@@ -1,10 +1,12 @@
-import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { useState, useEffect } from "react";
-import { Transaction } from "../types/transaction";
-import TransactionItem from "../components/TransactionItem";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import SectionHeader from "../components/SectionHeader";
+import TransactionItem from "../components/TransactionItem";
 import { getAllTransactions } from "../services/transaction.service";
+import { Transaction } from "../types/transaction";
+
+const PAGE_SIZE = 20;
 
 interface SectionData {
   title: string;
@@ -47,7 +49,10 @@ const groupByDate = (transactions: Transaction[]): SectionData[] => {
 export default function Records() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     fetchTransactions();
@@ -57,13 +62,32 @@ export default function Records() {
     try {
       setLoading(true);
       setError(null);
-      const response = await getAllTransactions({ page: 0, size: 100 });
+      const response = await getAllTransactions({ page: 0, size: PAGE_SIZE });
       setTransactions(response.content);
+      setCurrentPage(0);
+      setHasMore(response.hasNext);
     } catch (err) {
       setError('Failed to load transactions. Please try again.');
       console.error('Error fetching transactions:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadMoreTransactions = async () => {
+    if (loadingMore || !hasMore) return;
+
+    try {
+      setLoadingMore(true);
+      const nextPage = currentPage + 1;
+      const response = await getAllTransactions({ page: nextPage, size: PAGE_SIZE });
+      setTransactions(prev => [...prev, ...response.content]);
+      setCurrentPage(nextPage);
+      setHasMore(response.hasNext);
+    } catch (err) {
+      console.error('Error loading more transactions:', err);
+    } finally {
+      setLoadingMore(false);
     }
   };
 
@@ -103,12 +127,26 @@ export default function Records() {
     return <TransactionItem transaction={item.item!} />;
   };
 
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+
+    return (
+      <View style={styles.footerLoader}>
+        <ActivityIndicator size="small" color="#007AFF" />
+        <Text style={styles.footerText}>Loading more...</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <FlashList
         data={flatData}
         renderItem={renderItem}
         keyExtractor={(_item, index) => index.toString()}
+        onEndReached={loadMoreTransactions}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
       />
     </View>
   );
@@ -133,5 +171,14 @@ const styles = StyleSheet.create({
     color: "#ef4444",
     textAlign: "center",
     paddingHorizontal: 20,
+  },
+  footerLoader: {
+    paddingVertical: 20,
+    alignItems: "center",
+  },
+  footerText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: "#6b7280",
   },
 });
