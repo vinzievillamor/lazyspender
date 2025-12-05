@@ -25,25 +25,25 @@ public class CsvDataLoader implements CommandLineRunner {
 
     private final TransactionRepository transactionRepository;
 
-    private static final String CSV_FILE_PATH = "/mnt/c/Users/Vinzie/Downloads/Phone Link/report_2025-12-05_010513.csv";
+    private static final String CSV_FILE_PATH = "/mnt/c/Users/Vinzie/Downloads/Phone Link/report_2025-12-05_170747.csv";
     private static final String DEFAULT_OWNER = "villamorvinzie";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public void run(String... args) {
-        try {
-            log.info("Starting CSV data import...");
-            List<Transaction> transactions = readTransactionsFromCsv();
+        // try {
+        //     log.info("Starting CSV data import...");
+        //     List<Transaction> transactions = readTransactionsFromCsv();
 
-            if (!transactions.isEmpty()) {
-                transactionRepository.saveAll(transactions);
-                log.info("Successfully imported {} transactions from CSV", transactions.size());
-            } else {
-                log.warn("No transactions found in CSV file");
-            }
-        } catch (Exception e) {
-            log.error("Failed to import CSV data: {}", e.getMessage(), e);
-        }
+        //     if (!transactions.isEmpty()) {
+        //         transactionRepository.saveAll(transactions);
+        //         log.info("Successfully imported {} transactions from CSV", transactions.size());
+        //     } else {
+        //         log.warn("No transactions found in CSV file");
+        //     }
+        // } catch (Exception e) {
+        //     log.error("Failed to import CSV data: {}", e.getMessage(), e);
+        // }
     }
 
     private List<Transaction> readTransactionsFromCsv() throws IOException, CsvException {

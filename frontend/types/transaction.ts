@@ -1,7 +1,11 @@
 export interface Transaction {
   id: string;
+  owner: string;
+  account: string;
   category: string;
-  note: string;
   amount: number;
+  note: string;
   date: string;
+  currency: string;
+  refCurrencyAmount: number;
 }
