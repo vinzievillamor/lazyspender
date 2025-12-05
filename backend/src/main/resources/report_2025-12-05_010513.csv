@@ -1,0 +1,688 @@
+account;category;currency;amount;ref_currency_amount;type;payment_type;payment_type_local;note;date;gps_latitude;gps_longitude;gps_accuracy_in_meters;warranty_in_month;transfer;payee;labels;envelope_id;custom_category
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-12-05 00:55:01;;;;0;false;;;5001;false
+Cash;Bar, cafe;PHP;-400.00;-400.00;Expenses;CASH;Cash;starbucks;2025-12-05 00:54:15;;;;0;false;;;1002;false
+Cash;Pets, animals;PHP;-408.00;-408.00;Expenses;CASH;Cash;pet food;2025-12-03 19:47:27;;;;0;false;;;2005;false
+Cash;Health and beauty;PHP;-540.00;-540.00;Expenses;CASH;Cash;watsons;2025-12-03 19:33:34;;;;0;false;;;2002;false
+Cash;Restaurant, fast-food;PHP;-835.00;-835.00;Expenses;CASH;Cash;marugame;2025-12-03 18:58:37;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-112.00;-112.00;Expenses;CASH;Cash;;2025-12-03 08:35:52;;;;0;false;;;4004;false
+Cash;Groceries;PHP;-832.00;-832.00;Expenses;CASH;Cash;korean shop;2025-12-02 23:18:26;;;;0;false;;;1000;false
+Cash;Sports + Active;PHP;-510.00;-510.00;Expenses;CASH;Cash;;2025-12-02 21:22:38;;;;0;false;;;6003;false
+Cash;Software, apps, games;PHP;-1200.00;-1200.00;Expenses;CASH;Cash;claude;2025-12-02 13:22:40;;;;0;false;;;7003;false
+Cash;Restaurant, fast-food;PHP;-527.00;-527.00;Expenses;CASH;Cash;mcdo;2025-12-02 11:11:51;;;;0;false;;;1001;false
+Cash;Holiday, trips, hotels;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;sogo;2025-12-02 11:09:58;;;;0;false;;;6009;false
+Cash;Groceries;PHP;-900.00;-900.00;Expenses;CASH;Cash;7 eleven;2025-12-02 11:09:40;;;;0;false;;;1000;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-12-01 11:12:29;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-2593.00;-2593.00;Expenses;CASH;Cash;itallianis;2025-11-30 19:01:32;;;;0;false;;;1001;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-11-30 08:36:02;;;;0;false;;;5001;false
+Cash;Bar, cafe;PHP;-965.00;-965.00;Expenses;CASH;Cash;starbucks;2025-11-30 08:35:27;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-4070.00;-4070.00;Expenses;CASH;Cash;chars garden cafe;2025-11-29 15:18:49;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-11-29 11:56:34;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-1075.00;-1075.00;Expenses;CASH;Cash;mcdo;2025-11-29 08:45:21;;;;0;false;;;1001;false
+Cash;Parking;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-11-28 11:56:45;;;;0;false;;;5001;false
+Cash;Income;PHP;53341.00;53341.00;Income;CASH;Cash;;2025-11-28 08:05:14;;;;0;false;;;10011;false
+Cash;Restaurant, fast-food;PHP;-1300.00;-1300.00;Expenses;CASH;Cash;romantic baboy;2025-11-28 07:32:54;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-920.00;-920.00;Expenses;CASH;Cash;ramen kuroda;2025-11-27 17:41:06;;;;0;false;;;1001;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-11-27 17:17:03;;;;0;false;;;5001;false
+Cash;Parking;PHP;-180.00;-180.00;Expenses;CASH;Cash;;2025-11-27 17:16:20;;;;0;false;;;5001;false
+Crypto;Electronics, accessories;PHP;-698.00;-698.00;Expenses;CASH;Cash;ref delivery;2025-11-27 17:00:27;;;;0;false;;;2006;false
+Cash;Parking;PHP;-4500.00;-4500.00;Expenses;CASH;Cash;;2025-11-27 12:00:00;;;;0;false;;;5001;false
+Cash;Allowance;PHP;-3750.00;-3750.00;Expenses;CASH;Cash;;2025-11-27 12:00:00;;;;0;false;;;8007;false
+Cash;Allowance;PHP;-1500.00;-1500.00;Expenses;CASH;Cash;;2025-11-27 12:00:00;;;;0;false;;;8007;false
+Cash;Internet;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;;2025-11-27 12:00:00;;;;0;false;;;7002;false
+Cash;Housing;PHP;-6000.00;-6000.00;Expenses;CASH;Cash;;2025-11-27 12:00:00;;;;0;false;;;3005;false
+Cash;Restaurant, fast-food;PHP;-400.00;-400.00;Expenses;CASH;Cash;dunkin donut;2025-11-27 08:56:49;;;;0;false;;;1001;false
+Cash;Electronics, accessories;PHP;-700.00;-700.00;Expenses;CASH;Cash;ref delivery;2025-11-27 08:56:21;;;;0;false;;;2006;false
+Cash;Restaurant, fast-food;PHP;-660.00;-660.00;Expenses;CASH;Cash;noodle shop;2025-11-26 17:20:19;;;;0;false;;;1001;false
+Cash;Vehicle;PHP;-27439.00;-27439.00;Expenses;CASH;Cash;;2025-11-26 12:00:00;;;;0;false;;;5004;false
+Cash;Sports + Active;PHP;-180.00;-180.00;Expenses;CASH;Cash;;2025-11-25 16:56:43;;;;0;false;;;6003;false
+Cash;Software, apps, games;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-11-25 12:00:00;;;;0;false;;;7003;false
+Cash;Transportation;PHP;-159.00;-159.00;Expenses;CASH;Cash;;2025-11-25 10:41:49;;;;0;false;;;4004;false
+Cash;Drug-store, chemist;PHP;-503.00;-503.00;Expenses;CASH;Cash;mercury;2025-11-24 21:42:03;;;;0;false;;;2011;false
+Cash;Parking;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-11-24 18:59:40;;;;0;false;;;5001;false
+Cash;Fuel;PHP;-2546.00;-2546.00;Expenses;CASH;Cash;;2025-11-24 11:18:37;;;;0;false;;;5000;false
+Cash;Restaurant, fast-food;PHP;-600.00;-600.00;Expenses;CASH;Cash;mang inasal;2025-11-23 17:39:54;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-1750.00;-1750.00;Expenses;CASH;Cash;crosta;2025-11-23 17:39:44;;;;0;false;;;1001;false
+Cash;Drug-store, chemist;PHP;-109.00;-109.00;Expenses;CASH;Cash;watsons;2025-11-23 16:43:06;;;;0;false;;;2011;false
+Cash;Restaurant, fast-food;PHP;-1475.00;-1475.00;Expenses;CASH;Cash;manmaru;2025-11-21 19:40:07;;;;0;false;;;1001;false
+Cash;Bar, cafe;PHP;-1600.00;-1600.00;Expenses;CASH;Cash;coffee bean with rachelle family;2025-11-21 19:09:40;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-502.00;-502.00;Expenses;CASH;Cash;mcdo;2025-11-21 19:05:21;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-224.00;-224.00;Expenses;CASH;Cash;mcdo;2025-11-21 19:03:28;;;;0;false;;;1001;false
+Cash;Bar, cafe;PHP;-234.00;-234.00;Expenses;CASH;Cash;pickup coffee;2025-11-21 19:03:03;;;;0;false;;;1002;false
+Cash;Drug-store, chemist;PHP;-109.00;-109.00;Expenses;CASH;Cash;;2025-11-21 19:02:11;;;;0;false;;;2011;false
+Cash;Wellness, beauty;PHP;-2500.00;-2500.00;Expenses;CASH;Cash;nuat thai;2025-11-21 19:01:46;;;;0;false;;;6001;false
+Cash;Parking;PHP;-80.00;-80.00;Expenses;CASH;Cash;;2025-11-21 19:01:40;;;;0;false;;;5001;false
+Cash;Software, apps, games;PHP;-282.00;-282.00;Expenses;CASH;Cash;;2025-11-21 12:00:00;;;;0;false;;;7003;false
+Cash;Software, apps, games;PHP;-232.00;-232.00;Expenses;CASH;Cash;;2025-11-21 12:00:00;;;;0;false;;;7003;false
+Cash;Transportation;PHP;-204.00;-204.00;Expenses;CASH;Cash;;2025-11-21 08:43:54;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-489.00;-489.00;Expenses;CASH;Cash;why chicken;2025-11-17 20:38:12;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-1000.00;-1000.00;Expenses;CASH;Cash;;2025-11-17 16:14:44;;;;0;false;;;6003;false
+Cash;Parking;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-11-17 16:13:46;;;;0;false;;;5001;false
+Cash;Groceries;PHP;-188.00;-188.00;Expenses;CASH;Cash;mercury;2025-11-16 20:53:06;;;;0;false;;;1000;false
+Cash;Bar, cafe;PHP;-3883.50;-3883.50;Expenses;CASH;Cash;ucc;2025-11-16 20:52:38;;;;0;false;;;1002;false
+Cash;Health care, doctor;PHP;-1980.00;-1980.00;Expenses;CASH;Cash;mercury;2025-11-16 20:51:34;;;;0;false;;;6000;false
+Cash;Bar, cafe;PHP;-215.00;-215.00;Expenses;CASH;Cash;coffee bean;2025-11-16 20:49:40;;;;0;false;;;1002;false
+Cash;Electronics, accessories;PHP;-3365.00;-3365.00;Expenses;CASH;Cash;;2025-11-16 12:00:00;;;;0;false;;;2006;false
+Cash;Refunds (tax, purchase);PHP;2061.00;2061.00;Income;CASH;Cash;oniuq cc;2025-11-16 08:37:26;;;;0;false;;;10008;false
+Cash;Bar, cafe;PHP;-1500.00;-1500.00;Expenses;CASH;Cash;coffee bean;2025-11-16 08:14:22;;;;0;false;;;1002;false
+Cash;Transportation;PHP;-119.00;-119.00;Expenses;CASH;Cash;;2025-11-15 10:04:38;;;;0;false;;;4004;false
+Cash;Communication, PC;PHP;-7255.00;-7255.00;Expenses;CASH;Cash;;2025-11-14 12:00:00;;;;0;false;;;7005;false
+Cash;Transportation;PHP;-364.00;-364.00;Expenses;CASH;Cash;;2025-11-14 08:15:26;;;;0;false;;;4004;false
+Cash;Income;PHP;57835.00;57835.00;Income;CASH;Cash;;2025-11-14 08:03:33;;;;0;false;;;10011;false
+Cash;Income;PHP;102190.00;102190.00;Income;CASH;Cash;;2025-11-14 08:03:22;;;;0;false;;;10011;false
+Cash;Restaurant, fast-food;PHP;-433.00;-433.00;Expenses;CASH;Cash;mcdo;2025-11-14 08:00:42;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-376.00;-376.00;Expenses;CASH;Cash;;2025-11-12 08:10:30;;;;0;false;;;4004;false
+Cash;Transportation;PHP;-180.00;-180.00;Expenses;CASH;Cash;;2025-11-12 08:09:37;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-310.00;-310.00;Expenses;CASH;Cash;;2025-11-12 08:09:17;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-503.00;-503.00;Expenses;CASH;Cash;chooks to go;2025-11-11 11:31:14;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-212.00;-212.00;Expenses;CASH;Cash;;2025-11-11 08:19:29;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-749.00;-749.00;Expenses;CASH;Cash;jollibee;2025-11-11 08:19:12;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-2344.00;-2344.00;Expenses;CASH;Cash;soban;2025-11-10 17:55:30;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-795.00;-795.00;Expenses;CASH;Cash;tagaytay pasalubong;2025-11-10 16:04:12;;;;0;false;;;1000;false
+Cash;Pets, animals;PHP;-575.00;-575.00;Expenses;CASH;Cash;coco meds;2025-11-09 13:08:44;;;;0;false;;;2005;false
+Cash;Transportation;PHP;-180.00;-180.00;Expenses;CASH;Cash;;2025-11-09 12:58:01;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-320.00;-320.00;Expenses;CASH;Cash;;2025-11-09 12:57:47;;;;0;false;;;6003;false
+Cash;Holiday, trips, hotels;PHP;-2300.00;-2300.00;Expenses;CASH;Cash;sogo;2025-11-09 12:57:15;;;;0;false;;;6009;false
+Cash;Restaurant, fast-food;PHP;-1455.00;-1455.00;Expenses;CASH;Cash;dahon mesa;2025-11-08 12:45:28;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-1100.00;-1100.00;Expenses;CASH;Cash;frankies;2025-11-08 09:29:40;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-460.00;-460.00;Expenses;CASH;Cash;;2025-11-08 09:28:34;;;;0;false;;;4004;false
+Cash;Fuel;PHP;-2462.00;-2462.00;Expenses;CASH;Cash;;2025-11-06 16:12:39;;;;0;false;;;5000;false
+Cash;Restaurant, fast-food;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-11-06 16:12:32;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-11-05 20:55:23;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-170.00;-170.00;Expenses;CASH;Cash;;2025-11-05 16:14:56;;;;0;false;;;4004;false
+Cash;Groceries;PHP;-200.00;-200.00;Expenses;CASH;Cash;mercury;2025-11-05 15:28:11;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-460.00;-460.00;Expenses;CASH;Cash;jollibee;2025-11-05 15:01:16;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-378.00;-378.00;Expenses;CASH;Cash;mang inasal;2025-11-05 10:23:06;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-770.00;-770.00;Expenses;CASH;Cash;romantic baboy;2025-11-04 19:07:00;;;;0;false;;;1001;false
+Cash;Allowance;PHP;-1350.00;-1350.00;Expenses;CASH;Cash;For Rachelle bebe;2025-11-02 19:44:51;;;;0;false;;;8007;false
+Cash;Restaurant, fast-food;PHP;-2211.00;-2211.00;Expenses;CASH;Cash;davids tea house;2025-11-02 19:37:34;;;;0;false;;;1001;false
+Cash;Bar, cafe;PHP;-955.00;-955.00;Expenses;CASH;Cash;starbucks;2025-11-02 19:35:03;;;;0;false;;;1002;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-11-02 19:34:57;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-369.00;-369.00;Expenses;CASH;Cash;lugawan sa tejeros;2025-11-02 10:19:27;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-500.00;-500.00;Expenses;CASH;Cash;angels burger;2025-11-02 08:58:36;;;;0;false;;;1001;false
+Cash;Health care, doctor;PHP;-1222.00;-1222.00;Expenses;CASH;Cash;minoxidil;2025-11-01 11:46:06;;;;0;false;;;6000;false
+Cash;Health care, doctor;PHP;-140.00;-140.00;Expenses;CASH;Cash;watsons;2025-11-01 07:23:46;;;;0;false;;;6000;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-10-31 18:16:47;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-1003.00;-1003.00;Expenses;CASH;Cash;davids tea house;2025-10-31 18:16:36;;;;0;false;;;1001;false
+Cash;Holiday, trips, hotels;PHP;-2500.00;-2500.00;Expenses;CASH;Cash;hiking aurora;2025-10-31 17:39:02;;;;0;false;;;6009;false
+Cash;Wellness, beauty;PHP;-13100.00;-13100.00;Expenses;CASH;Cash;noah and eve;2025-10-31 17:36:24;;;;0;false;;;6001;false
+Cash;Restaurant, fast-food;PHP;-439.00;-439.00;Expenses;CASH;Cash;mcdo;2025-10-31 12:25:30;;;;0;false;;;1001;false
+Cash;Parking;PHP;-4500.00;-4500.00;Expenses;CASH;Cash;;2025-10-31 12:00:00;;;;0;false;;;5001;false
+Cash;Allowance;PHP;-1500.00;-1500.00;Expenses;CASH;Cash;;2025-10-31 12:00:00;;;;0;false;;;8007;false
+Cash;Transportation;PHP;-540.00;-540.00;Expenses;CASH;Cash;;2025-10-31 09:18:28;;;;0;false;;;4004;false
+Cash;Transportation;PHP;-900.00;-900.00;Expenses;CASH;Cash;;2025-10-29 23:41:59;;;;0;false;;;4004;false
+Cash;Groceries;PHP;-200.00;-200.00;Expenses;CASH;Cash;mercury;2025-10-29 15:05:34;;;;0;false;;;1000;false
+Cash;Income;PHP;54438.00;54438.00;Income;CASH;Cash;;2025-10-29 08:32:27;;;;0;false;;;10011;false
+Cash;Transportation;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-10-29 08:32:17;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-1400.00;-1400.00;Expenses;CASH;Cash;umimatsu;2025-10-29 08:31:26;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-340.00;-340.00;Expenses;CASH;Cash;;2025-10-28 20:24:16;;;;0;false;;;6003;false
+Cash;Housing;PHP;-6000.00;-6000.00;Expenses;CASH;Cash;;2025-10-28 12:00:00;;;;0;false;;;3005;false
+Cash;Allowance;PHP;-5500.00;-5500.00;Expenses;CASH;Cash;;2025-10-28 12:00:00;;;;0;false;;;8007;false
+Cash;Bar, cafe;PHP;-250.00;-250.00;Expenses;CASH;Cash;llaollao;2025-10-27 18:29:52;;;;0;false;;;1002;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-10-27 17:59:43;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-429.00;-429.00;Expenses;CASH;Cash;mang inasal;2025-10-27 17:59:34;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-100.00;-100.00;Expenses;CASH;Cash;mercury;2025-10-27 12:57:23;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-480.00;-480.00;Expenses;CASH;Cash;brisk n brew;2025-10-27 12:57:03;;;;0;false;;;1001;false
+Cash;Internet;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;;2025-10-27 12:00:00;;;;0;false;;;7002;false
+Cash;Vehicle;PHP;-27439.00;-27439.00;Expenses;CASH;Cash;;2025-10-27 12:00:00;;;;0;false;;;5004;false
+Cash;Restaurant, fast-food;PHP;-1030.00;-1030.00;Expenses;CASH;Cash;dampa;2025-10-26 19:06:30;;;;0;false;;;1001;false
+Cash;Software, apps, games;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-10-26 12:00:00;;;;0;false;;;7003;false
+Cash;Bar, cafe;PHP;-430.00;-430.00;Expenses;CASH;Cash;starbucks;2025-10-26 09:24:24;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-456.00;-456.00;Expenses;CASH;Cash;popeyes;2025-10-25 19:13:04;;;;0;false;;;1001;false
+Cash;Wellness, beauty;PHP;-600.00;-600.00;Expenses;CASH;Cash;haircut;2025-10-25 17:41:30;;;;0;false;;;6001;false
+Cash;Groceries;PHP;-200.00;-200.00;Expenses;CASH;Cash;mercury;2025-10-25 12:03:38;;;;0;false;;;1000;false
+Cash;Bar, cafe;PHP;-605.00;-605.00;Expenses;CASH;Cash;starbucks;2025-10-25 12:03:28;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-1381.00;-1381.00;Expenses;CASH;Cash;kazuko ramenba;2025-10-25 00:09:10;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-290.00;-290.00;Expenses;CASH;Cash;;2025-10-25 00:09:05;;;;0;false;;;4004;false
+Cash;Groceries;PHP;-200.00;-200.00;Expenses;CASH;Cash;mercury;2025-10-24 19:03:32;;;;0;false;;;1000;false
+Cash;Parking;PHP;-240.00;-240.00;Expenses;CASH;Cash;;2025-10-24 19:00:15;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-548.00;-548.00;Expenses;CASH;Cash;potato corner;2025-10-24 19:00:07;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-500.00;-500.00;Expenses;CASH;Cash;mcdo;2025-10-22 10:30:14;;;;0;false;;;1001;false
+Cash;Parking;PHP;-90.00;-90.00;Expenses;CASH;Cash;;2025-10-22 10:26:19;;;;0;false;;;5001;false
+Cash;Sports + Active;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-10-22 10:26:11;;;;0;false;;;6003;false
+Cash;Groceries;PHP;-323.00;-323.00;Expenses;CASH;Cash;mercury;2025-10-20 11:13:43;;;;0;false;;;1000;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-10-20 10:27:12;;;;0;false;;;4004;false
+Cash;Vehicle maintenance;PHP;-16000.00;-16000.00;Expenses;CASH;Cash;;2025-10-20 10:25:08;;;;0;false;;;5002;false
+Cash;Bar, cafe;PHP;-400.00;-400.00;Expenses;CASH;Cash;dunkin donut;2025-10-19 17:04:31;;;;0;false;;;1002;false
+Cash;Bar, cafe;PHP;-785.00;-785.00;Expenses;CASH;Cash;starbucks;2025-10-19 17:03:51;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-130.00;-130.00;Expenses;CASH;Cash;angels pizza;2025-10-19 16:35:11;;;;0;false;;;1001;false
+Cash;Parking;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-10-19 16:34:33;;;;0;false;;;5001;false
+Cash;Software, apps, games;PHP;-232.00;-232.00;Expenses;CASH;Cash;;2025-10-19 12:00:53;;;;0;false;;;7003;false
+Cash;Software, apps, games;PHP;-282.00;-282.00;Expenses;CASH;Cash;;2025-10-19 12:00:48;;;;0;false;;;7003;false
+Cash;Restaurant, fast-food;PHP;-315.00;-315.00;Expenses;CASH;Cash;pepper lunch;2025-10-18 18:02:26;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-695.00;-695.00;Expenses;CASH;Cash;marugame;2025-10-18 18:01:58;;;;0;false;;;1001;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-10-18 17:36:30;;;;0;false;;;5001;false
+Cash;Bar, cafe;PHP;-220.00;-220.00;Expenses;CASH;Cash;beard papas;2025-10-18 17:35:16;;;;0;false;;;1002;false
+Cash;Bar, cafe;PHP;-135.00;-135.00;Expenses;CASH;Cash;lemon;2025-10-18 17:35:06;;;;0;false;;;1002;false
+Cash;Vehicle maintenance;PHP;-250.00;-250.00;Expenses;CASH;Cash;car wash;2025-10-17 16:21:05;;;;0;false;;;5002;false
+Cash;Gifts, joy;PHP;-629.00;-629.00;Expenses;CASH;Cash;For Rachelle bebe;2025-10-17 15:14:09;;;;0;false;;;2007;false
+Cash;Transportation;PHP;-79.00;-79.00;Expenses;CASH;Cash;;2025-10-17 15:13:31;;;;0;false;;;4004;false
+Cash;Fuel;PHP;-2265.00;-2265.00;Expenses;CASH;Cash;;2025-10-17 14:17:49;;;;0;false;;;5000;false
+Cash;Electronics, accessories;PHP;-3365.00;-3365.00;Expenses;CASH;Cash;;2025-10-16 12:00:00;;;;0;false;;;2006;false
+Cash;Transportation;PHP;-301.00;-301.00;Expenses;CASH;Cash;;2025-10-16 08:27:07;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-261.00;-261.00;Expenses;CASH;Cash;mcdo;2025-10-16 08:26:42;;;;0;false;;;1001;false
+Cash;Drug-store, chemist;PHP;-927.00;-927.00;Expenses;CASH;Cash;essentials;2025-10-16 08:25:08;;;;0;false;;;2011;false
+Cash;Restaurant, fast-food;PHP;-699.00;-699.00;Expenses;CASH;Cash;peri peri;2025-10-16 08:24:59;;;;0;false;;;1001;false
+Cash;Phone, cell phone;PHP;-4330.00;-4330.00;Expenses;CASH;Cash;;2025-10-15 12:00:00;;;;0;false;;;7001;false
+Cash;Restaurant, fast-food;PHP;-261.00;-261.00;Expenses;CASH;Cash;mcdo;2025-10-14 11:59:40;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-1000.00;-1000.00;Expenses;CASH;Cash;macquarie ML;2025-10-14 10:11:20;;;;0;false;;;6003;false
+Cash;Income;PHP;53084.00;53084.00;Income;CASH;Cash;;2025-10-14 10:11:20;;;;0;false;;;10011;false
+Cash;Wellness, beauty;PHP;-2400.00;-2400.00;Expenses;CASH;Cash;nuat thai;2025-10-14 10:10:49;;;;0;false;;;6001;false
+Cash;Parking;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-10-14 08:24:48;;;;0;false;;;5001;false
+Cash;Hobbies;PHP;-1800.00;-1800.00;Expenses;CASH;Cash;sogo;2025-10-12 10:15:53;;;;0;false;;;6005;false
+Cash;Restaurant, fast-food;PHP;-404.00;-404.00;Expenses;CASH;Cash;mcdo;2025-10-09 21:35:55;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-404.00;-404.00;Expenses;CASH;Cash;mang inasal;2025-10-08 19:53:17;;;;0;false;;;1001;false
+Cash;Food & Drinks;PHP;-500.00;-500.00;Expenses;CASH;Cash;merienda;2025-10-08 19:52:54;;;;0;false;;;1003;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-10-07 22:12:30;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-500.00;-500.00;Expenses;CASH;Cash;;2025-10-07 22:12:15;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-519.00;-519.00;Expenses;CASH;Cash;subway;2025-10-06 21:37:38;;;;0;false;;;1001;false
+Cash;Parking;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-10-06 21:37:28;;;;0;false;;;5001;false
+Cash;Transportation;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-10-05 18:47:35;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-1300.00;-1300.00;Expenses;CASH;Cash;muhan;2025-10-05 18:47:12;;;;0;false;;;1001;false
+Cash;Bar, cafe;PHP;-200.00;-200.00;Expenses;CASH;Cash;starbucks;2025-10-05 12:10:26;;;;0;false;;;1002;false
+Cash;Clothes & shoes;PHP;-3772.00;-3772.00;Expenses;CASH;Cash;olympic village;2025-10-05 12:07:04;;;;0;false;;;2000;false
+Cash;Groceries;PHP;-1115.00;-1115.00;Expenses;CASH;Cash;embitin;2025-10-05 12:06:21;;;;0;false;;;1000;false
+Cash;Drug-store, chemist;PHP;-150.00;-150.00;Expenses;CASH;Cash;fever;2025-10-05 12:05:56;;;;0;false;;;2011;false
+Cash;Transportation;PHP;-140.00;-140.00;Expenses;CASH;Cash;;2025-10-05 11:03:03;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-10-05 11:02:59;;;;0;false;;;6003;false
+Cash;Sports + Active;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-10-04 21:34:34;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-580.00;-580.00;Expenses;CASH;Cash;burger king;2025-10-04 21:34:24;;;;0;false;;;1001;false
+Cash;Parking;PHP;-50.00;-50.00;Expenses;CASH;Cash;;2025-10-02 23:42:58;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-845.00;-845.00;Expenses;CASH;Cash;wings n things;2025-10-02 18:24:48;;;;0;false;;;1001;false
+Cash;Parking;PHP;-165.00;-165.00;Expenses;CASH;Cash;;2025-10-02 18:24:39;;;;0;false;;;5001;false
+Cash;Sports + Active;PHP;-494.00;-494.00;Expenses;CASH;Cash;;2025-10-01 14:09:40;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-10-01 14:08:05;;;;0;false;;;4004;false
+Cash;Parking;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-10-01 14:08:03;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-490.00;-490.00;Expenses;CASH;Cash;chowking;2025-09-30 20:51:43;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-09-30 20:46:10;;;;0;false;;;6003;false
+Cash;Parking;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-09-30 20:45:59;;;;0;false;;;5001;false
+Cash;Parking;PHP;-4500.00;-4500.00;Expenses;CASH;Cash;;2025-09-30 12:00:00;;;;0;false;;;5001;false
+Cash;Income;PHP;54438.00;54438.00;Income;CASH;Cash;;2025-09-29 17:53:47;;;;0;false;;;10011;false
+Cash;Restaurant, fast-food;PHP;-391.00;-391.00;Expenses;CASH;Cash;jollibee;2025-09-29 17:53:15;;;;0;false;;;1001;false
+Cash;Parking;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-09-29 16:10:35;;;;0;false;;;5001;false
+Cash;Clothes & shoes;PHP;-4350.00;-4350.00;Expenses;CASH;Cash;anello bag for rachelle;2025-09-29 15:21:45;;;;0;false;;;2000;false
+Cash;Housing;PHP;-6000.00;-6000.00;Expenses;CASH;Cash;;2025-09-29 12:00:00;;;;0;false;;;3005;false
+Cash;Allowance;PHP;-5500.00;-5500.00;Expenses;CASH;Cash;;2025-09-29 12:00:00;;;;0;false;;;8007;false
+Cash;Vehicle;PHP;-27439.00;-27439.00;Expenses;CASH;Cash;;2025-09-29 12:00:00;;;;0;false;;;5004;false
+Cash;Internet;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;;2025-09-29 12:00:00;;;;0;false;;;7002;false
+Cash;Parking;PHP;-100.00;-100.00;Expenses;CASH;Cash;;2025-09-28 16:57:16;;;;0;false;;;5001;false
+Cash;Clothes & shoes;PHP;-625.00;-625.00;Expenses;CASH;Cash;seiko wallet;2025-09-28 16:49:10;;;;0;false;;;2000;false
+Cash;Restaurant, fast-food;PHP;-850.00;-850.00;Expenses;CASH;Cash;mang inasal with family;2025-09-28 15:23:11;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-231.00;-231.00;Expenses;CASH;Cash;breadtalk;2025-09-28 15:11:19;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-310.00;-310.00;Expenses;CASH;Cash;;2025-09-27 20:44:03;;;;0;false;;;6003;false
+Cash;Parking;PHP;-100.00;-100.00;Expenses;CASH;Cash;;2025-09-27 16:57:31;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-310.00;-310.00;Expenses;CASH;Cash;beard papas;2025-09-27 16:56:26;;;;0;false;;;1001;false
+Cash;Clothes & shoes;PHP;-1495.00;-1495.00;Expenses;CASH;Cash;sunnies tumbler rachelle;2025-09-27 16:55:06;;;;0;false;;;2000;false
+Cash;Restaurant, fast-food;PHP;-1200.00;-1200.00;Expenses;CASH;Cash;caba garden cafe;2025-09-27 16:54:30;;;;0;false;;;1001;false
+Cash;Toll;PHP;-700.00;-700.00;Expenses;CASH;Cash;;2025-09-27 16:54:01;;;;0;false;;;8006;false
+Cash;Fuel;PHP;-2300.00;-2300.00;Expenses;CASH;Cash;;2025-09-27 16:53:55;;;;0;false;;;5000;false
+Cash;Transportation;PHP;-360.00;-360.00;Expenses;CASH;Cash;;2025-09-27 16:18:41;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-800.00;-800.00;Expenses;CASH;Cash;starbucks;2025-09-26 16:55:40;;;;0;false;;;1001;false
+Cash;Software, apps, games;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-09-26 12:00:00;;;;0;false;;;7003;false
+Cash;Sports + Active;PHP;-500.00;-500.00;Expenses;CASH;Cash;typing contest;2025-09-25 16:07:55;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-500.00;-500.00;Expenses;CASH;Cash;jollibee;2025-09-24 20:41:23;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-350.00;-350.00;Expenses;CASH;Cash;;2025-09-24 20:07:52;;;;0;false;;;6003;false
+Cash;Sports + Active;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-09-23 20:53:02;;;;0;false;;;6003;false
+Cash;Charges, Fees;PHP;-1979.00;-1979.00;Expenses;CASH;Cash;oniuq cc;2025-09-23 20:52:27;;;;0;false;;;8005;false
+Cash;Parking;PHP;-90.00;-90.00;Expenses;CASH;Cash;;2025-09-23 20:52:09;;;;0;false;;;5001;false
+Cash;Transportation;PHP;-328.00;-328.00;Expenses;CASH;Cash;;2025-09-21 18:59:02;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-1650.00;-1650.00;Expenses;CASH;Cash;manmaru;2025-09-21 18:43:38;;;;0;false;;;1001;false
+Cash;Parking;PHP;-50.00;-50.00;Expenses;CASH;Cash;;2025-09-20 13:36:29;;;;0;false;;;5001;false
+Cash;Bar, cafe;PHP;-180.00;-180.00;Expenses;CASH;Cash;DQ;2025-09-20 13:36:13;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-842.00;-842.00;Expenses;CASH;Cash;wings n things;2025-09-20 13:02:26;;;;0;false;;;1001;false
+Cash;Parking;PHP;-50.00;-50.00;Expenses;CASH;Cash;;2025-09-20 10:11:35;;;;0;false;;;5001;false
+Cash;Bar, cafe;PHP;-682.00;-682.00;Expenses;CASH;Cash;mccafe;2025-09-20 10:11:26;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-700.00;-700.00;Expenses;CASH;Cash;mang inasal with family;2025-09-19 17:10:14;;;;0;false;;;1001;false
+Cash;Software, apps, games;PHP;-281.00;-281.00;Expenses;CASH;Cash;;2025-09-19 12:00:00;;;;0;false;;;7003;false
+Cash;Bar, cafe;PHP;-720.00;-720.00;Expenses;CASH;Cash;coffee bean;2025-09-18 19:06:23;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-878.00;-878.00;Expenses;CASH;Cash;ramen kuroda;2025-09-18 18:21:17;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-09-18 18:17:30;;;;0;false;;;4004;false
+Cash;Software, apps, games;PHP;-201.00;-201.00;Expenses;CASH;Cash;;2025-09-18 12:00:00;;;;0;false;;;7003;false
+Cash;Groceries;PHP;-450.00;-450.00;Expenses;CASH;Cash;;2025-09-17 17:50:29;;;;0;false;;;1000;false
+Cash;Transportation;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-09-17 17:49:44;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-09-17 17:49:40;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-313.00;-313.00;Expenses;CASH;Cash;bonchon;2025-09-17 11:15:58;;;;0;false;;;1001;false
+Cash;Electronics, accessories;PHP;-3365.00;-3365.00;Expenses;CASH;Cash;;2025-09-16 12:00:00;;;;0;false;;;2006;false
+Cash;Sports + Active;PHP;-506.00;-506.00;Expenses;CASH;Cash;;2025-09-16 11:16:38;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-180.00;-180.00;Expenses;CASH;Cash;;2025-09-16 11:16:11;;;;0;false;;;4004;false
+Cash;Phone, cell phone;PHP;-4330.00;-4330.00;Expenses;CASH;Cash;mommy phone;2025-09-15 12:00:19;;;;0;false;;;7001;false
+Cash;Transportation;PHP;-147.00;-147.00;Expenses;CASH;Cash;;2025-09-14 01:21:32;;;;0;false;;;4004;false
+Cash;Clothes & shoes;PHP;-1599.00;-1599.00;Expenses;CASH;Cash;sandugo;2025-09-13 14:54:30;;;;0;false;;;2000;false
+Cash;Groceries;PHP;-2547.00;-2547.00;Expenses;CASH;Cash;luis birthday;2025-09-13 14:11:16;;;;0;false;;;1000;false
+Cash;Clothes & shoes;PHP;-430.00;-430.00;Expenses;CASH;Cash;decathlon;2025-09-13 14:10:59;;;;0;false;;;2000;false
+Cash;Pets, animals;PHP;-350.00;-350.00;Expenses;CASH;Cash;coco shampoo;2025-09-12 20:36:53;;;;0;false;;;2005;false
+Cash;Holiday, trips, hotels;PHP;-720.00;-720.00;Expenses;CASH;Cash;sogo;2025-09-12 20:32:04;;;;0;false;;;6009;false
+Cash;Restaurant, fast-food;PHP;-1949.00;-1949.00;Expenses;CASH;Cash;itallianis;2025-09-12 20:31:38;;;;0;false;;;1001;false
+Cash;Income;PHP;59486.00;59486.00;Income;CASH;Cash;;2025-09-12 12:47:35;;;;0;false;;;10011;false
+Cash;Bar, cafe;PHP;-780.00;-780.00;Expenses;CASH;Cash;starbucks;2025-09-11 20:40:45;;;;0;false;;;1002;false
+Cash;Transportation;PHP;-236.00;-236.00;Expenses;CASH;Cash;;2025-09-10 19:00:13;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-249.00;-249.00;Expenses;CASH;Cash;llaollao;2025-09-07 16:54:49;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-765.00;-765.00;Expenses;CASH;Cash;marugame;2025-09-07 16:54:41;;;;0;false;;;1001;false
+Cash;Wellness, beauty;PHP;-2400.00;-2400.00;Expenses;CASH;Cash;nuat thai;2025-09-07 16:18:50;;;;0;false;;;6001;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-09-07 13:42:55;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-09-07 13:42:50;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-804.00;-804.00;Expenses;CASH;Cash;ramen kuroda;2025-09-06 13:44:19;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-485.00;-485.00;Expenses;CASH;Cash;no brand;2025-09-06 13:43:37;;;;0;false;;;1000;false
+Cash;Sports + Active;PHP;-350.00;-350.00;Expenses;CASH;Cash;;2025-09-06 12:59:59;;;;0;false;;;6003;false
+Cash;Bar, cafe;PHP;-210.00;-210.00;Expenses;CASH;Cash;starbucks;2025-09-06 12:59:29;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-400.00;-400.00;Expenses;CASH;Cash;andoks;2025-09-05 17:14:29;;;;0;false;;;1001;false
+Cash;Cinema;PHP;-840.00;-840.00;Expenses;CASH;Cash;;2025-09-05 12:59:42;;;;0;false;;;6007;false
+Cash;Restaurant, fast-food;PHP;-378.00;-378.00;Expenses;CASH;Cash;mcdo;2025-09-04 11:33:00;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-09-03 19:34:09;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-09-03 19:33:10;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-500.00;-500.00;Expenses;CASH;Cash;;2025-09-02 19:34:52;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-09-02 19:34:41;;;;0;false;;;4004;false
+Cash;Phone, cell phone;PHP;-800.00;-800.00;Expenses;CASH;Cash;smart load;2025-09-02 19:31:50;;;;0;false;;;7001;false
+Cash;Transportation;PHP;-500.00;-500.00;Expenses;CASH;Cash;from/to sogo;2025-08-31 20:25:18;;;;0;false;;;4004;false
+Cash;Wellness, beauty;PHP;-945.00;-945.00;Expenses;CASH;Cash;sogo;2025-08-31 20:24:20;;;;0;false;;;6001;false
+Cash;Drug-store, chemist;PHP;-800.00;-800.00;Expenses;CASH;Cash;7 eleven;2025-08-31 20:23:51;;;;0;false;;;2011;false
+Cash;Restaurant, fast-food;PHP;-200.00;-200.00;Expenses;CASH;Cash;mcdo;2025-08-31 19:15:27;;;;0;false;;;1001;false
+Cash;Others;PHP;-550.00;-550.00;Expenses;CASH;Cash;;2025-08-31 19:09:43;;;;0;false;;;11000;false
+Cash;Fuel;PHP;-2644.00;-2644.00;Expenses;CASH;Cash;;2025-08-30 19:11:54;;;;0;false;;;5000;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-08-30 19:11:03;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-390.00;-390.00;Expenses;CASH;Cash;mcdo;2025-08-29 22:42:54;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-640.00;-640.00;Expenses;CASH;Cash;;2025-08-29 22:42:48;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-08-29 19:52:38;;;;0;false;;;4004;false
+Cash;Allowance;PHP;-1500.00;-1500.00;Expenses;CASH;Cash;;2025-08-29 12:00:00;;;;0;false;;;8007;false
+Cash;Parking;PHP;-4500.00;-4500.00;Expenses;CASH;Cash;;2025-08-29 12:00:00;;;;0;false;;;5001;false
+Cash;Income;PHP;50500.00;50500.00;Income;CASH;Cash;;2025-08-29 09:08:14;;;;0;false;;;10011;false
+Cash;Food & Drinks;PHP;-1000.00;-1000.00;Expenses;CASH;Cash;peri peri;2025-08-28 19:13:20;;;;0;false;;;1003;false
+Cash;Parking;PHP;-100.00;-100.00;Expenses;CASH;Cash;;2025-08-28 16:35:44;;;;0;false;;;5001;false
+Cash;Allowance;PHP;-5500.00;-5500.00;Expenses;CASH;Cash;;2025-08-28 12:00:00;;;;0;false;;;8007;false
+Cash;Housing;PHP;-6000.00;-6000.00;Expenses;CASH;Cash;;2025-08-28 12:00:00;;;;0;false;;;3005;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-08-28 07:39:45;;;;0;false;;;5001;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-08-27 14:20:10;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-430.00;-430.00;Expenses;CASH;Cash;;2025-08-27 14:19:51;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-465.00;-465.00;Expenses;CASH;Cash;marugame;2025-08-26 14:22:09;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-255.00;-255.00;Expenses;CASH;Cash;zus coffee;2025-08-26 14:21:23;;;;0;false;;;1001;false
+Cash;Vehicle;PHP;-27439.00;-27439.00;Expenses;CASH;Cash;;2025-08-26 12:00:00;;;;0;false;;;5004;false
+Cash;Software, apps, games;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-08-26 12:00:00;;;;0;false;;;7003;false
+Cash;Internet;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;;2025-08-26 12:00:00;;;;0;false;;;7002;false
+Cash;Restaurant, fast-food;PHP;-50.00;-50.00;Expenses;CASH;Cash;ice cream;2025-08-25 17:59:42;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-1430.00;-1430.00;Expenses;CASH;Cash;frankies;2025-08-25 16:23:55;;;;0;false;;;1001;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-08-25 12:15:27;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-1225.00;-1225.00;Expenses;CASH;Cash;pizza hut;2025-08-24 17:11:44;;;;0;false;;;1001;false
+Cash;Vehicle maintenance;PHP;-200.00;-200.00;Expenses;CASH;Cash;car wash;2025-08-24 13:31:48;;;;0;false;;;5002;false
+Cash;Food & Drinks;PHP;-776.00;-776.00;Expenses;CASH;Cash;starbucks;2025-08-24 13:31:37;;;;0;false;;;1003;false
+Cash;Phone, cell phone;PHP;-4330.00;-4330.00;Expenses;CASH;Cash;mommy phone;2025-08-23 13:28:03;;;;0;false;;;7001;false
+Cash;Food & Drinks;PHP;-350.00;-350.00;Expenses;CASH;Cash;pasig river street food;2025-08-23 11:35:35;;;;0;false;;;1003;false
+Cash;Food & Drinks;PHP;-404.00;-404.00;Expenses;CASH;Cash;mang inasal;2025-08-23 11:34:49;;;;0;false;;;1003;false
+Cash;Sports + Active;PHP;-430.00;-430.00;Expenses;CASH;Cash;;2025-08-23 07:23:31;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-08-23 07:00:23;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-445.00;-445.00;Expenses;CASH;Cash;;2025-08-22 21:55:07;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-08-22 21:48:07;;;;0;false;;;4004;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-08-22 13:31:19;;;;0;false;;;5001;false
+Cash;Groceries;PHP;-354.00;-354.00;Expenses;CASH;Cash;mercury;2025-08-22 13:31:09;;;;0;false;;;1000;false
+Cash;Food & Drinks;PHP;-1000.00;-1000.00;Expenses;CASH;Cash;circuit bar;2025-08-22 13:24:10;;;;0;false;;;1003;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-08-21 22:31:50;;;;0;false;;;5001;false
+Cash;Life & Entertainment;PHP;-600.00;-600.00;Expenses;CASH;Cash;timezone;2025-08-21 20:11:49;;;;0;false;;;6013;false
+Cash;Cinema;PHP;-850.00;-850.00;Expenses;CASH;Cash;;2025-08-21 20:11:34;;;;0;false;;;6007;false
+Cash;Restaurant, fast-food;PHP;-861.00;-861.00;Expenses;CASH;Cash;dim en wok;2025-08-21 13:53:15;;;;0;false;;;1001;false
+Cash;Toll;PHP;-760.00;-760.00;Expenses;CASH;Cash;;2025-08-21 11:14:24;;;;0;false;;;8006;false
+Cash;Groceries;PHP;-150.00;-150.00;Expenses;CASH;Cash;mercury;2025-08-20 20:14:19;;;;0;false;;;1000;false
+Cash;Parking;PHP;-50.00;-50.00;Expenses;CASH;Cash;;2025-08-20 20:14:12;;;;0;false;;;5001;false
+Cash;Health and beauty;PHP;-621.00;-621.00;Expenses;CASH;Cash;watsons;2025-08-20 19:18:08;;;;0;false;;;2002;false
+Cash;Pets, animals;PHP;-517.00;-517.00;Expenses;CASH;Cash;food;2025-08-20 18:33:10;;;;0;false;;;2005;false
+Cash;Restaurant, fast-food;PHP;-911.00;-911.00;Expenses;CASH;Cash;wings n things;2025-08-20 18:04:59;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-620.00;-620.00;Expenses;CASH;Cash;burger king;2025-08-19 17:33:52;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-08-19 16:27:58;;;;0;false;;;1000;false
+Cash;Sports + Active;PHP;-575.00;-575.00;Expenses;CASH;Cash;;2025-08-19 16:23:47;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-08-19 16:22:03;;;;0;false;;;4004;false
+Cash;Software, apps, games;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-08-19 12:00:00;;;;0;false;;;7003;false
+Cash;Software, apps, games;PHP;-279.00;-279.00;Expenses;CASH;Cash;;2025-08-19 12:00:00;;;;0;false;;;7003;false
+Cash;Software, apps, games;PHP;-1500.00;-1500.00;Expenses;CASH;Cash;ELSA speak;2025-08-19 10:36:24;;;;0;false;;;7003;false
+Cash;Groceries;PHP;-500.00;-500.00;Expenses;CASH;Cash;;2025-08-18 10:36:07;;;;0;false;;;1000;false
+Cash;Sports + Active;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-08-18 10:35:33;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-220.00;-220.00;Expenses;CASH;Cash;;2025-08-18 10:35:21;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-1435.00;-1435.00;Expenses;CASH;Cash;dohton bori;2025-08-17 13:42:57;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-200.00;-200.00;Expenses;CASH;Cash;mercury;2025-08-17 13:12:55;;;;0;false;;;1000;false
+Cash;Parking;PHP;-100.00;-100.00;Expenses;CASH;Cash;;2025-08-17 13:12:18;;;;0;false;;;5001;false
+Cash;Clothes & shoes;PHP;-1990.00;-1990.00;Expenses;CASH;Cash;hla;2025-08-17 12:59:30;;;;0;false;;;2000;false
+Cash;Clothes & shoes;PHP;-1992.00;-1992.00;Expenses;CASH;Cash;uniqlo;2025-08-17 12:57:50;;;;0;false;;;2000;false
+Cash;Clothes & shoes;PHP;-1640.00;-1640.00;Expenses;CASH;Cash;decathlon;2025-08-17 12:38:27;;;;0;false;;;2000;false
+Cash;Electronics, accessories;PHP;-3365.00;-3365.00;Expenses;CASH;Cash;;2025-08-16 12:00:00;;;;0;false;;;2006;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-08-16 08:50:01;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-08-16 08:49:52;;;;0;false;;;6003;false
+Cash;Phone, cell phone;PHP;-4330.00;-4330.00;Expenses;CASH;Cash;mommy phone;2025-08-15 14:30:34;;;;0;false;;;7001;false
+Cash;Sports + Active;PHP;-75.00;-75.00;Expenses;CASH;Cash;;2025-08-15 08:49:43;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-08-15 08:49:28;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-771.00;-771.00;Expenses;CASH;Cash;wings n things;2025-08-14 18:59:22;;;;0;false;;;1001;false
+Cash;Income;PHP;57232.00;57232.00;Income;CASH;Cash;;2025-08-14 10:33:28;;;;0;false;;;10011;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-08-13 00:15:11;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-370.00;-370.00;Expenses;CASH;Cash;;2025-08-13 00:15:04;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-600.00;-600.00;Expenses;CASH;Cash;jollibee;2025-08-12 16:50:36;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-200.00;-200.00;Expenses;CASH;Cash;mercury;2025-08-12 16:50:25;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-450.00;-450.00;Expenses;CASH;Cash;andoks;2025-08-12 14:25:44;;;;0;false;;;1001;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-08-11 19:46:54;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-839.00;-839.00;Expenses;CASH;Cash;ramen kuroda;2025-08-11 18:18:15;;;;0;false;;;1001;false
+Cash;Phone, cell phone;PHP;-800.00;-800.00;Expenses;CASH;Cash;tempered glass;2025-08-11 17:16:29;;;;0;false;;;7001;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-08-11 15:48:20;;;;0;false;;;5001;false
+Cash;Groceries;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-08-10 15:49:00;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-1775.00;-1775.00;Expenses;CASH;Cash;starbucks;2025-08-10 14:44:11;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-503.00;-503.00;Expenses;CASH;Cash;mcdo;2025-08-10 10:48:04;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-570.00;-570.00;Expenses;CASH;Cash;lugawan sa tejeros;2025-08-10 09:03:50;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-327.00;-327.00;Expenses;CASH;Cash;ice cream;2025-08-09 12:06:14;;;;0;false;;;1000;false
+Cash;Sports + Active;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-08-09 10:34:00;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-180.00;-180.00;Expenses;CASH;Cash;;2025-08-09 10:34:00;;;;0;false;;;4004;false
+Cash;Cinema;PHP;-1000.00;-1000.00;Expenses;CASH;Cash;cinema;2025-08-09 09:05:00;;;;0;false;;;6007;false
+Cash;Fuel;PHP;-2700.00;-2700.00;Expenses;CASH;Cash;;2025-08-09 09:04:00;;;;0;false;;;5000;false
+Cash;Transportation;PHP;-205.00;-205.00;Expenses;CASH;Cash;;2025-08-08 20:33:54;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-370.00;-370.00;Expenses;CASH;Cash;;2025-08-08 20:33:36;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-387.00;-387.00;Expenses;CASH;Cash;mcdo;2025-08-07 09:03:00;;;;0;false;;;1001;false
+Cash;Home, garden;PHP;-2850.00;-2850.00;Expenses;CASH;Cash;curtain;2025-08-07 05:36:03;;;;0;false;;;2004;false
+Cash;Groceries;PHP;-400.00;-400.00;Expenses;CASH;Cash;7 eleven;2025-08-06 05:26:00;;;;0;false;;;1000;false
+Cash;Transportation;PHP;-180.00;-180.00;Expenses;CASH;Cash;;2025-08-05 19:37:51;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-178.00;-178.00;Expenses;CASH;Cash;;2025-08-05 19:37:45;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-700.00;-700.00;Expenses;CASH;Cash;;2025-08-05 16:03:00;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-205.00;-205.00;Expenses;CASH;Cash;;2025-08-04 21:27:15;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-410.00;-410.00;Expenses;CASH;Cash;brisk n brew;2025-08-04 20:41:24;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-210.00;-210.00;Expenses;CASH;Cash;;2025-08-04 20:41:09;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-805.00;-805.00;Expenses;CASH;Cash;ramen kuroda;2025-08-03 18:27:59;;;;0;false;;;1001;false
+Cash;Bar, cafe;PHP;-200.00;-200.00;Expenses;CASH;Cash;fruitas;2025-08-03 17:33:43;;;;0;false;;;1002;false
+Cash;Parking;PHP;-80.00;-80.00;Expenses;CASH;Cash;;2025-08-03 17:33:17;;;;0;false;;;5001;false
+Cash;Phone, cell phone;PHP;-17752.00;-17752.00;Expenses;CASH;Cash;phone fix;2025-08-03 16:38:40;;;;0;false;;;7001;false
+Cash;Phone, cell phone;PHP;-12990.00;-12990.00;Expenses;CASH;Cash;alternative phone;2025-08-03 16:28:01;;;;0;false;;;7001;false
+Cash;Groceries;PHP;-103.00;-103.00;Expenses;CASH;Cash;mercury;2025-08-03 08:49:28;;;;0;false;;;1000;false
+Cash;Holiday, trips, hotels;PHP;-800.00;-800.00;Expenses;CASH;Cash;staycation;2025-08-02 23:47:23;;;;0;false;;;6009;false
+Cash;Transportation;PHP;-160.00;-160.00;Expenses;CASH;Cash;;2025-08-02 23:44:39;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-08-02 23:44:21;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-410.00;-410.00;Expenses;CASH;Cash;kfc;2025-08-01 14:17:41;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-192.00;-192.00;Expenses;CASH;Cash;;2025-07-31 19:00:00;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-404.00;-404.00;Expenses;CASH;Cash;mang inasal;2025-07-31 18:59:00;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-100.00;-100.00;Expenses;CASH;Cash;;2025-07-31 18:59:00;;;;0;false;;;4004;false
+Cash;Transportation;PHP;-100.00;-100.00;Expenses;CASH;Cash;;2025-07-30 21:14:01;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-332.00;-332.00;Expenses;CASH;Cash;noodle shop;2025-07-30 21:13:33;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-07-30 20:23:31;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-07-30 20:23:21;;;;0;false;;;6003;false
+Cash;Vehicle insurance;PHP;-31100.00;-31100.00;Expenses;CASH;Cash;;2025-07-30 12:00:00;;;;0;false;;;5010;false
+Cash;Restaurant, fast-food;PHP;-805.00;-805.00;Expenses;CASH;Cash;circuit bar;2025-07-29 22:46:28;;;;0;false;;;1001;false
+Cash;Income;PHP;52319.91;52319.91;Income;CASH;Cash;;2025-07-29 09:29:34;;;;0;false;;;10011;false
+Cash;Restaurant, fast-food;PHP;-440.00;-440.00;Expenses;CASH;Cash;marugame;2025-07-28 19:45:00;;;;0;false;;;1001;false
+Cash;Parking;PHP;-90.00;-90.00;Expenses;CASH;Cash;;2025-07-28 19:45:00;;;;0;false;;;5001;false
+Cash;Phone, cell phone;PHP;-350.00;-350.00;Expenses;CASH;Cash;phone checkup;2025-07-28 18:15:57;;;;0;false;;;7001;false
+Cash;Vehicle;PHP;-27439.00;-27439.00;Expenses;CASH;Cash;;2025-07-28 18:15:26;;;;0;false;;;5004;false
+Cash;Housing;PHP;-6000.00;-6000.00;Expenses;CASH;Cash;;2025-07-28 18:15:22;;;;0;false;;;3005;false
+Cash;Allowance;PHP;-5500.00;-5500.00;Expenses;CASH;Cash;;2025-07-28 18:15:16;;;;0;false;;;8007;false
+Cash;Internet;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;;2025-07-28 18:15:10;;;;0;false;;;7002;false
+Cash;Parking;PHP;-4500.00;-4500.00;Expenses;CASH;Cash;;2025-07-28 18:15:03;;;;0;false;;;5001;false
+Cash;Allowance;PHP;-1500.00;-1500.00;Expenses;CASH;Cash;;2025-07-28 18:14:54;;;;0;false;;;8007;false
+Cash;Wellness, beauty;PHP;-2400.00;-2400.00;Expenses;CASH;Cash;nuat thai;2025-07-27 19:45:00;;;;0;false;;;6001;false
+Cash;Bar, cafe;PHP;-218.00;-218.00;Expenses;CASH;Cash;pickup coffee;2025-07-27 19:45:00;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-912.00;-912.00;Expenses;CASH;Cash;wings n things;2025-07-27 19:45:00;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-2905.00;-2905.00;Expenses;CASH;Cash;balinsasayaw;2025-07-27 19:45:00;;;;0;false;;;1001;false
+Cash;Holiday, trips, hotels;PHP;-3000.00;-3000.00;Expenses;CASH;Cash;PH badminton team tagaytay;2025-07-27 19:05:03;;;;0;false;;;6009;false
+Cash;Restaurant, fast-food;PHP;-315.00;-315.00;Expenses;CASH;Cash;mcdo;2025-07-27 11:18:52;;;;0;false;;;1001;false
+Cash;Parking;PHP;-40.00;-40.00;Expenses;CASH;Cash;;2025-07-26 19:45:00;;;;0;false;;;5001;false
+Cash;Fuel;PHP;-2624.00;-2624.00;Expenses;CASH;Cash;;2025-07-25 22:44:00;;;;0;false;;;5000;false
+Cash;Toll;PHP;-613.00;-613.00;Expenses;CASH;Cash;toll;2025-07-25 12:11:59;;;;0;false;;;8006;false
+Cash;Software, apps, games;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-07-25 12:00:00;;;;0;false;;;7003;false
+Cash;Software, apps, games;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-07-25 12:00:00;;;;0;false;;;7003;false
+Cash;Phone, cell phone;PHP;-17500.00;-17500.00;Expenses;CASH;Cash;phone display fix;2025-07-24 22:36:54;;;;0;false;;;7001;false
+Cash;Restaurant, fast-food;PHP;-391.00;-391.00;Expenses;CASH;Cash;mcdo;2025-07-24 19:45:00;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-380.00;-380.00;Expenses;CASH;Cash;mercury;2025-07-23 19:45:00;;;;0;false;;;1000;false
+Cash;Drug-store, chemist;PHP;-91.00;-91.00;Expenses;CASH;Cash;mercury;2025-07-23 12:11:00;;;;0;false;;;2011;false
+Cash;Restaurant, fast-food;PHP;-391.00;-391.00;Expenses;CASH;Cash;mcdo;2025-07-23 12:09:00;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-580.00;-580.00;Expenses;CASH;Cash;;2025-07-23 05:53:18;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-550.00;-550.00;Expenses;CASH;Cash;mcdo;2025-07-21 22:53:00;;;;0;false;;;1001;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-07-20 22:52:00;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-95.00;-95.00;Expenses;CASH;Cash;mozza;2025-07-20 22:51:00;;;;0;false;;;1001;false
+Cash;Bar, cafe;PHP;-585.00;-585.00;Expenses;CASH;Cash;starbucks;2025-07-20 22:49:00;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-627.00;-627.00;Expenses;CASH;Cash;ramen kuroda;2025-07-20 22:49:00;;;;0;false;;;1001;false
+Cash;TV, Streaming;PHP;-860.00;-860.00;Expenses;CASH;Cash;cinema;2025-07-20 22:47:00;;;;0;false;;;6008;false
+Cash;Software, apps, games;PHP;-279.00;-279.00;Expenses;CASH;Cash;;2025-07-19 12:00:00;;;;0;false;;;7003;false
+Cash;Restaurant, fast-food;PHP;-649.00;-649.00;Expenses;CASH;Cash;ambers palabok;2025-07-18 12:02:58;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-875.00;-875.00;Expenses;CASH;Cash;string;2025-07-18 12:00:30;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-1548.00;-1548.00;Expenses;CASH;Cash;angels pizza;2025-07-18 11:59:49;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-964.00;-964.00;Expenses;CASH;Cash;jollibee;2025-07-18 11:56:16;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-585.00;-585.00;Expenses;CASH;Cash;starbucks;2025-07-17 10:29:34;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-2042.00;-2042.00;Expenses;CASH;Cash;dampa;2025-07-17 10:29:23;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-140.00;-140.00;Expenses;CASH;Cash;resort breakfast;2025-07-17 10:28:52;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-357.00;-357.00;Expenses;CASH;Cash;waltermart;2025-07-16 12:28:21;;;;0;false;;;1000;false
+Cash;Electronics, accessories;PHP;-3365.00;-3365.00;Expenses;CASH;Cash;;2025-07-16 12:00:00;;;;0;false;;;2006;false
+Cash;Bar, cafe;PHP;-585.00;-585.00;Expenses;CASH;Cash;starbucks;2025-07-16 10:48:36;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-380.00;-380.00;Expenses;CASH;Cash;dinner resort;2025-07-16 10:28:53;;;;0;false;;;1001;false
+Cash;Parking;PHP;-40.00;-40.00;Expenses;CASH;Cash;;2025-07-16 10:27:57;;;;0;false;;;5001;false
+Cash;Drug-store, chemist;PHP;-427.00;-427.00;Expenses;CASH;Cash;condom;2025-07-16 10:27:02;;;;0;false;;;2011;false
+Cash;Holiday, trips, hotels;PHP;-250.00;-250.00;Expenses;CASH;Cash;crosswinds;2025-07-16 09:31:17;;;;0;false;;;6009;false
+Cash;Fuel;PHP;-2382.00;-2382.00;Expenses;CASH;Cash;;2025-07-16 09:30:58;;;;0;false;;;5000;false
+Cash;Food & Drinks;PHP;-1360.00;-1360.00;Expenses;CASH;Cash;coffee project;2025-07-16 09:23:48;;;;0;false;;;1003;false
+Cash;Toll;PHP;-963.00;-963.00;Expenses;CASH;Cash;toll;2025-07-16 06:43:18;;;;0;false;;;8006;false
+Cash;Transportation;PHP;-151.00;-151.00;Expenses;CASH;Cash;;2025-07-15 22:37:42;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-340.00;-340.00;Expenses;CASH;Cash;team blue;2025-07-15 20:56:24;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-138.00;-138.00;Expenses;CASH;Cash;;2025-07-15 06:40:25;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-660.00;-660.00;Expenses;CASH;Cash;;2025-07-14 23:18:11;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-450.00;-450.00;Expenses;CASH;Cash;mang inasal;2025-07-14 23:14:29;;;;0;false;;;1001;false
+Cash;Income;PHP;59107.42;59107.42;Income;CASH;Cash;;2025-07-14 09:19:21;;;;0;false;;;10011;false
+Cash;Sports + Active;PHP;-688.00;-688.00;Expenses;CASH;Cash;decathlon;2025-07-13 23:19:52;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-190.00;-190.00;Expenses;CASH;Cash;turks;2025-07-13 22:19:47;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-260.00;-260.00;Expenses;CASH;Cash;mercury;2025-07-13 19:24:33;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-407.00;-407.00;Expenses;CASH;Cash;24 chicken;2025-07-13 18:15:38;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-95.00;-95.00;Expenses;CASH;Cash;towel grip;2025-07-13 15:57:28;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-275.00;-275.00;Expenses;CASH;Cash;butterboy;2025-07-13 15:41:47;;;;0;false;;;1001;false
+Cash;Bar, cafe;PHP;-70.00;-70.00;Expenses;CASH;Cash;lemon;2025-07-13 15:38:27;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-1680.00;-1680.00;Expenses;CASH;Cash;decathlon;2025-07-13 15:37:42;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-355.00;-355.00;Expenses;CASH;Cash;;2025-07-13 08:15:28;;;;0;false;;;6003;false
+Cash;Vehicle maintenance;PHP;-300.00;-300.00;Expenses;CASH;Cash;car wash;2025-07-12 14:30:18;;;;0;false;;;5002;false
+Cash;Restaurant, fast-food;PHP;-368.00;-368.00;Expenses;CASH;Cash;llaollao;2025-07-12 14:29:52;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-625.00;-625.00;Expenses;CASH;Cash;marugame;2025-07-12 14:29:36;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-143.00;-143.00;Expenses;CASH;Cash;;2025-07-12 13:46:20;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-330.00;-330.00;Expenses;CASH;Cash;;2025-07-12 10:51:08;;;;0;false;;;6003;false
+Cash;Groceries;PHP;-202.00;-202.00;Expenses;CASH;Cash;mercury;2025-07-11 20:11:19;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-1300.00;-1300.00;Expenses;CASH;Cash;samgyupsalamat;2025-07-11 13:48:40;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-463.00;-463.00;Expenses;CASH;Cash;jollibee;2025-07-10 17:57:56;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-272.00;-272.00;Expenses;CASH;Cash;DQ;2025-07-09 21:07:33;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-490.00;-490.00;Expenses;CASH;Cash;mang inasal;2025-07-09 21:07:20;;;;0;false;;;1001;false
+Cash;Bar, cafe;PHP;-80.00;-80.00;Expenses;CASH;Cash;;2025-07-09 16:29:37;;;;0;false;;;1002;false
+Cash;Transportation;PHP;-80.00;-80.00;Expenses;CASH;Cash;;2025-07-09 16:28:47;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-113.00;-113.00;Expenses;CASH;Cash;;2025-07-08 20:13:25;;;;0;false;;;6003;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-07-08 20:12:51;;;;0;false;;;5001;false
+Cash;Groceries;PHP;-226.00;-226.00;Expenses;CASH;Cash;mercury;2025-07-07 21:06:57;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-307.00;-307.00;Expenses;CASH;Cash;mcdo;2025-07-07 11:18:46;;;;0;false;;;1001;false
+Cash;Phone, cell phone;PHP;-100.00;-100.00;Expenses;CASH;Cash;eSim;2025-07-06 23:24:52;;;;0;false;;;7001;false
+Cash;Restaurant, fast-food;PHP;-879.00;-879.00;Expenses;CASH;Cash;peri peri;2025-07-06 17:47:35;;;;0;false;;;1001;false
+Cash;Vehicle maintenance;PHP;-620.00;-620.00;Expenses;CASH;Cash;car scent;2025-07-06 16:16:49;;;;0;false;;;5002;false
+Cash;Transportation;PHP;-151.00;-151.00;Expenses;CASH;Cash;;2025-07-05 21:05:58;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-627.00;-627.00;Expenses;CASH;Cash;ramen kuroda;2025-07-05 19:09:09;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-260.00;-260.00;Expenses;CASH;Cash;towel grip;2025-07-05 19:06:46;;;;0;false;;;6003;false
+Cash;Groceries;PHP;-220.00;-220.00;Expenses;CASH;Cash;egg tart;2025-07-05 19:06:20;;;;0;false;;;1000;false
+Cash;Sports + Active;PHP;-330.00;-330.00;Expenses;CASH;Cash;;2025-07-05 19:06:08;;;;0;false;;;6003;false
+Cash;Holiday, trips, hotels;PHP;-1077.00;-1077.00;Expenses;CASH;Cash;PH badminton team tagaytay;2025-07-05 18:36:08;;;;0;false;;;6009;false
+Cash;Restaurant, fast-food;PHP;-510.00;-510.00;Expenses;CASH;Cash;yi fang;2025-07-04 20:35:30;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-450.00;-450.00;Expenses;CASH;Cash;chooks to go;2025-07-04 16:54:00;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-600.00;-600.00;Expenses;CASH;Cash;7 eleven;2025-07-03 16:46:05;;;;0;false;;;1000;false
+Cash;Parking;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-07-03 16:45:56;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-531.00;-531.00;Expenses;CASH;Cash;jollibee;2025-07-02 20:24:49;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-60.00;-60.00;Expenses;CASH;Cash;badminton drink;2025-07-02 19:59:22;;;;0;false;;;1000;false
+Cash;Sports + Active;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-07-02 19:59:08;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-205.00;-205.00;Expenses;CASH;Cash;;2025-07-02 19:58:55;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-600.00;-600.00;Expenses;CASH;Cash;mcdo;2025-07-01 23:50:12;;;;0;false;;;1001;false
+Cash;Parking;PHP;-60.00;-60.00;Expenses;CASH;Cash;;2025-07-01 23:50:02;;;;0;false;;;5001;false
+Cash;Sports + Active;PHP;-95.00;-95.00;Expenses;CASH;Cash;towel grip;2025-07-01 23:49:37;;;;0;false;;;6003;false
+Cash;Groceries;PHP;-550.00;-550.00;Expenses;CASH;Cash;snacks;2025-06-30 21:10:15;;;;0;false;;;1000;false
+Cash;Sports + Active;PHP;-310.00;-310.00;Expenses;CASH;Cash;;2025-06-30 21:09:26;;;;0;false;;;6003;false
+Cash;Clothes & shoes;PHP;-1240.00;-1240.00;Expenses;CASH;Cash;decathlon;2025-06-29 21:09:11;;;;0;false;;;2000;false
+Cash;Clothes & shoes;PHP;-10704.00;-10704.00;Expenses;CASH;Cash;yonex shoes;2025-06-29 21:07:40;;;;0;false;;;2000;false
+Cash;Parking;PHP;-220.00;-220.00;Expenses;CASH;Cash;;2025-06-29 21:06:21;;;;0;false;;;5001;false
+Cash;Restaurant, fast-food;PHP;-835.00;-835.00;Expenses;CASH;Cash;yellow cab;2025-06-29 21:05:53;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-198.00;-198.00;Expenses;CASH;Cash;potato corner;2025-06-29 21:05:32;;;;0;false;;;1001;false
+Cash;Fuel;PHP;-2640.00;-2640.00;Expenses;CASH;Cash;;2025-06-29 13:46:44;;;;0;false;;;5000;false
+Cash;Restaurant, fast-food;PHP;-300.00;-300.00;Expenses;CASH;Cash;chooks to go;2025-06-29 08:26:15;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-330.00;-330.00;Expenses;CASH;Cash;;2025-06-28 17:14:05;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-151.00;-151.00;Expenses;CASH;Cash;;2025-06-28 17:13:49;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-190.00;-190.00;Expenses;CASH;Cash;Ritas;2025-06-28 13:55:21;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-1300.00;-1300.00;Expenses;CASH;Cash;samgyupsalamat;2025-06-28 13:54:58;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-500.00;-500.00;Expenses;CASH;Cash;snacks and angels burger;2025-06-27 20:46:11;;;;0;false;;;1001;false
+Cash;Allowance;PHP;-5500.00;-5500.00;Expenses;CASH;Cash;;2025-06-27 12:00:00;;;;0;false;;;8007;false
+Cash;Vehicle;PHP;-27439.00;-27439.00;Expenses;CASH;Cash;;2025-06-27 12:00:00;;;;0;false;;;5004;false
+Cash;Parking;PHP;-4500.00;-4500.00;Expenses;CASH;Cash;;2025-06-27 12:00:00;;;;0;false;;;5001;false
+Cash;Internet;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;;2025-06-27 12:00:00;;;;0;false;;;7002;false
+Cash;Allowance;PHP;-1500.00;-1500.00;Expenses;CASH;Cash;;2025-06-27 12:00:00;;;;0;false;;;8007;false
+Cash;Housing;PHP;-6000.00;-6000.00;Expenses;CASH;Cash;;2025-06-27 12:00:00;;;;0;false;;;3005;false
+Cash;Income;PHP;50444.00;50444.00;Income;CASH;Cash;;2025-06-27 10:53:33;;;;0;false;;;10011;false
+Cash;Restaurant, fast-food;PHP;-479.00;-479.00;Expenses;CASH;Cash;mang inasal;2025-06-26 13:24:00;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-100.00;-100.00;Expenses;CASH;Cash;water;2025-06-26 10:51:27;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-166.00;-166.00;Expenses;CASH;Cash;;2025-06-25 22:29:22;;;;0;false;;;4004;false
+Cash;Software, apps, games;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-06-25 12:00:00;;;;0;false;;;7003;false
+Cash;Software, apps, games;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-06-25 12:00:00;;;;0;false;;;7003;false
+Cash;Vehicle maintenance;PHP;-6000.00;-6000.00;Expenses;CASH;Cash;Parking incident;2025-06-25 11:09:29;;;;0;false;;;5002;false
+Cash;Groceries;PHP;-238.25;-238.25;Expenses;CASH;Cash;no brand;2025-06-24 11:37:33;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-390.00;-390.00;Expenses;CASH;Cash;marugame;2025-06-24 11:37:10;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-3007.00;-3007.00;Expenses;CASH;Cash;;2025-06-23 11:41:06;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-248.00;-248.00;Expenses;CASH;Cash;greenwich;2025-06-23 11:35:39;;;;0;false;;;1001;false
+Cash;Bar, cafe;PHP;-425.00;-425.00;Expenses;CASH;Cash;starbucks;2025-06-22 17:07:13;;;;0;false;;;1002;false
+Cash;Vehicle;PHP;-213.00;-213.00;Expenses;CASH;Cash;autosweep;2025-06-22 15:16:58;;;;0;false;;;5004;false
+Cash;Groceries;PHP;-201.00;-201.00;Expenses;CASH;Cash;;2025-06-22 12:39:15;;;;0;false;;;1000;false
+Cash;Restaurant, fast-food;PHP;-762.00;-762.00;Expenses;CASH;Cash;mang inasal with family;2025-06-22 04:06:37;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-539.00;-539.00;Expenses;CASH;Cash;from/to sogo;2025-06-21 23:07:41;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-330.00;-330.00;Expenses;CASH;Cash;;2025-06-21 13:50:01;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-06-21 13:49:52;;;;0;false;;;4004;false
+Cash;Bar, cafe;PHP;-200.00;-200.00;Expenses;CASH;Cash;fruitas;2025-06-21 13:49:26;;;;0;false;;;1002;false
+Cash;TV, Streaming;PHP;-840.00;-840.00;Expenses;CASH;Cash;28 years later;2025-06-21 10:00:00;;;;0;false;;;6008;false
+Cash;Restaurant, fast-food;PHP;-731.00;-731.00;Expenses;CASH;Cash;ramen kuroda;2025-06-21 10:00:00;;;;0;false;;;1001;false
+Cash;Holiday, trips, hotels;PHP;-835.00;-835.00;Expenses;CASH;Cash;sogo;2025-06-21 10:00:00;;;;0;false;;;6009;false
+Cash;Health and beauty;PHP;-511.00;-511.00;Expenses;CASH;Cash;watsons;2025-06-21 10:00:00;;;;0;false;;;2002;false
+Cash;Restaurant, fast-food;PHP;-336.00;-336.00;Expenses;CASH;Cash;mcdo;2025-06-21 10:00:00;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-330.00;-330.00;Expenses;CASH;Cash;;2025-06-20 21:43:44;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-321.00;-321.00;Expenses;CASH;Cash;mcdo;2025-06-20 21:27:14;;;;0;false;;;1001;false
+Cash;Food & Drinks;PHP;-100.00;-100.00;Expenses;CASH;Cash;brownies;2025-06-20 21:23:48;;;;0;false;;;1003;false
+Cash;Health and beauty;PHP;-495.00;-495.00;Expenses;CASH;Cash;rachelle lipstick;2025-06-20 21:23:13;;;;0;false;;;2002;false
+Cash;Food & Drinks;PHP;-239.00;-239.00;Expenses;CASH;Cash;llaollao;2025-06-20 21:22:46;;;;0;false;;;1003;false
+Cash;Health and beauty;PHP;-900.00;-900.00;Expenses;CASH;Cash;rachelle lipstick;2025-06-20 21:22:38;;;;0;false;;;2002;false
+Cash;Food & Drinks;PHP;-699.00;-699.00;Expenses;CASH;Cash;peri peri;2025-06-20 21:22:21;;;;0;false;;;1003;false
+Cash;TV, Streaming;PHP;-300.00;-300.00;Expenses;CASH;Cash;netflix;2025-06-19 21:46:30;;;;0;false;;;6008;false
+Cash;Restaurant, fast-food;PHP;-626.00;-626.00;Expenses;CASH;Cash;jiang nan;2025-06-19 21:28:25;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-172.00;-172.00;Expenses;CASH;Cash;;2025-06-19 21:28:00;;;;0;false;;;6003;false
+Cash;Software, apps, games;PHP;-279.00;-279.00;Expenses;CASH;Cash;;2025-06-19 12:00:00;;;;0;false;;;7003;false
+Cash;Restaurant, fast-food;PHP;-230.00;-230.00;Expenses;CASH;Cash;7 eleven;2025-06-18 21:47:39;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-300.00;-300.00;Expenses;CASH;Cash;mcdo;2025-06-18 21:26:51;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-677.00;-677.00;Expenses;CASH;Cash;zark;2025-06-17 21:26:20;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-273.00;-273.00;Expenses;CASH;Cash;;2025-06-17 21:24:56;;;;0;false;;;6003;false
+Cash;Life events;PHP;-2500.00;-2500.00;Expenses;CASH;Cash;nanay birthday;2025-06-16 20:31:02;;;;0;false;;;6004;false
+Cash;Phone, cell phone;PHP;-3364.00;-3364.00;Expenses;CASH;Cash;;2025-06-16 20:30:39;;;;0;false;;;7001;false
+Cash;Vehicle maintenance;PHP;-4384.00;-4384.00;Expenses;CASH;Cash;battery;2025-06-16 20:30:02;;;;0;false;;;5002;false
+Cash;Food & Drinks;PHP;-1462.00;-1462.00;Expenses;CASH;Cash;;2025-06-16 09:09:34;;;;0;false;;;1003;false
+Cash;Fuel;PHP;-2215.00;-2215.00;Expenses;CASH;Cash;;2025-06-14 23:55:48;;;;0;false;;;5000;false
+Cash;Taxi;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-06-14 23:53:05;;;;0;false;;;4001;false
+Cash;Wellness, beauty;PHP;-2200.00;-2200.00;Expenses;CASH;Cash;;2025-06-14 23:45:00;;;;0;false;;;6001;false
+Cash;Sports + Active;PHP;-190.00;-190.00;Expenses;CASH;Cash;;2025-06-14 16:29:29;;;;0;false;;;6003;false
+Cash;Sports + Active;PHP;-345.00;-345.00;Expenses;CASH;Cash;;2025-06-13 20:55:26;;;;0;false;;;6003;false
+Cash;Income;PHP;61790.00;61790.00;Income;CASH;Cash;;2025-06-13 13:18:24;;;;0;false;;;10011;false
+Cash;Wellness, beauty;PHP;-1600.00;-1600.00;Expenses;CASH;Cash;nuat thai;2025-06-12 13:17:08;;;;0;false;;;6001;false
+Cash;Transportation;PHP;-349.00;-349.00;Expenses;CASH;Cash;Rachelle to MyTown LA;2025-06-12 13:11:37;;;;0;false;;;4004;false
+Cash;Groceries;PHP;-1018.00;-1018.00;Expenses;CASH;Cash;7 eleven;2025-06-11 23:16:41;;;;0;false;;;1000;false
+Cash;Active sport, fitness;PHP;1756.00;1756.00;Income;CASH;Cash;refund;2025-06-11 17:30:00;;;;0;false;;;6002;false
+Cash;Restaurant, fast-food;PHP;-738.00;-738.00;Expenses;CASH;Cash;mang inasal with family;2025-06-11 17:30:00;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-380.00;-380.00;Expenses;CASH;Cash;SM Makati to Rachelle House;2025-06-11 13:09:49;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-288.00;-288.00;Expenses;CASH;Cash;;2025-06-10 17:15:00;;;;0;false;;;6003;false
+Cash;Sports + Active;PHP;-161.00;-161.00;Expenses;CASH;Cash;;2025-06-10 17:15:00;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-399.00;-399.00;Expenses;CASH;Cash;;2025-06-09 17:30:00;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-85.00;-85.00;Expenses;CASH;Cash;court sharing;2025-06-09 17:15:00;;;;0;false;;;6003;false
+Cash;Food & Drinks;PHP;-250.00;-250.00;Expenses;CASH;Cash;angels burger;2025-06-09 17:15:00;;;;0;false;;;1003;false
+Cash;Food & Drinks;PHP;-264.75;-264.75;Expenses;CASH;Cash;;2025-06-08 17:30:00;;;;0;false;;;1003;false
+Cash;Restaurant, fast-food;PHP;-2057.00;-2057.00;Expenses;CASH;Cash;;2025-06-08 17:30:00;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-340.00;-340.00;Expenses;CASH;Cash;;2025-06-07 22:51:28;;;;0;false;;;6003;false
+Cash;Pets, animals;PHP;-430.00;-430.00;Expenses;CASH;Cash;coco shampoo;2025-06-07 10:01:51;;;;0;false;;;2005;false
+Cash;Food & Drinks;PHP;-239.00;-239.00;Expenses;CASH;Cash;llaollao;2025-06-07 09:59:33;;;;0;false;;;1003;false
+Cash;Wellness, beauty;PHP;-600.00;-600.00;Expenses;CASH;Cash;haircut;2025-06-06 10:01:27;;;;0;false;;;6001;false
+Cash;Food & Drinks;PHP;-109.00;-109.00;Expenses;CASH;Cash;lawson;2025-06-06 10:01:14;;;;0;false;;;1003;false
+Cash;Food & Drinks;PHP;-260.00;-260.00;Expenses;CASH;Cash;turks;2025-06-06 10:00:56;;;;0;false;;;1003;false
+Cash;Wellness, beauty;PHP;-2350.00;-2350.00;Expenses;CASH;Cash;nuat thai;2025-06-06 10:00:14;;;;0;false;;;6001;false
+Cash;Parking;PHP;-50.00;-50.00;Expenses;CASH;Cash;parking;2025-06-06 09:59:49;;;;0;false;;;5001;false
+Cash;Food & Drinks;PHP;-194.00;-194.00;Expenses;CASH;Cash;pickup coffee;2025-06-06 09:59:06;;;;0;false;;;1003;false
+Cash;Food & Drinks;PHP;-228.00;-228.00;Expenses;CASH;Cash;;2025-06-05 17:30:00;;;;0;false;;;1003;false
+Cash;Sports + Active;PHP;531.00;531.00;Income;CASH;Cash;refund;2025-06-05 10:42:36;;;;0;false;;;6003;false
+Cash;Sports + Active;PHP;531.00;531.00;Income;CASH;Cash;refund;2025-06-05 08:44:23;;;;0;false;;;6003;false
+Cash;Sports + Active;PHP;-120.00;-120.00;Expenses;CASH;Cash;;2025-06-04 20:12:44;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-200.00;-200.00;Expenses;CASH;Cash;;2025-06-04 20:11:54;;;;0;false;;;4004;false
+Cash;Sports + Active;PHP;-5000.00;-5000.00;Expenses;CASH;Cash;coach nadal;2025-06-04 20:11:51;;;;0;false;;;6003;false
+Cash;Sports + Active;PHP;-1250.00;-1250.00;Expenses;CASH;Cash;shirt tournament;2025-06-04 20:10:49;;;;0;false;;;6003;false
+Cash;Bar, cafe;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-06-03 20:29:27;;;;0;false;;;1002;false
+Cash;Bar, cafe;PHP;-425.00;-425.00;Expenses;CASH;Cash;;2025-06-03 20:29:15;;;;0;false;;;1002;false
+Cash;Restaurant, fast-food;PHP;-2422.00;-2422.00;Expenses;CASH;Cash;;2025-06-03 20:27:24;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-647.00;-647.00;Expenses;CASH;Cash;kuroda;2025-06-03 20:26:52;;;;0;false;;;1001;false
+Cash;Allowance;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;For Rachelle bebe;2025-06-03 10:13:42;;;;0;false;;;8007;false
+Cash;Restaurant, fast-food;PHP;-650.00;-650.00;Expenses;CASH;Cash;711, Angels Burger;2025-06-03 10:08:36;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-379.00;-379.00;Expenses;CASH;Cash;;2025-06-01 09:18:26;;;;0;false;;;1001;false
+Cash;Shopping;PHP;-568.00;-568.00;Expenses;CASH;Cash;;2025-06-01 09:17:21;;;;0;false;;;2010;false
+Cash;Fuel;PHP;-2404.00;-2404.00;Expenses;CASH;Cash;;2025-06-01 09:17:17;;;;0;false;;;5000;false
+Cash;Clothes & shoes;PHP;-760.00;-760.00;Expenses;CASH;Cash;;2025-06-01 09:17:12;;;;0;false;;;2000;false
+Cash;Restaurant, fast-food;PHP;-1191.67;-1191.67;Expenses;CASH;Cash;;2025-06-01 09:16:06;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-102.00;-102.00;Expenses;CASH;Cash;;2025-05-31 15:07:01;;;;0;false;;;1000;false
+Cash;Sports + Active;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-05-31 15:06:49;;;;0;false;;;6003;false
+Cash;Housing;PHP;-4500.00;-4500.00;Expenses;CASH;Cash;;2025-05-30 21:26:38;;;;0;false;;;3005;false
+Cash;Food & Drinks;PHP;-250.00;-250.00;Expenses;CASH;Cash;;2025-05-30 21:24:26;;;;0;false;;;1003;false
+Cash;Wellness, beauty;PHP;-2400.00;-2400.00;Expenses;CASH;Cash;;2025-05-30 21:23:46;;;;0;false;;;6001;false
+Cash;Restaurant, fast-food;PHP;-305.00;-305.00;Expenses;CASH;Cash;;2025-05-30 21:22:57;;;;0;false;;;1001;false
+Cash;Groceries;PHP;-310.75;-310.75;Expenses;CASH;Cash;;2025-05-29 20:24:10;;;;0;false;;;1000;false
+Cash;Sports + Active;PHP;-644.00;-644.00;Expenses;CASH;Cash;;2025-05-29 20:19:01;;;;0;false;;;6003;false
+Cash;Restaurant, fast-food;PHP;-527.00;-527.00;Expenses;CASH;Cash;;2025-05-29 20:18:47;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-148.00;-148.00;Expenses;CASH;Cash;;2025-05-29 12:13:53;;;;0;false;;;4004;false
+Cash;Income;PHP;53992.00;53992.00;Income;CASH;Cash;;2025-05-29 10:15:24;;;;0;false;;;10011;false
+Cash;Taxi;PHP;-180.00;-180.00;Expenses;CASH;Cash;;2025-05-28 21:28:25;;;;0;false;;;4001;false
+Cash;Restaurant, fast-food;PHP;-1478.00;-1478.00;Expenses;CASH;Cash;;2025-05-28 20:56:28;;;;0;false;;;1001;false
+Cash;Transportation;PHP;-263.00;-263.00;Expenses;CASH;Cash;;2025-05-28 12:13:30;;;;0;false;;;4004;false
+Cash;Internet;PHP;-600.00;-600.00;Expenses;CASH;Cash;;2025-05-28 12:12:48;;;;0;false;;;7002;false
+Cash;Sports + Active;PHP;-1600.00;-1600.00;Expenses;CASH;Cash;;2025-05-28 10:54:45;;;;0;false;;;6003;false
+Cash;Charges, Fees;PHP;-30005.00;-30005.00;Expenses;CASH;Cash;;2025-05-28 09:55:37;;;;0;false;;;8005;false
+Cash;Parking;PHP;-4500.00;-4500.00;Expenses;CASH;Cash;;2025-05-28 09:54:59;;;;0;false;;;5001;false
+Cash;Housing;PHP;-6000.00;-6000.00;Expenses;CASH;Cash;;2025-05-28 09:54:38;;;;0;false;;;3005;false
+Cash;Housing;PHP;-5500.00;-5500.00;Expenses;CASH;Cash;;2025-05-28 09:53:38;;;;0;false;;;3005;false
+Cash;Income;PHP;104312.00;104312.00;Income;CASH;Cash;;2025-05-28 09:09:42;;;;0;false;;;10011;false
+Cash;Food & Drinks;PHP;-1000.00;-1000.00;Expenses;CASH;Cash;;2025-05-27 21:08:28;;;;0;false;;;1003;false
+Cash;Transportation;PHP;-166.00;-166.00;Expenses;CASH;Cash;;2025-05-27 12:12:27;;;;0;false;;;4004;false
+Cash;Income;PHP;100000.00;100000.00;Income;CASH;Cash;;2025-05-27 09:51:25;;;;0;false;;;10011;false
+Cash;Lending, renting;PHP;3000.00;3000.00;Income;CASH;Cash;;2025-05-27 09:50:39;;;;0;false;;;10005;false
+Cash;Sports + Active;PHP;-1600.00;-1600.00;Expenses;CASH;Cash;;2025-05-27 09:08:10;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-155.00;-155.00;Expenses;CASH;Cash;;2025-05-26 12:11:54;;;;0;false;;;4004;false
+Cash;Shopping;PHP;-202.00;-202.00;Expenses;CASH;Cash;mercury;2025-05-26 11:43:37;;;;0;false;;;2010;false
+Cash;Vehicle;PHP;-27439.00;-27439.00;Expenses;CASH;Cash;;2025-05-26 09:49:50;;;;0;false;;;5004;false
+Cash;Financial expenses;PHP;-4175.00;-4175.00;Expenses;CASH;Cash;;2025-05-26 09:49:26;;;;0;false;;;8008;false
+Cash;Transportation;PHP;-114.00;-114.00;Expenses;CASH;Cash;;2025-05-25 12:11:35;;;;0;false;;;4004;false
+Cash;Software, apps, games;PHP;-150.00;-150.00;Expenses;CASH;Cash;spotify;2025-05-25 12:10:57;;;;0;false;;;7003;false
+Cash;Food & Drinks;PHP;-438.00;-438.00;Expenses;CASH;Cash;;2025-05-25 12:10:15;;;;0;false;;;1003;false
+Cash;Transportation;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-05-24 12:06:33;;;;0;false;;;4004;false
+Cash;Bar, cafe;PHP;-425.00;-425.00;Expenses;CASH;Cash;starbucks;2025-05-24 11:42:56;;;;0;false;;;1002;false
+Cash;TV, Streaming;PHP;-840.00;-840.00;Expenses;CASH;Cash;cinema;2025-05-24 11:41:35;;;;0;false;;;6008;false
+Cash;Restaurant, fast-food;PHP;-1164.00;-1164.00;Expenses;CASH;Cash;nonos;2025-05-24 11:41:10;;;;0;false;;;1001;false
+Cash;Restaurant, fast-food;PHP;-1460.00;-1460.00;Expenses;CASH;Cash;jiang nan;2025-05-23 11:40:21;;;;0;false;;;1001;false
+Cash;Active sport, fitness;PHP;-5580.00;-5580.00;Expenses;CASH;Cash;new racket;2025-05-23 11:39:46;;;;0;false;;;6002;false
+Cash;Sports + Active;PHP;-800.00;-800.00;Expenses;CASH;Cash;;2025-05-23 09:49:04;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-169.00;-169.00;Expenses;CASH;Cash;;2025-05-22 12:05:46;;;;0;false;;;4004;false
+Cash;Food & Drinks;PHP;-1023.00;-1023.00;Expenses;CASH;Cash;;2025-05-22 12:05:10;;;;0;false;;;1003;false
+Cash;Restaurant, fast-food;PHP;-287.00;-287.00;Expenses;CASH;Cash;;2025-05-22 11:39:15;;;;0;false;;;1001;false
+Cash;Sports + Active;PHP;-644.00;-644.00;Expenses;CASH;Cash;;2025-05-22 09:47:24;;;;0;false;;;6003;false
+Cash;Transportation;PHP;-340.00;-340.00;Expenses;CASH;Cash;;2025-05-21 12:02:20;;;;0;false;;;4004;false
+Cash;Transportation;PHP;-166.00;-166.00;Expenses;CASH;Cash;;2025-05-21 12:02:19;;;;0;false;;;4004;false
+Cash;Restaurant, fast-food;PHP;-634.00;-634.00;Expenses;CASH;Cash;burger king;2025-05-21 11:37:53;;;;0;false;;;1001;false
+Cash;Drug-store, chemist;PHP;-373.00;-373.00;Expenses;CASH;Cash;watson;2025-05-21 11:37:26;;;;0;false;;;2011;false
+Cash;Transportation;PHP;-166.00;-166.00;Expenses;CASH;Cash;;2025-05-20 11:59:42;;;;0;false;;;4004;false
+Cash;TV, Streaming;PHP;-251.00;-251.00;Expenses;CASH;Cash;netflix;2025-05-19 11:58:19;;;;0;false;;;6008;false
+Cash;Restaurant, fast-food;PHP;-902.00;-902.00;Expenses;CASH;Cash;grabfood;2025-05-19 11:55:01;;;;0;false;;;1001;false
+Cash;Bar, cafe;PHP;-195.00;-195.00;Expenses;CASH;Cash;breadtalk;2025-05-19 11:36:30;;;;0;false;;;1002;false
+Cash;Bar, cafe;PHP;-438.00;-438.00;Expenses;CASH;Cash;llaollao;2025-05-19 11:35:31;;;;0;false;;;1002;false
+Cash;Life & Entertainment;PHP;-1400.00;-1400.00;Expenses;CASH;Cash;;2025-05-19 09:46:27;;;;0;false;;;6013;false
+Cash;Financial expenses;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;;2025-05-19 09:32:52;;;;0;false;;;8008;false
+Cash;Software, apps, games;PHP;-120.00;-120.00;Expenses;CASH;Cash;google storage;2025-05-18 11:48:43;;;;0;false;;;7003;false
+Cash;Public transport;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-05-17 11:48:18;;;;0;false;;;4000;false
+Cash;Vehicle;PHP;-249.00;-249.00;Expenses;CASH;Cash;blade asia wiper fluid;2025-05-17 11:34:17;;;;0;false;;;5004;false
+Cash;Restaurant, fast-food;PHP;-838.00;-838.00;Expenses;CASH;Cash;kuroda;2025-05-17 11:32:56;;;;0;false;;;1001;false
+Cash;Clothes & shoes;PHP;-830.00;-830.00;Expenses;CASH;Cash;;2025-05-17 11:31:34;;;;0;false;;;2000;false
+Cash;Clothes & shoes;PHP;-990.00;-990.00;Expenses;CASH;Cash;decathlon;2025-05-17 11:30:47;;;;0;false;;;2000;false
+Cash;Shopping;PHP;-82.75;-82.75;Expenses;CASH;Cash;mercury;2025-05-16 11:30:09;;;;0;false;;;2010;false
+Cash;Fuel;PHP;-2608.00;-2608.00;Expenses;CASH;Cash;;2025-05-16 11:29:34;;;;0;false;;;5000;false
+Cash;Financial expenses;PHP;-3000.00;-3000.00;Expenses;CASH;Cash;;2025-05-16 09:32:35;;;;0;false;;;8008;false
+Cash;Bar, cafe;PHP;-235.00;-235.00;Expenses;CASH;Cash;;2025-05-15 11:27:26;;;;0;false;;;1002;false
+Cash;Allowance;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;;2025-05-15 09:30:15;;;;0;false;;;8007;false
+Cash;Sports + Active;PHP;-356.00;-356.00;Expenses;CASH;Cash;;2025-05-14 09:29:00;;;;0;false;;;6003;false
+Cash;Income;PHP;51405.00;51405.00;Income;CASH;Cash;;2025-05-14 09:24:56;;;;0;false;;;10011;false
+Cash;Bar, cafe;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-05-13 09:24:31;;;;0;false;;;1002;false
+Cash;Financial expenses;PHP;-5000.00;-5000.00;Expenses;CASH;Cash;;2025-05-12 09:24:03;;;;0;false;;;8008;false
+Cash;Financial expenses;PHP;-5000.00;-5000.00;Expenses;CASH;Cash;;2025-05-09 09:23:46;;;;0;false;;;8008;false
+Cash;Financial expenses;PHP;-3400.00;-3400.00;Expenses;CASH;Cash;;2025-05-08 09:23:17;;;;0;false;;;8008;false
+Cash;Financial expenses;PHP;-4500.00;-4500.00;Expenses;CASH;Cash;;2025-05-05 09:22:58;;;;0;false;;;8008;false
+Cash;Bar, cafe;PHP;-435.00;-435.00;Expenses;CASH;Cash;;2025-05-05 09:21:28;;;;0;false;;;1002;false
+Cash;Sports + Active;PHP;-300.00;-300.00;Expenses;CASH;Cash;;2025-05-05 09:19:59;;;;0;false;;;6003;false
+Cash;Financial expenses;PHP;-2000.00;-2000.00;Expenses;CASH;Cash;;2025-05-05 09:19:15;;;;0;false;;;8008;false
+Cash;Bar, cafe;PHP;-150.00;-150.00;Expenses;CASH;Cash;;2025-04-30 09:16:00;;;;0;false;;;1002;false
+Cash;Financial expenses;PHP;-5000.00;-5000.00;Expenses;CASH;Cash;;2025-04-30 09:15:49;;;;0;false;;;8008;false
+Cash;Income;PHP;100300.00;100300.00;Income;CASH;Cash;;2025-04-29 09:57:10;;;;0;false;;;10011;false
+Cash;Sports + Active;PHP;-147.00;-147.00;Expenses;CASH;Cash;;2025-04-29 09:14:37;;;;0;false;;;6003;false

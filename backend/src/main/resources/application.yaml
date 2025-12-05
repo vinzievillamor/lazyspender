@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: backend
+  cloud:
+    gcp:
+      project-id: lazyspender-local
+      datastore:
+        host: localhost:8081
+        namespace: lazyspender
+        emulator:
+          enabled: false
+
+

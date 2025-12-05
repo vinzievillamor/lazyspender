@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "name": "LazySpender (Root)",
+      "path": "."
+    },
+    {
+      "name": "Backend (Spring)",
+      "path": "backend"
+    },
+    {
+      "name": "Frontend (React Native)",
+      "path": "frontend"
+    }
+  ],
+  "settings": {
+    "java.debug.settings.onBuildFailureProceed": true
+  }
+}

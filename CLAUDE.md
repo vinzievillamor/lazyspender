@@ -252,12 +252,6 @@ The project uses **Google Cloud Firestore**, a NoSQL document database. For loca
 - Expo builds: Use EAS (Expo Application Services)
 - Configure environment variables for production API endpoints
 
-### Database Deployment
-- Set up production Firestore project in Google Cloud Console
-- Configure authentication credentials
-- Set up security rules
-- Configure indexes
-
 ---
 
 ## Environment Variables
@@ -267,15 +261,6 @@ Create `.env` file in `frontend/` directory:
 ```
 API_BASE_URL=http://localhost:8080
 FIRESTORE_EMULATOR_HOST=localhost:8081
-```
-
-### Backend
-Configure in `backend/src/main/resources/application.properties`:
-```properties
-server.port=8080
-spring.application.name=lazyspender-backend
-# Firestore configuration
-# Add other environment-specific configs
 ```
 
 ---
