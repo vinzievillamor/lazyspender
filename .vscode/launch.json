@@ -12,7 +12,8 @@
         "SPRING_PROFILES_ACTIVE": "dev"
       },
       "args": "",
-      "vmArgs": "-Dspring.devtools.restart.enabled=true"
+      "vmArgs": "-Dspring.devtools.restart.enabled=true",
+      "preLaunchTask": "Start Firestore Emulator"
     },
     {
       "type": "node",

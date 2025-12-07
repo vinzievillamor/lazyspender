@@ -31,19 +31,19 @@ public class CsvDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // try {
-        //     log.info("Starting CSV data import...");
-        //     List<Transaction> transactions = readTransactionsFromCsv();
+        try {
+            log.info("Starting CSV data import...");
+            List<Transaction> transactions = readTransactionsFromCsv();
 
-        //     if (!transactions.isEmpty()) {
-        //         transactionRepository.saveAll(transactions);
-        //         log.info("Successfully imported {} transactions from CSV", transactions.size());
-        //     } else {
-        //         log.warn("No transactions found in CSV file");
-        //     }
-        // } catch (Exception e) {
-        //     log.error("Failed to import CSV data: {}", e.getMessage(), e);
-        // }
+            if (!transactions.isEmpty()) {
+                transactionRepository.saveAll(transactions);
+                log.info("Successfully imported {} transactions from CSV", transactions.size());
+            } else {
+                log.warn("No transactions found in CSV file");
+            }
+        } catch (Exception e) {
+            log.error("Failed to import CSV data: {}", e.getMessage(), e);
+        }
     }
 
     private List<Transaction> readTransactionsFromCsv() throws IOException, CsvException {
