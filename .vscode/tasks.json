@@ -1,0 +1,45 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Firestore Emulator",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "command": "docker-compose",
+      "args": [
+        "up",
+        "-d",
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": "(Started|running)"
+        }
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Stop Firestore Emulator",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": [
+        "down"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
