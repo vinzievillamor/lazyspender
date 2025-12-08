@@ -85,13 +85,13 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: "Roboto-SemiBold",
     color: "#111827",
     marginBottom: 2,
   },
   noteText: {
     fontSize: 14,
-    fontWeight: "400",
+    fontFamily: "Roboto-Regular",
     color: "#6b7280",
   },
   amountContainer: {
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
   amountText: {
     fontSize: 16,
-    fontWeight: "700",
+    fontFamily: "Roboto-Bold",
     letterSpacing: 0.5,
   },
 });

@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   sectionHeaderText: {
     fontSize: 14,
-    fontWeight: "600",
+    fontFamily: "Roboto-SemiBold",
     color: "#374151",
     textTransform: "uppercase",
   },

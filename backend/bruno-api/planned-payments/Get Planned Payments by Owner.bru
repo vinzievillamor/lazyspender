@@ -5,13 +5,13 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/api/planned-payments?owner=john_doe
+  url: {{baseUrl}}/api/planned-payments?owner=villamorvinzie
   body: none
   auth: none
 }
 
 params:query {
-  owner: john_doe
+  owner: villamorvinzie
 }
 
 script:post-response {
@@ -23,12 +23,12 @@ script:post-response {
 
 docs {
   # Get Planned Payments by Owner
-
+  
   Retrieves all planned payments for a specific owner.
-
+  
   ## Optional Query Parameters
   - status: Filter by payment status (ACTIVE, PAUSED, COMPLETED, CANCELLED)
-
+  
   Example with status:
   GET /api/planned-payments?owner=john_doe&status=ACTIVE
 }

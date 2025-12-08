@@ -17,6 +17,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontFamily: "Roboto-Bold",
   },
 });

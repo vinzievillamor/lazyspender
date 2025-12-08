@@ -164,10 +164,12 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 12,
     fontSize: 16,
+    fontFamily: "Roboto-Regular",
     color: "#6b7280",
   },
   errorText: {
     fontSize: 16,
+    fontFamily: "Roboto-Medium",
     color: "#ef4444",
     textAlign: "center",
     paddingHorizontal: 20,
@@ -179,6 +181,7 @@ const styles = StyleSheet.create({
   footerText: {
     marginTop: 8,
     fontSize: 14,
+    fontFamily: "Roboto-Regular",
     color: "#6b7280",
   },
 });

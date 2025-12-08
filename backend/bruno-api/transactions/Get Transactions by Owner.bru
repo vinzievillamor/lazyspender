@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/api/transactions/owner/john_doe?page=0&size=20
+  url: {{baseUrl}}/api/transactions/owner/villamorvinzie?page=0&size=20
   body: none
   auth: none
 }
@@ -24,16 +24,16 @@ script:post-response {
 
 docs {
   # Get Transactions by Owner (Paginated)
-
+  
   Retrieves all transactions for a specific owner with pagination.
   Results are sorted by date in descending order (newest first).
-
+  
   ## URL Parameters
   - owner: The owner username (in the path)
-
+  
   ## Query Parameters
   - page: Page number (default: 0)
   - size: Items per page (default: 20)
-
+  
   Example: /api/transactions/owner/john_doe?page=1&size=10
 }
