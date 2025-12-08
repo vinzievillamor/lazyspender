@@ -24,7 +24,7 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TransactionResponse> getTransactionById(@PathVariable Long id) {
+    public ResponseEntity<TransactionResponse> getTransactionById(@PathVariable(name = "id") String id) {
         TransactionResponse response = transactionService.getTransactionById(id);
         return ResponseEntity.ok(response);
     }
@@ -39,7 +39,7 @@ public class TransactionController {
 
     @GetMapping("/owner/{owner}")
     public ResponseEntity<PageResponse<TransactionResponse>> getTransactionsByOwner(
-            @PathVariable String owner,
+            @PathVariable(name = "owner") String owner,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size) {
         PageResponse<TransactionResponse> response = transactionService.getTransactionsByOwner(owner, page, size);
@@ -48,14 +48,14 @@ public class TransactionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TransactionResponse> updateTransaction(
-            @PathVariable Long id,
+            @PathVariable(name = "id") String id,
             @Valid @RequestBody TransactionRequest request) {
         TransactionResponse response = transactionService.updateTransaction(id, request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTransaction(@PathVariable(name = "id") String id) {
         transactionService.deleteTransaction(id);
         return ResponseEntity.noContent().build();
     }

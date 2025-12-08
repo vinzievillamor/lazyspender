@@ -1,0 +1,20 @@
+meta {
+  name: Delete Transaction
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/transactions/{{transactionId}}
+  body: none
+  auth: none
+}
+
+docs {
+  # Delete Transaction
+  
+  Deletes a transaction by its UUID.
+  
+  Replace {{transactionId}} with the actual UUID.
+  Returns 204 No Content on success.
+}

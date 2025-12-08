@@ -1,0 +1,20 @@
+meta {
+  name: Delete Planned Payment
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/planned-payments/{{plannedPaymentId}}
+  body: none
+  auth: none
+}
+
+docs {
+  # Delete Planned Payment
+
+  Deletes a planned payment by its UUID.
+
+  Replace {{plannedPaymentId}} with the actual UUID.
+  Returns 204 No Content on success.
+}

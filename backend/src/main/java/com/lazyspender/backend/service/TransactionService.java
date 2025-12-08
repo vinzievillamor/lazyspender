@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,11 +26,12 @@ public class TransactionService {
 
     public TransactionResponse createTransaction(TransactionRequest request) {
         Transaction transaction = transactionMapper.toEntity(request);
+        transaction.setId(UUID.randomUUID().toString());
         Transaction savedTransaction = transactionRepository.save(transaction);
         return transactionMapper.toResponse(savedTransaction);
     }
 
-    public TransactionResponse getTransactionById(Long id) {
+    public TransactionResponse getTransactionById(String id) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
         return transactionMapper.toResponse(transaction);
@@ -47,7 +49,7 @@ public class TransactionService {
         return mapToPageResponse(transactionPage);
     }
 
-    public TransactionResponse updateTransaction(Long id, TransactionRequest request) {
+    public TransactionResponse updateTransaction(String id, TransactionRequest request) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
 
@@ -56,7 +58,7 @@ public class TransactionService {
         return transactionMapper.toResponse(updatedTransaction);
     }
 
-    public void deleteTransaction(Long id) {
+    public void deleteTransaction(String id) {
         if (!transactionRepository.existsById(id)) {
             throw new RuntimeException("Transaction not found with id: " + id);
         }

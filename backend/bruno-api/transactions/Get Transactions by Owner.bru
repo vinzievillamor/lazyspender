@@ -1,0 +1,39 @@
+meta {
+  name: Get Transactions by Owner
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/transactions/owner/john_doe?page=0&size=20
+  body: none
+  auth: none
+}
+
+params:query {
+  page: 0
+  size: 20
+}
+
+script:post-response {
+  if (res.status === 200 && res.body.content && res.body.content.length > 0) {
+    bru.setEnvVar("transactionId", res.body.content[0].id);
+    console.log("Set transactionId to first item:", res.body.content[0].id);
+  }
+}
+
+docs {
+  # Get Transactions by Owner (Paginated)
+
+  Retrieves all transactions for a specific owner with pagination.
+  Results are sorted by date in descending order (newest first).
+
+  ## URL Parameters
+  - owner: The owner username (in the path)
+
+  ## Query Parameters
+  - page: Page number (default: 0)
+  - size: Items per page (default: 20)
+
+  Example: /api/transactions/owner/john_doe?page=1&size=10
+}

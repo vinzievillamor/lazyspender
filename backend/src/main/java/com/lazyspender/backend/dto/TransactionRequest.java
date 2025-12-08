@@ -37,4 +37,6 @@ public class TransactionRequest {
 
     @NotNull(message = "Reference currency amount is required")
     private double refCurrencyAmount;
+
+    private String plannedPaymentId;
 }

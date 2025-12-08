@@ -1,0 +1,35 @@
+meta {
+  name: Update Transaction
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/transactions/{{transactionId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "owner": "john_doe",
+    "account": "Credit Card",
+    "category": "Food & Dining",
+    "amount": -30.00,
+    "note": "Updated lunch expense",
+    "date": "2025-12-08T12:30:00Z",
+    "currency": "USD",
+    "refCurrencyAmount": -30.00
+  }
+}
+
+docs {
+  # Update Transaction
+
+  Updates an existing transaction.
+  All fields must be provided (full replacement).
+
+  Replace {{transactionId}} with the actual UUID.
+
+  Note: The ID field is ignored in the request body and cannot be changed.
+}

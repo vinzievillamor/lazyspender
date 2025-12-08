@@ -1,0 +1,72 @@
+meta {
+  name: Create Transaction
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/transactions
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "owner": "john_doe",
+    "account": "Credit Card",
+    "category": "Food & Dining",
+    "amount": -25.50,
+    "note": "Lunch at restaurant",
+    "date": "2025-12-08T12:30:00Z",
+    "currency": "USD",
+    "refCurrencyAmount": -25.50
+  }
+}
+
+script:post-response {
+  if (res.status === 201 && res.body.id) {
+    bru.setEnvVar("transactionId", res.body.id);
+    console.log("Transaction created with ID:", res.body.id);
+  }
+}
+
+docs {
+  # Create Transaction
+
+  Creates a new transaction (expense or income).
+
+  ## Amount Convention
+  - Negative values = Expenses (money out)
+  - Positive values = Income (money in)
+
+  ## Optional Fields
+  - note: Additional description
+  - plannedPaymentId: Link to a planned payment (auto-set when confirming planned payments)
+
+  ## Examples
+
+  **Expense:**
+  ```json
+  {
+    "amount": -25.50,
+    "category": "Food & Dining"
+  }
+  ```
+
+  **Income:**
+  ```json
+  {
+    "amount": 3500.00,
+    "category": "Salary"
+  }
+  ```
+
+  **Different Currency:**
+  ```json
+  {
+    "currency": "EUR",
+    "amount": -50.00,
+    "refCurrencyAmount": -54.50
+  }
+  ```
+}

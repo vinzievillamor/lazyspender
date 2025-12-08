@@ -1,0 +1,56 @@
+meta {
+  name: Create Planned Payment
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/planned-payments
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "owner": "john_doe",
+    "account": "Checking Account",
+    "category": "Housing",
+    "amount": -1200.00,
+    "description": "Monthly rent payment",
+    "currency": "USD",
+    "startDate": "2025-12-01T09:00:00Z",
+    "recurrenceType": "MONTHLY",
+    "recurrenceValue": "1",
+    "endType": "NEVER",
+    "endValue": null,
+    "confirmationType": "MANUAL"
+  }
+}
+
+script:post-response {
+  if (res.status === 201 && res.body.id) {
+    bru.setEnvVar("plannedPaymentId", res.body.id);
+    console.log("Planned payment created with ID:", res.body.id);
+  }
+}
+
+docs {
+  # Create Planned Payment
+  
+  Creates a new planned/recurring payment.
+  
+  ## Recurrence Types
+  - DAILY: recurrenceValue = "1" (number of days)
+  - WEEKLY: recurrenceValue = "MONDAY" | "TUESDAY" | etc.
+  - MONTHLY: recurrenceValue = "1-31" (day of month)
+  - YEARLY: recurrenceValue = "1" (number of years)
+  
+  ## End Types
+  - NEVER: endValue = null
+  - DATE: endValue = "2026-12-31T23:59:59Z" (ISO date)
+  - OCCURRENCE: endValue = "12" (number of times)
+  
+  ## Confirmation Types
+  - MANUAL: Requires manual confirmation
+  - AUTO: Automatically creates transactions
+}

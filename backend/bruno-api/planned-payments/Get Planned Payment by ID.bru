@@ -1,0 +1,25 @@
+meta {
+  name: Get Planned Payment by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/planned-payments/{{plannedPaymentId}}
+  body: none
+  auth: none
+}
+
+script:post-response {
+  if (res.status === 200 && res.body.id) {
+    bru.setEnvVar("plannedPaymentId", res.body.id);
+  }
+}
+
+docs {
+  # Get Planned Payment by ID
+  
+  Retrieves a single planned payment by its UUID.
+  
+  Replace {{plannedPaymentId}} with the actual UUID from a created payment.
+}

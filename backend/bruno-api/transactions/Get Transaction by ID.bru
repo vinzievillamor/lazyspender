@@ -1,0 +1,25 @@
+meta {
+  name: Get Transaction by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/transactions/{{transactionId}}
+  body: none
+  auth: none
+}
+
+script:post-response {
+  if (res.status === 200 && res.body.id) {
+    bru.setEnvVar("transactionId", res.body.id);
+  }
+}
+
+docs {
+  # Get Transaction by ID
+
+  Retrieves a single transaction by its UUID.
+
+  Replace {{transactionId}} with the actual UUID from a created transaction.
+}

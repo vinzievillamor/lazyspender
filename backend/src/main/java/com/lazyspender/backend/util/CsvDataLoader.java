@@ -17,6 +17,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -83,6 +84,7 @@ public class CsvDataLoader implements CommandLineRunner {
         Instant date = parseDate(record[9]);
 
         return Transaction.builder()
+                .id(UUID.randomUUID().toString())
                 .owner(DEFAULT_OWNER)
                 .account(account)
                 .category(category)

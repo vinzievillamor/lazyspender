@@ -1,0 +1,48 @@
+meta {
+  name: Get All Transactions
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://172.17.59.24:8080/api/transactions?page=0&size=20
+  body: none
+  auth: none
+}
+
+params:query {
+  page: 0
+  size: 20
+}
+
+script:post-response {
+  if (res.status === 200 && res.body.content && res.body.content.length > 0) {
+    bru.setEnvVar("transactionId", res.body.content[0].id);
+    console.log("Set transactionId to first item:", res.body.content[0].id);
+  }
+}
+
+docs {
+  # Get All Transactions (Paginated)
+  
+  Retrieves all transactions with pagination.
+  Results are sorted by date in descending order (newest first).
+  
+  ## Query Parameters
+  - page: Page number (default: 0)
+  - size: Items per page (default: 20)
+  
+  ## Response Format
+  Returns a PageResponse object:
+  ```json
+  {
+    "content": [...],
+    "pageNumber": 0,
+    "pageSize": 20,
+    "totalElements": 100,
+    "totalPages": 5,
+    "hasNext": true,
+    "hasPrevious": false
+  }
+  ```
+}

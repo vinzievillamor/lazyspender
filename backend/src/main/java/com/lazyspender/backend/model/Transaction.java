@@ -17,7 +17,7 @@ import java.time.Instant;
 public class Transaction {
 
     @Id
-    private Long id;
+    private String id;
 
     private String owner;
 
@@ -34,4 +34,6 @@ public class Transaction {
     private String currency;
 
     private double refCurrencyAmount;
+
+    private String plannedPaymentId;
 }

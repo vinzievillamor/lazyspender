@@ -13,7 +13,7 @@ import java.time.Instant;
 @AllArgsConstructor
 public class TransactionResponse {
 
-    private Long id;
+    private String id;
     private String owner;
     private String account;
     private String category;
@@ -22,4 +22,5 @@ public class TransactionResponse {
     private Instant date;
     private String currency;
     private double refCurrencyAmount;
+    private String plannedPaymentId;
 }
