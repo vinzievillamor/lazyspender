@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { MaterialIcons, Ionicons, FontAwesome5 } from '@expo/vector-icons';
-import { Transaction } from "../types/transaction";
+import { Transaction, TransactionType } from "../types/transaction";
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -33,7 +33,7 @@ const getCategoryIcon = (category: string) => {
 };
 
 export default function TransactionItem({ transaction }: TransactionItemProps) {
-  const isIncome = transaction.amount > 0;
+  const isIncome = transaction.type === TransactionType.INCOME;
 
   return (
     <View style={styles.transactionItem}>
@@ -53,7 +53,7 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
           styles.amountText,
           { color: isIncome ? '#10b981' : '#ef4444' }
         ]}>
-          {isIncome ? '+' : ''}{transaction.amount.toFixed(2)}
+          {isIncome ? '+' : '-'}{transaction.amount.toFixed(2)}
         </Text>
       </View>
     </View>

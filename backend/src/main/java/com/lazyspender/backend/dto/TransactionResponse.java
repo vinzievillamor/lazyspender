@@ -1,5 +1,6 @@
 package com.lazyspender.backend.dto;
 
+import com.lazyspender.backend.model.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,5 @@ public class TransactionResponse {
     private String currency;
     private double refCurrencyAmount;
     private String plannedPaymentId;
+    private TransactionType type;
 }

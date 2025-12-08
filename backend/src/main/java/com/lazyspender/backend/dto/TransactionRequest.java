@@ -1,5 +1,6 @@
 package com.lazyspender.backend.dto;
 
+import com.lazyspender.backend.model.TransactionType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -39,4 +40,7 @@ public class TransactionRequest {
     private double refCurrencyAmount;
 
     private String plannedPaymentId;
+
+    @NotNull(message = "Transaction type is required")
+    private TransactionType type;
 }

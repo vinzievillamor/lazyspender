@@ -1,6 +1,7 @@
 package com.lazyspender.backend.util;
 
 import com.lazyspender.backend.model.Transaction;
+import com.lazyspender.backend.model.TransactionType;
 import com.lazyspender.backend.repository.TransactionRepository;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
@@ -83,16 +84,21 @@ public class CsvDataLoader implements CommandLineRunner {
         String note = record[8];
         Instant date = parseDate(record[9]);
 
+        TransactionType type = amount < 0 ? TransactionType.EXPENSE : TransactionType.INCOME;
+        double absoluteAmount = Math.abs(amount);
+        double absoluteRefCurrencyAmount = Math.abs(refCurrencyAmount);
+
         return Transaction.builder()
                 .id(UUID.randomUUID().toString())
                 .owner(DEFAULT_OWNER)
                 .account(account)
                 .category(category)
-                .amount(amount)
+                .amount(absoluteAmount)
                 .note(note)
                 .date(date)
                 .currency(currency)
-                .refCurrencyAmount(refCurrencyAmount)
+                .refCurrencyAmount(absoluteRefCurrencyAmount)
+                .type(type)
                 .build();
     }
 

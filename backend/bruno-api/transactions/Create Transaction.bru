@@ -15,11 +15,12 @@ body:json {
     "owner": "john_doe",
     "account": "Credit Card",
     "category": "Food & Dining",
-    "amount": -25.50,
+    "amount": 25.50,
     "note": "Lunch at restaurant",
     "date": "2025-12-08T12:30:00Z",
     "currency": "USD",
-    "refCurrencyAmount": -25.50
+    "refCurrencyAmount": 25.50,
+    "type": "EXPENSE"
   }
 }
 
@@ -35,9 +36,15 @@ docs {
 
   Creates a new transaction (expense or income).
 
-  ## Amount Convention
-  - Negative values = Expenses (money out)
-  - Positive values = Income (money in)
+  ## Required Fields
+  - type: EXPENSE or INCOME
+  - amount: Always positive (unsigned)
+  - owner: User identifier
+  - account: Account name
+  - category: Transaction category
+  - date: Transaction date
+  - currency: Currency code
+  - refCurrencyAmount: Amount in reference currency (always positive)
 
   ## Optional Fields
   - note: Additional description
@@ -48,7 +55,8 @@ docs {
   **Expense:**
   ```json
   {
-    "amount": -25.50,
+    "amount": 25.50,
+    "type": "EXPENSE",
     "category": "Food & Dining"
   }
   ```
@@ -57,6 +65,7 @@ docs {
   ```json
   {
     "amount": 3500.00,
+    "type": "INCOME",
     "category": "Salary"
   }
   ```
@@ -65,8 +74,9 @@ docs {
   ```json
   {
     "currency": "EUR",
-    "amount": -50.00,
-    "refCurrencyAmount": -54.50
+    "amount": 50.00,
+    "refCurrencyAmount": 54.50,
+    "type": "EXPENSE"
   }
   ```
 }

@@ -1,3 +1,8 @@
+export enum TransactionType {
+  INCOME = 'INCOME',
+  EXPENSE = 'EXPENSE'
+}
+
 export interface Transaction {
   id: string;
   owner: string;
@@ -8,4 +13,5 @@ export interface Transaction {
   date: string;
   currency: string;
   refCurrencyAmount: number;
+  type: TransactionType;
 }

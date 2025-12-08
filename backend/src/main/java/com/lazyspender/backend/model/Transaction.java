@@ -36,4 +36,6 @@ public class Transaction {
     private double refCurrencyAmount;
 
     private String plannedPaymentId;
+
+    private TransactionType type;
 }

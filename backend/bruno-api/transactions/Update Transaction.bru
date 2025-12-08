@@ -15,11 +15,12 @@ body:json {
     "owner": "john_doe",
     "account": "Credit Card",
     "category": "Food & Dining",
-    "amount": -30.00,
+    "amount": 30.00,
     "note": "Updated lunch expense",
     "date": "2025-12-08T12:30:00Z",
     "currency": "USD",
-    "refCurrencyAmount": -30.00
+    "refCurrencyAmount": 30.00,
+    "type": "EXPENSE"
   }
 }
 
@@ -32,4 +33,8 @@ docs {
   Replace {{transactionId}} with the actual UUID.
 
   Note: The ID field is ignored in the request body and cannot be changed.
+
+  ## Required Fields
+  - type: EXPENSE or INCOME (required)
+  - amount: Always positive (unsigned)
 }
