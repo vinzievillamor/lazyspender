@@ -1,0 +1,63 @@
+meta {
+  name: Create User
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "owner": "villamorvinzie",
+    "accounts": ["Savings Account", "Credit Card", "Cash"]
+  }
+}
+
+script:post-response {
+  if (res.status === 201 && res.body.id) {
+    bru.setEnvVar("userId", res.body.id);
+    bru.setEnvVar("owner", res.body.owner);
+    console.log("User created with ID:", res.body.id);
+  }
+}
+
+docs {
+  # Create User
+  
+  Creates a new user with account management.
+  
+  ## Required Fields
+  - owner: Username/identifier for the user
+  
+  ## Optional Fields
+  - accounts: List of account names (can be empty array or omitted for new users)
+  
+  ## Examples
+  
+  **New User with Accounts:**
+  ```json
+  {
+    "owner": "john_doe",
+    "accounts": ["Savings Account", "Credit Card", "Cash"]
+  }
+  ```
+  
+  **New User without Accounts:**
+  ```json
+  {
+    "owner": "jane_smith",
+    "accounts": []
+  }
+  ```
+  
+  **User Onboarding (No Accounts):**
+  ```json
+  {
+    "owner": "new_user"
+  }
+  ```
+}

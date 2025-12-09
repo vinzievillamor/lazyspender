@@ -1,0 +1,63 @@
+meta {
+  name: Update User
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "owner": "john_doe",
+    "accounts": ["Savings Account", "Credit Card", "Cash", "Investment Account"]
+  }
+}
+
+docs {
+  # Update User
+
+  Updates an existing user's information.
+
+  ## Path Parameters
+  - id: User ID (UUID string)
+
+  ## Request Body
+  - owner: Username (required)
+  - accounts: List of account names (optional)
+
+  ## Use Cases
+  - Add new accounts to a user
+  - Remove accounts from a user
+  - Update the entire account list
+  - Change username (if needed)
+
+  ## Examples
+
+  **Add New Account:**
+  ```json
+  {
+    "owner": "john_doe",
+    "accounts": ["Savings Account", "Credit Card", "Cash", "Investment Account"]
+  }
+  ```
+
+  **Remove Accounts:**
+  ```json
+  {
+    "owner": "john_doe",
+    "accounts": ["Savings Account"]
+  }
+  ```
+
+  **Clear All Accounts:**
+  ```json
+  {
+    "owner": "john_doe",
+    "accounts": []
+  }
+  ```
+}

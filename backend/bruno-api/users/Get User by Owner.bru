@@ -1,0 +1,30 @@
+meta {
+  name: Get User by Owner
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/users/owner/{{owner}}
+  body: none
+  auth: none
+}
+
+docs {
+  # Get User by Owner
+
+  Retrieves a user by their owner/username.
+
+  ## Path Parameters
+  - owner: Username/owner identifier
+
+  ## Response
+  Returns a user object with:
+  - id: User ID
+  - owner: Username
+  - accounts: List of account names
+
+  ## Use Case
+  This endpoint is useful for retrieving user data when you know the username
+  but not the UUID. Commonly used during login or when checking if a user exists.
+}

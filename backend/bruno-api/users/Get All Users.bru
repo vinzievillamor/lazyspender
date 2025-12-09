@@ -1,0 +1,27 @@
+meta {
+  name: Get All Users
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/users
+  body: none
+  auth: none
+}
+
+docs {
+  # Get All Users
+
+  Retrieves all users in the system.
+
+  ## Response
+  Returns an array of user objects, each containing:
+  - id: User ID
+  - owner: Username
+  - accounts: List of account names
+
+  ## Use Case
+  This endpoint is useful for admin purposes or displaying a list of all users.
+  Note: In production, this should be paginated and protected with proper authentication.
+}

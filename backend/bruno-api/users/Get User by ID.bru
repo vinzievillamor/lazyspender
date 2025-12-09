@@ -1,0 +1,26 @@
+meta {
+  name: Get User by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/users/{{userId}}
+  body: none
+  auth: none
+}
+
+docs {
+  # Get User by ID
+
+  Retrieves a user by their unique ID.
+
+  ## Path Parameters
+  - id: User ID (UUID string)
+
+  ## Response
+  Returns a user object with:
+  - id: User ID
+  - owner: Username
+  - accounts: List of account names
+}
