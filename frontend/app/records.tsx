@@ -1,9 +1,9 @@
 import { FlashList } from "@shopify/flash-list";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { useMemo } from "react";
+import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import SectionHeader from "../components/SectionHeader";
 import TransactionItem from "../components/TransactionItem";
-import { getAllTransactions } from "../services/transaction.service";
+import { useTransactions } from "../hooks/useTransactions";
 import { Transaction } from "../types/transaction";
 
 const PAGE_SIZE = 20;
@@ -47,51 +47,22 @@ const groupByDate = (transactions: Transaction[]): SectionData[] => {
 };
 
 export default function Records() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useTransactions({ pageSize: PAGE_SIZE });
 
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
+  const transactions = useMemo(() => {
+    return data?.pages.flatMap((page) => page.content) ?? [];
+  }, [data]);
 
-  const fetchTransactions = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await getAllTransactions({ page: 0, size: PAGE_SIZE });
-      setTransactions(response.content);
-      setCurrentPage(0);
-      setHasMore(response.hasNext);
-    } catch (err) {
-      setError('Failed to load transactions. Please try again.');
-      console.error('Error fetching transactions:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadMoreTransactions = async () => {
-    if (loadingMore || !hasMore) return;
-
-    try {
-      setLoadingMore(true);
-      const nextPage = currentPage + 1;
-      const response = await getAllTransactions({ page: nextPage, size: PAGE_SIZE });
-      setTransactions(prev => [...prev, ...response.content]);
-      setCurrentPage(nextPage);
-      setHasMore(response.hasNext);
-    } catch (err) {
-      console.error('Error loading more transactions:', err);
-    } finally {
-      setLoadingMore(false);
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
         <ActivityIndicator size="large" color="#007AFF" />
@@ -100,10 +71,15 @@ export default function Records() {
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <Text style={styles.errorText}>{error}</Text>
+        <Text style={styles.errorText}>
+          {error instanceof Error ? error.message : 'Failed to load transactions. Please try again.'}
+        </Text>
+        <TouchableOpacity style={styles.retryButton} onPress={() => refetch()}>
+          <Text style={styles.retryButtonText}>Retry</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -128,7 +104,7 @@ export default function Records() {
   };
 
   const renderFooter = () => {
-    if (!loadingMore) return null;
+    if (!isFetchingNextPage) return null;
 
     return (
       <View style={styles.footerLoader}>
@@ -138,13 +114,19 @@ export default function Records() {
     );
   };
 
+  const handleEndReached = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FlashList
         data={flatData}
         renderItem={renderItem}
         keyExtractor={(_item, index) => index.toString()}
-        onEndReached={loadMoreTransactions}
+        onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />
@@ -183,5 +165,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Roboto-Regular",
     color: "#6b7280",
+  },
+  retryButton: {
+    marginTop: 16,
+    backgroundColor: "#007AFF",
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    fontSize: 16,
+    fontFamily: "Roboto-Medium",
+    color: "#ffffff",
   },
 });

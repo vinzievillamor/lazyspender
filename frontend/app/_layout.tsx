@@ -3,6 +3,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "../config/queryClient";
 import { UserProvider } from "../contexts/UserContext";
 
 // Keep the splash screen visible while fonts load
@@ -33,38 +35,40 @@ export default function RootLayout() {
   }
 
   return (
-    <UserProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Drawer>
-          <Drawer.Screen
-            name="dashboard"
-            options={{
-              drawerLabel: "Dashboard",
-              title: "Dashboard",
-            }}
-          />
-          <Drawer.Screen
-            name="records"
-            options={{
-              drawerLabel: "Records",
-              title: "Records",
-            }}
-          />
-          <Drawer.Screen
-            name="planned-payments"
-            options={{
-              drawerLabel: "Planned Payments",
-              title: "Planned Payments",
-            }}
-          />
-          <Drawer.Screen
-            name="index"
-            options={{
-              drawerItemStyle: { display: "none" },
-            }}
-          />
-        </Drawer>
-      </GestureHandlerRootView>
-    </UserProvider>
+    <QueryClientProvider client={queryClient}>
+      <UserProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Drawer>
+            <Drawer.Screen
+              name="dashboard"
+              options={{
+                drawerLabel: "Dashboard",
+                title: "Dashboard",
+              }}
+            />
+            <Drawer.Screen
+              name="records"
+              options={{
+                drawerLabel: "Records",
+                title: "Records",
+              }}
+            />
+            <Drawer.Screen
+              name="planned-payments"
+              options={{
+                drawerLabel: "Planned Payments",
+                title: "Planned Payments",
+              }}
+            />
+            <Drawer.Screen
+              name="index"
+              options={{
+                drawerItemStyle: { display: "none" },
+              }}
+            />
+          </Drawer>
+        </GestureHandlerRootView>
+      </UserProvider>
+    </QueryClientProvider>
   );
 }

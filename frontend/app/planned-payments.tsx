@@ -1,36 +1,18 @@
 import { FlashList } from '@shopify/flash-list';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PlannedPaymentItem from '../components/PlannedPaymentItem';
-import { getPlannedPaymentsByStatus } from '../services/plannedPayment.service';
-import { PlannedPaymentResponse, PaymentStatus } from '../types/plannedPayment';
+import { usePlannedPaymentsByStatus } from '../hooks/usePlannedPayments';
+import { PaymentStatus, PlannedPaymentResponse } from '../types/plannedPayment';
 
 const OWNER = 'villamorvinzie';
 
 export default function PlannedPayments() {
-  const [plannedPayments, setPlannedPayments] = useState<PlannedPaymentResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: plannedPayments, isLoading, isError, error, refetch } = usePlannedPaymentsByStatus(
+    OWNER,
+    PaymentStatus.ACTIVE
+  );
 
-  useEffect(() => {
-    fetchPlannedPayments();
-  }, []);
-
-  const fetchPlannedPayments = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await getPlannedPaymentsByStatus(OWNER, PaymentStatus.ACTIVE);
-      setPlannedPayments(response);
-    } catch (err) {
-      setError('Failed to load planned payments. Please try again.');
-      console.error('Error fetching planned payments:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
         <ActivityIndicator size="large" color="#007AFF" />
@@ -39,15 +21,20 @@ export default function PlannedPayments() {
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <Text style={styles.errorText}>{error}</Text>
+        <Text style={styles.errorText}>
+          {error instanceof Error ? error.message : 'Failed to load planned payments. Please try again.'}
+        </Text>
+        <TouchableOpacity style={styles.retryButton} onPress={() => refetch()}>
+          <Text style={styles.retryButtonText}>Retry</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
-  if (plannedPayments.length === 0) {
+  if (!plannedPayments || plannedPayments.length === 0) {
     return (
       <View style={[styles.container, styles.centerContent]}>
         <Text style={styles.emptyText}>No active planned payments</Text>
@@ -65,7 +52,6 @@ export default function PlannedPayments() {
         data={plannedPayments}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        estimatedItemSize={100}
       />
     </View>
   );
@@ -99,5 +85,17 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     textAlign: 'center',
     paddingHorizontal: 20,
+  },
+  retryButton: {
+    marginTop: 16,
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Medium',
+    color: '#ffffff',
   },
 });
