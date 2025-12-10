@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   Modal,
-  View,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  ActivityIndicator,
-  Alert,
+  View,
 } from 'react-native';
-import { TransactionType } from '../types/transaction';
-import { CreateTransactionRequest } from '../services/transaction.service';
-import { useCreateTransaction } from '../hooks/useTransactions';
+import { Picker } from '@react-native-picker/picker';
 import { useUser } from '../contexts/UserContext';
+import { useCreateTransaction } from '../hooks/useTransactions';
+import { CreateTransactionRequest } from '../services/transaction.service';
+import { TransactionType } from '../types/transaction';
+import { Category } from '../types/category';
 
 interface TransactionFormModalProps {
   visible: boolean;
@@ -24,11 +26,15 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
   const { user } = useUser();
   const { mutate: createTransaction, isPending } = useCreateTransaction();
 
-  const [formData, setFormData] = useState<Partial<CreateTransactionRequest>>({
+  const getInitialFormData = (): Partial<CreateTransactionRequest> => ({
     type: TransactionType.EXPENSE,
     currency: 'USD',
+    category: Category.ACTIVE_SPORT_FITNESS,
+    account: user?.accounts[0],
     date: new Date().toISOString(),
   });
+
+  const [formData, setFormData] = useState<Partial<CreateTransactionRequest>>(getInitialFormData());
 
   const handleSubmit = () => {
     if (!user) {
@@ -36,7 +42,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
       return;
     }
 
-    if (!formData.account || !formData.category || !formData.amount || !formData.refCurrencyAmount) {
+    if (!formData.account || !formData.category || !formData.amount) {
       Alert.alert('Validation Error', 'Please fill in all required fields');
       return;
     }
@@ -48,8 +54,8 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
       amount: formData.amount,
       note: formData.note,
       date: formData.date || new Date().toISOString(),
-      currency: formData.currency || 'USD',
-      refCurrencyAmount: formData.refCurrencyAmount,
+      currency: formData.currency || '',
+      refCurrencyAmount: formData.refCurrencyAmount || 0,
       plannedPaymentId: formData.plannedPaymentId,
       type: formData.type || TransactionType.EXPENSE,
     };
@@ -67,11 +73,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
   };
 
   const resetForm = () => {
-    setFormData({
-      type: TransactionType.EXPENSE,
-      currency: 'USD',
-      date: new Date().toISOString(),
-    });
+    setFormData(getInitialFormData());
   };
 
   const handleClose = () => {
@@ -159,13 +161,18 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Category *</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.category}
-                onChangeText={(text) => setFormData({ ...formData, category: text })}
-                placeholder="Enter category"
-                editable={!isPending}
-              />
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={formData.category}
+                  onValueChange={(itemValue) => setFormData({ ...formData, category: itemValue })}
+                  enabled={!isPending}
+                  style={styles.picker}
+                >
+                  {Object.values(Category).map((category) => (
+                    <Picker.Item key={category} label={category} value={category} />
+                  ))}
+                </Picker>
+              </View>
             </View>
 
             <View style={styles.inputGroup}>
@@ -174,20 +181,6 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                 style={styles.input}
                 value={formData.amount?.toString()}
                 onChangeText={(text) => setFormData({ ...formData, amount: parseFloat(text) || 0 })}
-                placeholder="0.00"
-                keyboardType="numeric"
-                editable={!isPending}
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Reference Currency Amount *</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.refCurrencyAmount?.toString()}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, refCurrencyAmount: parseFloat(text) || 0 })
-                }
                 placeholder="0.00"
                 keyboardType="numeric"
                 editable={!isPending}
@@ -249,13 +242,16 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
   modalContent: {
     backgroundColor: '#ffffff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    maxHeight: '90%',
+    borderRadius: 20,
+    height: '75%',
+    width: '100%',
+    maxWidth: 500,
   },
   header: {
     flexDirection: 'row',
@@ -379,6 +375,19 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     opacity: 0.6,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+  },
+  picker: {
+    height: 50,
+    color: '#111827',
+    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
+    marginHorizontal: -4,
   },
 });
 

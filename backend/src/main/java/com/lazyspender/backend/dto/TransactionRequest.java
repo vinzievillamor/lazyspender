@@ -33,10 +33,8 @@ public class TransactionRequest {
     @NotNull(message = "Date is required")
     private Instant date;
 
-    @NotBlank(message = "Currency is required")
     private String currency;
 
-    @NotNull(message = "Reference currency amount is required")
     private double refCurrencyAmount;
 
     private String plannedPaymentId;

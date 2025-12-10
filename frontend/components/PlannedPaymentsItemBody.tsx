@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { MaterialIcons, Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { RecurrenceType } from '../types/plannedPayment';
+import { getCategoryIcon } from '../utils/categoryIcons';
 
 interface PlannedPaymentsItemBodyProps {
   category: string;
@@ -10,32 +10,6 @@ interface PlannedPaymentsItemBodyProps {
   amount: number;
   nextDueDate: string;
 }
-
-const getCategoryIcon = (category: string) => {
-  const cat = category.toLowerCase();
-
-  if (cat.includes('transportation') || cat.includes('car')) {
-    return <MaterialIcons name="directions-car" size={24} color="#6366f1" />;
-  } else if (cat.includes('groceries')) {
-    return <MaterialIcons name="shopping-cart" size={24} color="#10b981" />;
-  } else if (cat.includes('restaurant') || cat.includes('fast-food')) {
-    return <MaterialIcons name="restaurant" size={24} color="#f59e0b" />;
-  } else if (cat.includes('parking')) {
-    return <MaterialIcons name="local-parking" size={24} color="#8b5cf6" />;
-  } else if (cat.includes('sports') || cat.includes('active')) {
-    return <MaterialIcons name="sports-soccer" size={24} color="#ef4444" />;
-  } else if (cat.includes('software') || cat.includes('apps') || cat.includes('games')) {
-    return <MaterialIcons name="computer" size={24} color="#3b82f6" />;
-  } else if (cat.includes('holiday') || cat.includes('trips') || cat.includes('hotels')) {
-    return <FontAwesome5 name="plane" size={20} color="#ec4899" />;
-  } else if (cat.includes('bar') || cat.includes('cafe')) {
-    return <Ionicons name="cafe" size={24} color="#8b4513" />;
-  } else if (cat.includes('income')) {
-    return <MaterialIcons name="attach-money" size={24} color="#10b981" />;
-  } else {
-    return <MaterialIcons name="payment" size={24} color="#6b7280" />;
-  }
-};
 
 const formatNextDueDate = (dateString: string): string => {
   const date = new Date(dateString);
