@@ -1,10 +1,11 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { useMemo, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import SectionHeader from "../components/SectionHeader";
-import TransactionItem from "../components/TransactionItem";
 import TransactionFormModal from "../components/TransactionFormModal";
+import TransactionItem from "../components/TransactionItem";
 import { useTransactions } from "../hooks/useTransactions";
 import { Transaction } from "../types/transaction";
 
@@ -50,6 +51,7 @@ const groupByDate = (transactions: Transaction[]): SectionData[] => {
 
 export default function Records() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const isFocused = useIsFocused();
 
   const {
     data,
@@ -60,7 +62,7 @@ export default function Records() {
     hasNextPage,
     isFetchingNextPage,
     refetch,
-  } = useTransactions({ pageSize: PAGE_SIZE });
+  } = useTransactions({ pageSize: PAGE_SIZE, enabled: isFocused });
 
   const transactions = useMemo(() => {
     return data?.pages.flatMap((page) => page.content) ?? [];
@@ -119,7 +121,7 @@ export default function Records() {
   };
 
   const handleEndReached = () => {
-    if (hasNextPage && !isFetchingNextPage) {
+    if (isFocused && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   };

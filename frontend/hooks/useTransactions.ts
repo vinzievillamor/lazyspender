@@ -1,6 +1,6 @@
 import { PageResponse } from '@/types/api';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAllTransactions, GetTransactionsParams, createTransaction, CreateTransactionRequest } from '../services/transaction.service';
+import { createTransaction, CreateTransactionRequest, getAllTransactions, GetTransactionsParams } from '../services/transaction.service';
 import { Transaction } from '../types/transaction';
 
 export const TRANSACTION_QUERY_KEYS = {
@@ -11,16 +11,18 @@ export const TRANSACTION_QUERY_KEYS = {
 
 interface UseTransactionsOptions {
   pageSize?: number;
+  enabled?: boolean;
 }
 
 export const useTransactions = (options: UseTransactionsOptions = {}) => {
-  const { pageSize = 20 } = options;
+  const { pageSize, enabled = true } = options;
 
   return useInfiniteQuery({
     queryKey: TRANSACTION_QUERY_KEYS.list({ size: pageSize }),
     queryFn: ({ pageParam }) => getAllTransactions({ page: pageParam as number, size: pageSize }),
     initialPageParam: 0,
-    getNextPageParam: (lastPage: PageResponse<Transaction>) => lastPage.hasNext ? lastPage.pageNumber + 1 : null
+    getNextPageParam: (lastPage: PageResponse<Transaction>) => lastPage.hasNext ? lastPage.pageNumber + 1 : null,
+    enabled
   });
 };
 
