@@ -13,5 +13,6 @@ export interface Transaction {
   date: string;
   currency: string;
   refCurrencyAmount: number;
+  plannedPaymentId: string;
   type: TransactionType;
 }

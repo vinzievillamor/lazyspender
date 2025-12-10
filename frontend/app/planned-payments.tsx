@@ -2,7 +2,7 @@ import { FlashList } from '@shopify/flash-list';
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PlannedPaymentItem from '../components/PlannedPaymentItem';
 import { usePlannedPaymentsByStatus } from '../hooks/usePlannedPayments';
-import { PaymentStatus, PlannedPaymentResponse } from '../types/plannedPayment';
+import { PaymentStatus, PlannedPayment } from '../types/plannedPayment';
 
 const OWNER = 'villamorvinzie';
 
@@ -42,7 +42,7 @@ export default function PlannedPayments() {
     );
   }
 
-  const renderItem = ({ item }: { item: PlannedPaymentResponse }) => {
+  const renderItem = ({ item }: { item: PlannedPayment }) => {
     return <PlannedPaymentItem plannedPayment={item} />;
   };
 

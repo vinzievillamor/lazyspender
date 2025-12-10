@@ -1,8 +1,10 @@
 import { FlashList } from "@shopify/flash-list";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import SectionHeader from "../components/SectionHeader";
 import TransactionItem from "../components/TransactionItem";
+import TransactionFormModal from "../components/TransactionFormModal";
 import { useTransactions } from "../hooks/useTransactions";
 import { Transaction } from "../types/transaction";
 
@@ -47,6 +49,8 @@ const groupByDate = (transactions: Transaction[]): SectionData[] => {
 };
 
 export default function Records() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const {
     data,
     isLoading,
@@ -130,6 +134,19 @@ export default function Records() {
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />
+
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => setIsModalVisible(true)}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="add" size={28} color="#ffffff" />
+      </TouchableOpacity>
+
+      <TransactionFormModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+      />
     </View>
   );
 }
@@ -177,5 +194,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Roboto-Medium",
     color: "#ffffff",
+  },
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#007AFF",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 });

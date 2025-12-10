@@ -21,22 +21,7 @@ export enum PaymentStatus {
   CANCELLED = 'CANCELLED'
 }
 
-export interface PlannedPaymentRequest {
-  owner: string;
-  account: string;
-  category: string;
-  amount: number;
-  description: string;
-  currency: string;
-  startDate: string;
-  recurrenceType: RecurrenceType;
-  recurrenceValue: string;
-  endType: EndType;
-  endValue?: string;
-  confirmationType: ConfirmationType;
-}
-
-export interface PlannedPaymentResponse {
+export interface PlannedPayment {
   id: string;
   owner: string;
   account: string;

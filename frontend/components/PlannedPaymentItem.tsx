@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { PlannedPaymentResponse } from '../types/plannedPayment';
-import PlannedPaymentsItemHeader from './PlannedPaymentsItemHeader';
+import { StyleSheet, View } from 'react-native';
+import { PlannedPayment } from '../types/plannedPayment';
 import PlannedPaymentsItemBody from './PlannedPaymentsItemBody';
+import PlannedPaymentsItemHeader from './PlannedPaymentsItemHeader';
 
 interface PlannedPaymentItemProps {
-  plannedPayment: PlannedPaymentResponse;
+  plannedPayment: PlannedPayment;
 }
 
 const PlannedPaymentItem: React.FC<PlannedPaymentItemProps> = ({
