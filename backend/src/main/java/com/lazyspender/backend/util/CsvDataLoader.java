@@ -1,15 +1,5 @@
 package com.lazyspender.backend.util;
 
-import com.lazyspender.backend.model.Transaction;
-import com.lazyspender.backend.model.TransactionType;
-import com.lazyspender.backend.repository.TransactionRepository;
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.Instant;
@@ -20,16 +10,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import com.lazyspender.backend.model.Transaction;
+import com.lazyspender.backend.model.TransactionType;
+import com.lazyspender.backend.repository.TransactionRepository;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class CsvDataLoader implements CommandLineRunner {
 
-    private final TransactionRepository transactionRepository;
-
     private static final String CSV_FILE_PATH = "/mnt/c/Users/Vinzie/Downloads/Phone Link/report_2025-12-05_170747.csv";
+
     private static final String DEFAULT_OWNER = "villamorvinzie";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final TransactionRepository transactionRepository;
 
     @Override
     public void run(String... args) {
@@ -51,14 +55,14 @@ public class CsvDataLoader implements CommandLineRunner {
     private List<Transaction> readTransactionsFromCsv() throws IOException, CsvException {
         List<Transaction> transactions = new ArrayList<>();
 
-        try (CSVReader reader = new CSVReader(new FileReader(CSV_FILE_PATH))) {
+        try (CSVReader reader = new CSVReaderBuilder(new FileReader(CSV_FILE_PATH))
+                .withCSVParser(new CSVParserBuilder().withSeparator(';').build())
+                .build()) {
             List<String[]> records = reader.readAll();
 
             // Skip header row
             for (int i = 1; i < records.size(); i++) {
                 String[] record = records.get(i);
-                String str = String.join("", record);
-                record = str.split(";");
 
                 if (record.length >= 10) {
                     try {
@@ -75,7 +79,8 @@ public class CsvDataLoader implements CommandLineRunner {
     }
 
     private Transaction parseTransaction(String[] record) {
-        // CSV columns: account;category;currency;amount;ref_currency_amount;type;payment_type;payment_type_local;note;date;...
+        // CSV columns:
+        // account;category;currency;amount;ref_currency_amount;type;payment_type;payment_type_local;note;date;...
         String account = record[0];
         String category = record[1];
         String currency = record[2];
