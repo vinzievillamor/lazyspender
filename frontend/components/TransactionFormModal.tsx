@@ -10,12 +10,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import { useUser } from '../contexts/UserContext';
 import { useCreateTransaction } from '../hooks/useTransactions';
 import { CreateTransactionRequest } from '../services/transaction.service';
 import { TransactionType } from '../types/transaction';
 import { Category } from '../types/category';
+import CategorySelectorModal from './CategorySelectorModal';
 
 interface TransactionFormModalProps {
   visible: boolean;
@@ -35,6 +35,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
   });
 
   const [formData, setFormData] = useState<Partial<CreateTransactionRequest>>(getInitialFormData());
+  const [categorySelectorVisible, setCategorySelectorVisible] = useState(false);
 
   const handleSubmit = () => {
     if (!user) {
@@ -82,15 +83,16 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
   };
 
   return (
-    <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={handleClose}>
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <View style={styles.header}>
-            <Text style={styles.title}>New Transaction</Text>
-            <TouchableOpacity onPress={handleClose} disabled={isPending}>
-              <Text style={styles.closeButton}>✕</Text>
-            </TouchableOpacity>
-          </View>
+    <>
+      <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={handleClose}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.header}>
+              <Text style={styles.title}>New Transaction</Text>
+              <TouchableOpacity onPress={handleClose} disabled={isPending}>
+                <Text style={styles.closeButton}>✕</Text>
+              </TouchableOpacity>
+            </View>
 
           <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
             <View style={styles.inputGroup}>
@@ -161,18 +163,16 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Category *</Text>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={formData.category}
-                  onValueChange={(itemValue) => setFormData({ ...formData, category: itemValue })}
-                  enabled={!isPending}
-                  style={styles.picker}
-                >
-                  {Object.values(Category).map((category) => (
-                    <Picker.Item key={category} label={category} value={category} />
-                  ))}
-                </Picker>
-              </View>
+              <TouchableOpacity
+                style={styles.categorySelector}
+                onPress={() => setCategorySelectorVisible(true)}
+                disabled={isPending}
+              >
+                <Text style={styles.categorySelectorText}>
+                  {formData.category || 'Select a category'}
+                </Text>
+                <Text style={styles.categorySelectorIcon}>▼</Text>
+              </TouchableOpacity>
             </View>
 
             <View style={styles.inputGroup}>
@@ -235,6 +235,14 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
         </View>
       </View>
     </Modal>
+
+    <CategorySelectorModal
+      visible={categorySelectorVisible}
+      selectedCategory={formData.category as Category}
+      onSelect={(category) => setFormData({ ...formData, category })}
+      onClose={() => setCategorySelectorVisible(false)}
+    />
+  </>
   );
 };
 
@@ -376,18 +384,26 @@ const styles = StyleSheet.create({
   disabledButton: {
     opacity: 0.6,
   },
-  pickerContainer: {
+  categorySelector: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#d1d5db',
     borderRadius: 8,
+    padding: 12,
     backgroundColor: '#ffffff',
   },
-  picker: {
-    height: 50,
-    color: '#111827',
-    fontFamily: 'Roboto-Regular',
+  categorySelectorText: {
     fontSize: 16,
-    marginHorizontal: -4,
+    fontFamily: 'Roboto-Regular',
+    color: '#111827',
+    flex: 1,
+  },
+  categorySelectorIcon: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginLeft: 8,
   },
 });
 
