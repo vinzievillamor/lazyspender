@@ -28,12 +28,6 @@ function CustomDrawerContent(props: any) {
           onPress={() => router.push("/records")}
           icon="history"
         />
-        <PaperDrawer.Item
-          label="Planned Payments"
-          active={pathname === "/planned-payments"}
-          onPress={() => router.push("/planned-payments")}
-          icon="calendar-clock"
-        />
       </PaperDrawer.Section>
     </DrawerContentScrollView>
   );

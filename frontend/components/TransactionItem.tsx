@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { List, Text, useTheme } from "react-native-paper";
 import { Transaction, TransactionType } from "../types/transaction";
 import { getCategoryIcon } from "../utils/categoryIcons";

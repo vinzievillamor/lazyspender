@@ -26,20 +26,7 @@
           "endsPattern": "(Started|running)"
         }
       },
-      "isBackground": true
-    },
-    {
-      "label": "Stop Firestore Emulator",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": [
-        "down"
-      ],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      },
-      "problemMatcher": []
+      "isBackground": true,
     }
   ]
 }
