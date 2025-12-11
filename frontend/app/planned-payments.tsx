@@ -1,5 +1,5 @@
-import { FlashList } from '@shopify/flash-list';
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Button, Text, useTheme } from 'react-native-paper';
 import PlannedPaymentItem from '../components/PlannedPaymentItem';
 import { usePlannedPaymentsByStatus } from '../hooks/usePlannedPayments';
 import { PaymentStatus, PlannedPayment } from '../types/plannedPayment';
@@ -7,6 +7,7 @@ import { PaymentStatus, PlannedPayment } from '../types/plannedPayment';
 const OWNER = 'villamorvinzie';
 
 export default function PlannedPayments() {
+  const theme = useTheme();
   const { data: plannedPayments, isLoading, isError, error, refetch } = usePlannedPaymentsByStatus(
     OWNER,
     PaymentStatus.ACTIVE
@@ -14,30 +15,30 @@ export default function PlannedPayments() {
 
   if (isLoading) {
     return (
-      <View style={[styles.container, styles.centerContent]}>
-        <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={styles.loadingText}>Loading planned payments...</Text>
+      <View style={[styles.centerContent, { backgroundColor: theme.colors.background }]}>
+        <ActivityIndicator size="large" />
+        <Text variant="bodyLarge" style={styles.loadingText}>Loading planned payments...</Text>
       </View>
     );
   }
 
   if (isError) {
     return (
-      <View style={[styles.container, styles.centerContent]}>
-        <Text style={styles.errorText}>
+      <View style={[styles.centerContent, { backgroundColor: theme.colors.background }]}>
+        <Text variant="bodyLarge" style={styles.errorText}>
           {error instanceof Error ? error.message : 'Failed to load planned payments. Please try again.'}
         </Text>
-        <TouchableOpacity style={styles.retryButton} onPress={() => refetch()}>
-          <Text style={styles.retryButtonText}>Retry</Text>
-        </TouchableOpacity>
+        <Button mode="contained" onPress={() => refetch()} style={styles.retryButton}>
+          Retry
+        </Button>
       </View>
     );
   }
 
   if (!plannedPayments || plannedPayments.length === 0) {
     return (
-      <View style={[styles.container, styles.centerContent]}>
-        <Text style={styles.emptyText}>No active planned payments</Text>
+      <View style={[styles.centerContent, { backgroundColor: theme.colors.background }]}>
+        <Text variant="bodyLarge" style={styles.emptyText}>No active planned payments</Text>
       </View>
     );
   }
@@ -47,11 +48,11 @@ export default function PlannedPayments() {
   };
 
   return (
-    <View style={styles.container}>
-      <FlashList
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <FlatList
         data={plannedPayments}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item: PlannedPayment) => item.id}
       />
     </View>
   );
@@ -60,42 +61,24 @@ export default function PlannedPayments() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9fafb',
   },
   centerContent: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   loadingText: {
     marginTop: 12,
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#6b7280',
   },
   errorText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Medium',
-    color: '#ef4444',
     textAlign: 'center',
     paddingHorizontal: 20,
   },
   emptyText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#6b7280',
     textAlign: 'center',
     paddingHorizontal: 20,
   },
   retryButton: {
     marginTop: 16,
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  retryButtonText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Medium',
-    color: '#ffffff',
   },
 });

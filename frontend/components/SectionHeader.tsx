@@ -1,29 +1,28 @@
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Text, useTheme } from "react-native-paper";
 
 interface SectionHeaderProps {
   title: string;
 }
 
 export default function SectionHeader({ title }: SectionHeaderProps) {
+  const theme = useTheme();
+
   return (
-    <View style={styles.sectionHeader}>
-      <Text style={styles.sectionHeaderText}>{title}</Text>
+    <View style={[styles.sectionHeader, { backgroundColor: theme.colors.elevation.level1 }]}>
+      <Text variant="labelLarge" style={[styles.sectionHeaderText, { color: theme.colors.primary }]}>
+        {title}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   sectionHeader: {
-    backgroundColor: "#e5e7eb",
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#d1d5db",
   },
   sectionHeaderText: {
-    fontSize: 14,
-    fontFamily: "Roboto-SemiBold",
-    color: "#374151",
-    textTransform: "uppercase",
+    fontWeight: '600',
   },
 });

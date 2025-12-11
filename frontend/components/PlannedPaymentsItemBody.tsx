@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Text, useTheme } from 'react-native-paper';
 import { RecurrenceType } from '../types/plannedPayment';
 import { getCategoryIcon } from '../utils/categoryIcons';
 
@@ -41,6 +42,7 @@ const PlannedPaymentsItemBody: React.FC<PlannedPaymentsItemBodyProps> = ({
   amount,
   nextDueDate,
 }) => {
+  const theme = useTheme();
   const isIncome = amount > 0;
 
   return (
@@ -48,19 +50,22 @@ const PlannedPaymentsItemBody: React.FC<PlannedPaymentsItemBodyProps> = ({
       <View style={styles.iconContainer}>{getCategoryIcon(category)}</View>
 
       <View style={styles.categoryContainer}>
-        <Text style={styles.categoryText}>{category}</Text>
-        <Text style={styles.recurrenceText}>
+        <Text variant="bodyLarge">{category}</Text>
+        <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
           {recurrenceType} - {recurrenceValue}
         </Text>
       </View>
 
       <View style={styles.amountContainer}>
         <Text
-          style={[styles.amountText, { color: isIncome ? '#10b981' : '#ef4444' }]}
+          variant="bodyLarge"
+          style={{ color: isIncome ? theme.colors.tertiary : theme.colors.onSurface }}
         >
           {isIncome ? '+' : ''}{amount.toFixed(2)}
         </Text>
-        <Text style={styles.dueDateText}>{formatNextDueDate(nextDueDate)}</Text>
+        <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
+          {formatNextDueDate(nextDueDate)}
+        </Text>
       </View>
     </View>
   );
@@ -74,8 +79,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: '#f3f4f6',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -84,31 +87,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  categoryText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Bold',
-    color: '#1f2937',
-    marginBottom: 2,
-  },
-  recurrenceText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
-    color: '#6b7280',
-  },
   amountContainer: {
     justifyContent: 'center',
     alignItems: 'flex-end',
     marginLeft: 12,
-  },
-  amountText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Bold',
-    marginBottom: 2,
-  },
-  dueDateText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
-    color: '#6b7280',
   },
 });
 

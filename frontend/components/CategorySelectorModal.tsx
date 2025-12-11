@@ -3,11 +3,9 @@ import {
   Modal,
   ScrollView,
   StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
+import { Searchbar, Chip, Text, IconButton, Button, Surface } from 'react-native-paper';
 import { Category } from '../types/category';
 
 interface CategorySelectorModalProps {
@@ -55,31 +53,27 @@ const CategorySelectorModal: React.FC<CategorySelectorModalProps> = ({
       onRequestClose={handleClose}
     >
       <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
+        <Surface style={styles.modalContent}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.title}>Select Category</Text>
-            <TouchableOpacity onPress={handleClose}>
-              <Text style={styles.closeButton}>✕</Text>
-            </TouchableOpacity>
+            <Text variant="headlineSmall">Select Category</Text>
+            <IconButton icon="close" onPress={handleClose} />
           </View>
 
           {/* Description */}
           <View style={styles.descriptionContainer}>
-            <Text style={styles.description}>
+            <Text variant="bodyMedium">
               Select a category for your transaction
             </Text>
           </View>
 
           {/* Search Bar */}
           <View style={styles.searchContainer}>
-            <Text style={styles.searchIcon}>🔍</Text>
-            <TextInput
-              style={styles.searchInput}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
+            <Searchbar
               placeholder="Search"
-              placeholderTextColor="#9ca3af"
+              onChangeText={setSearchQuery}
+              value={searchQuery}
+              style={styles.searchbar}
             />
           </View>
 
@@ -93,23 +87,15 @@ const CategorySelectorModal: React.FC<CategorySelectorModalProps> = ({
               {filteredCategories.map((category) => {
                 const isSelected = selectedCategory === category;
                 return (
-                  <TouchableOpacity
+                  <Chip
                     key={category}
-                    style={[
-                      styles.categoryChip,
-                      isSelected && styles.categoryChipSelected,
-                    ]}
+                    selected={isSelected}
                     onPress={() => handleSelectCategory(category)}
+                    style={styles.chip}
+                    showSelectedOverlay={isSelected}
                   >
-                    <Text
-                      style={[
-                        styles.categoryChipText,
-                        isSelected && styles.categoryChipTextSelected,
-                      ]}
-                    >
-                      {category}
-                    </Text>
-                  </TouchableOpacity>
+                    {category}
+                  </Chip>
                 );
               })}
             </View>
@@ -117,14 +103,15 @@ const CategorySelectorModal: React.FC<CategorySelectorModalProps> = ({
 
           {/* Footer */}
           <View style={styles.footer}>
-            <TouchableOpacity
-              style={styles.backButton}
+            <Button
+              mode="outlined"
               onPress={handleClose}
+              style={styles.backButton}
             >
-              <Text style={styles.backButtonText}>Back</Text>
-            </TouchableOpacity>
+              Back
+            </Button>
           </View>
-        </View>
+        </Surface>
       </View>
     </Modal>
   );
@@ -133,69 +120,37 @@ const CategorySelectorModal: React.FC<CategorySelectorModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    backgroundColor: '#ffffff',
-    borderRadius: 20,
     height: '80%',
     width: '100%',
     maxWidth: 600,
+    borderRadius: 16,
+    overflow: 'hidden',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  title: {
-    fontSize: 22,
-    fontFamily: 'Roboto-Bold',
-    color: '#111827',
-  },
-  closeButton: {
-    fontSize: 24,
-    color: '#6b7280',
-    fontFamily: 'Roboto-Regular',
+    paddingLeft: 20,
+    paddingRight: 8,
+    paddingVertical: 12,
   },
   descriptionContainer: {
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 12,
   },
-  description: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
-    color: '#6b7280',
-    lineHeight: 20,
-  },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     marginBottom: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
   },
-  searchIcon: {
-    fontSize: 18,
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#111827',
-    padding: 0,
+  searchbar: {
+    elevation: 0,
   },
   categoriesContainer: {
     flex: 1,
@@ -207,46 +162,17 @@ const styles = StyleSheet.create({
   categoryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: 8,
   },
-  categoryChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: '#ffffff',
-    borderWidth: 1.5,
-    borderColor: '#d1d5db',
-    marginBottom: 2,
-  },
-  categoryChipSelected: {
-    backgroundColor: '#10b981',
-    borderColor: '#10b981',
-  },
-  categoryChipText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
-    color: '#374151',
-  },
-  categoryChipTextSelected: {
-    color: '#ffffff',
+  chip: {
+    marginRight: 4,
+    marginBottom: 4,
   },
   footer: {
     padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   backButton: {
-    paddingHorizontal: 32,
-    paddingVertical: 14,
-    borderRadius: 8,
-    backgroundColor: '#f3f4f6',
-  },
-  backButtonText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Medium',
-    color: '#374151',
+    width: '100%',
   },
 });
 

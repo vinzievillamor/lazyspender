@@ -1,8 +1,7 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import { useMemo, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Button, FAB, Text, useTheme } from "react-native-paper";
 import SectionHeader from "../components/SectionHeader";
 import TransactionFormModal from "../components/TransactionFormModal";
 import TransactionItem from "../components/TransactionItem";
@@ -50,6 +49,7 @@ const groupByDate = (transactions: Transaction[]): SectionData[] => {
 };
 
 export default function Records() {
+  const theme = useTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const isFocused = useIsFocused();
 
@@ -70,22 +70,22 @@ export default function Records() {
 
   if (isLoading) {
     return (
-      <View style={[styles.container, styles.centerContent]}>
-        <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={styles.loadingText}>Loading transactions...</Text>
+      <View style={[styles.centerContent, { backgroundColor: theme.colors.background }]}>
+        <ActivityIndicator size="large" />
+        <Text variant="bodyLarge" style={styles.loadingText}>Loading transactions...</Text>
       </View>
     );
   }
 
   if (isError) {
     return (
-      <View style={[styles.container, styles.centerContent]}>
-        <Text style={styles.errorText}>
+      <View style={[styles.centerContent, { backgroundColor: theme.colors.background }]}>
+        <Text variant="bodyLarge" style={styles.errorText}>
           {error instanceof Error ? error.message : 'Failed to load transactions. Please try again.'}
         </Text>
-        <TouchableOpacity style={styles.retryButton} onPress={() => refetch()}>
-          <Text style={styles.retryButtonText}>Retry</Text>
-        </TouchableOpacity>
+        <Button mode="contained" onPress={() => refetch()} style={styles.retryButton}>
+          Retry
+        </Button>
       </View>
     );
   }
@@ -114,8 +114,8 @@ export default function Records() {
 
     return (
       <View style={styles.footerLoader}>
-        <ActivityIndicator size="small" color="#007AFF" />
-        <Text style={styles.footerText}>Loading more...</Text>
+        <ActivityIndicator size="small" />
+        <Text variant="bodyMedium" style={styles.footerText}>Loading more...</Text>
       </View>
     );
   };
@@ -127,23 +127,21 @@ export default function Records() {
   };
 
   return (
-    <View style={styles.container}>
-      <FlashList
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <FlatList
         data={flatData}
         renderItem={renderItem}
-        keyExtractor={(_item, index) => index.toString()}
+        keyExtractor={(_item: any, index: number) => index.toString()}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />
 
-      <TouchableOpacity
+      <FAB
+        icon="plus"
         style={styles.fab}
         onPress={() => setIsModalVisible(true)}
-        activeOpacity={0.8}
-      >
-        <Ionicons name="add" size={28} color="#ffffff" />
-      </TouchableOpacity>
+      />
 
       <TransactionFormModal
         visible={isModalVisible}
@@ -156,22 +154,16 @@ export default function Records() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9fafb",
   },
   centerContent: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   loadingText: {
     marginTop: 12,
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-    color: "#6b7280",
   },
   errorText: {
-    fontSize: 16,
-    fontFamily: "Roboto-Medium",
-    color: "#ef4444",
     textAlign: "center",
     paddingHorizontal: 20,
   },
@@ -181,39 +173,13 @@ const styles = StyleSheet.create({
   },
   footerText: {
     marginTop: 8,
-    fontSize: 14,
-    fontFamily: "Roboto-Regular",
-    color: "#6b7280",
   },
   retryButton: {
     marginTop: 16,
-    backgroundColor: "#007AFF",
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  retryButtonText: {
-    fontSize: 16,
-    fontFamily: "Roboto-Medium",
-    color: "#ffffff",
   },
   fab: {
     position: "absolute",
-    right: 20,
-    bottom: 20,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "#007AFF",
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    right: 16,
+    bottom: 16,
   },
 });

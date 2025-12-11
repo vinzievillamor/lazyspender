@@ -1,74 +1,84 @@
+import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { usePathname, useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { MD3LightTheme, Drawer as PaperDrawer, PaperProvider } from "react-native-paper";
 import { queryClient } from "../config/queryClient";
 import { UserProvider } from "../contexts/UserContext";
 
-// Keep the splash screen visible while fonts load
-SplashScreen.preventAutoHideAsync();
+const theme = { ...MD3LightTheme }
 
-export default function RootLayout() {
-  const [fontsLoaded, fontError] = useFonts({
-    "Roboto-Regular": require("../assets/fonts/roboto/static/Roboto-Regular.ttf"),
-    "Roboto-Italic": require("../assets/fonts/roboto/static/Roboto-Italic.ttf"),
-    "Roboto-Light": require("../assets/fonts/roboto/static/Roboto-Light.ttf"),
-    "Roboto-LightItalic": require("../assets/fonts/roboto/static/Roboto-LightItalic.ttf"),
-    "Roboto-Medium": require("../assets/fonts/roboto/static/Roboto-Medium.ttf"),
-    "Roboto-MediumItalic": require("../assets/fonts/roboto/static/Roboto-MediumItalic.ttf"),
-    "Roboto-Bold": require("../assets/fonts/roboto/static/Roboto-Bold.ttf"),
-    "Roboto-BoldItalic": require("../assets/fonts/roboto/static/Roboto-BoldItalic.ttf"),
-    "Roboto-SemiBold": require("../assets/fonts/roboto/static/Roboto-SemiBold.ttf"),
-    "Roboto-SemiBoldItalic": require("../assets/fonts/roboto/static/Roboto-SemiBoldItalic.ttf"),
-  });
-
-  useEffect(() => {
-    if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+function CustomDrawerContent(props: any) {
+  const router = useRouter();
+  const pathname = usePathname();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <UserProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <Drawer>
-            <Drawer.Screen
-              name="dashboard"
-              options={{
-                drawerLabel: "Dashboard",
-                title: "Dashboard",
-              }}
-            />
-            <Drawer.Screen
-              name="records"
-              options={{
-                drawerLabel: "Records",
-                title: "Records",
-              }}
-            />
-            <Drawer.Screen
-              name="planned-payments"
-              options={{
-                drawerLabel: "Planned Payments",
-                title: "Planned Payments",
-              }}
-            />
-            <Drawer.Screen
-              name="index"
-              options={{
-                drawerItemStyle: { display: "none" },
-              }}
-            />
-          </Drawer>
-        </GestureHandlerRootView>
-      </UserProvider>
-    </QueryClientProvider>
+    <DrawerContentScrollView {...props}>
+      <PaperDrawer.Section title="LazySpender">
+        <PaperDrawer.Item
+          label="Dashboard"
+          active={pathname === "/dashboard"}
+          onPress={() => router.push("/dashboard")}
+          icon="view-dashboard"
+        />
+        <PaperDrawer.Item
+          label="Records"
+          active={pathname === "/records"}
+          onPress={() => router.push("/records")}
+          icon="history"
+        />
+        <PaperDrawer.Item
+          label="Planned Payments"
+          active={pathname === "/planned-payments"}
+          onPress={() => router.push("/planned-payments")}
+          icon="calendar-clock"
+        />
+      </PaperDrawer.Section>
+    </DrawerContentScrollView>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <PaperProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <UserProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Drawer
+              drawerContent={(props) => <CustomDrawerContent {...props} />}
+            >
+              <Drawer.Screen
+                name="dashboard"
+                options={{
+                  drawerLabel: "Dashboard",
+                  title: "Dashboard",
+                }}
+              />
+              <Drawer.Screen
+                name="records"
+                options={{
+                  drawerLabel: "Records",
+                  title: "Records",
+                }}
+              />
+              <Drawer.Screen
+                name="planned-payments"
+                options={{
+                  drawerLabel: "Planned Payments",
+                  title: "Planned Payments",
+                }}
+              />
+              <Drawer.Screen
+                name="index"
+                options={{
+                  drawerItemStyle: { display: "none" },
+                }}
+              />
+            </Drawer>
+          </GestureHandlerRootView>
+        </UserProvider>
+      </QueryClientProvider>
+    </PaperProvider>
   );
 }

@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import {
-  ActivityIndicator,
   Alert,
   Modal,
   ScrollView,
   StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
+import { Button, Chip, IconButton, SegmentedButtons, Surface, Text, TextInput } from 'react-native-paper';
 import { useUser } from '../contexts/UserContext';
 import { useCreateTransaction } from '../hooks/useTransactions';
 import { CreateTransactionRequest } from '../services/transaction.service';
-import { TransactionType } from '../types/transaction';
 import { Category } from '../types/category';
+import { TransactionType } from '../types/transaction';
 import CategorySelectorModal from './CategorySelectorModal';
 
 interface TransactionFormModalProps {
@@ -86,324 +83,181 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
     <>
       <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={handleClose}>
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <Surface style={styles.modalContent}>
             <View style={styles.header}>
-              <Text style={styles.title}>New Transaction</Text>
-              <TouchableOpacity onPress={handleClose} disabled={isPending}>
-                <Text style={styles.closeButton}>✕</Text>
-              </TouchableOpacity>
+              <Text variant="headlineSmall">New Transaction</Text>
+              <IconButton icon="close" onPress={handleClose} disabled={isPending} />
             </View>
 
-          <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Type *</Text>
-              <View style={styles.typeSelector}>
-                <TouchableOpacity
-                  style={[
-                    styles.typeButton,
-                    formData.type === TransactionType.EXPENSE && styles.typeButtonActive,
+            <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
+              <View style={styles.inputGroup}>
+                <Text variant="labelLarge" style={styles.label}>Type *</Text>
+                <SegmentedButtons
+                  value={formData.type || TransactionType.EXPENSE}
+                  onValueChange={(value) => setFormData({ ...formData, type: value as TransactionType })}
+                  buttons={[
+                    { value: TransactionType.EXPENSE, label: 'Expense', disabled: isPending},
+                    { value: TransactionType.INCOME, label: 'Income', disabled: isPending },
                   ]}
-                  onPress={() => setFormData({ ...formData, type: TransactionType.EXPENSE })}
-                  disabled={isPending}
-                >
-                  <Text
-                    style={[
-                      styles.typeButtonText,
-                      formData.type === TransactionType.EXPENSE && styles.typeButtonTextActive,
-                    ]}
-                  >
-                    Expense
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.typeButton,
-                    formData.type === TransactionType.INCOME && styles.typeButtonActive,
-                  ]}
-                  onPress={() => setFormData({ ...formData, type: TransactionType.INCOME })}
-                  disabled={isPending}
-                >
-                  <Text
-                    style={[
-                      styles.typeButtonText,
-                      formData.type === TransactionType.INCOME && styles.typeButtonTextActive,
-                    ]}
-                  >
-                    Income
-                  </Text>
-                </TouchableOpacity>
+                />
               </View>
-            </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Account *</Text>
-              <View style={styles.accountSelector}>
-                {user?.accounts.map((account) => (
-                  <TouchableOpacity
-                    key={account}
-                    style={[
-                      styles.accountButton,
-                      formData.account === account && styles.accountButtonActive,
-                    ]}
-                    onPress={() => setFormData({ ...formData, account })}
-                    disabled={isPending}
-                  >
-                    <Text
-                      style={[
-                        styles.accountButtonText,
-                        formData.account === account && styles.accountButtonTextActive,
-                      ]}
+              <View style={styles.inputGroup}>
+                <Text variant="labelLarge" style={styles.label}>Account *</Text>
+                <View style={styles.chipContainer}>
+                  {user?.accounts.map((account) => (
+                    <Chip
+                      key={account}
+                      selected={formData.account === account}
+                      onPress={() => setFormData({ ...formData, account })}
+                      disabled={isPending}
+                      style={styles.chip}
                     >
                       {account}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                    </Chip>
+                  ))}
+                </View>
               </View>
-            </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Category *</Text>
-              <TouchableOpacity
-                style={styles.categorySelector}
-                onPress={() => setCategorySelectorVisible(true)}
-                disabled={isPending}
-              >
-                <Text style={styles.categorySelectorText}>
+              <View style={styles.inputGroup}>
+                <Text variant="labelLarge" style={styles.label}>Category *</Text>
+                <Button
+                  mode="outlined"
+                  onPress={() => setCategorySelectorVisible(true)}
+                  disabled={isPending}
+                  icon="chevron-down"
+                  contentStyle={styles.categoryButtonContent}
+                  style={styles.categoryButton}
+                >
                   {formData.category || 'Select a category'}
-                </Text>
-                <Text style={styles.categorySelectorIcon}>▼</Text>
-              </TouchableOpacity>
-            </View>
+                </Button>
+              </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Amount *</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.amount?.toString()}
-                onChangeText={(text) => setFormData({ ...formData, amount: parseFloat(text) || 0 })}
-                placeholder="0.00"
-                keyboardType="numeric"
-                editable={!isPending}
-              />
-            </View>
+              <View style={styles.inputGroup}>
+                <TextInput
+                  label="Amount *"
+                  value={formData.amount?.toString()}
+                  onChangeText={(text) => setFormData({ ...formData, amount: parseFloat(text) || 0 })}
+                  placeholder="0.00"
+                  keyboardType="numeric"
+                  disabled={isPending}
+                  mode="outlined"
+                />
+              </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Currency</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.currency}
-                onChangeText={(text) => setFormData({ ...formData, currency: text })}
-                placeholder="USD"
-                editable={!isPending}
-              />
-            </View>
+              <View style={styles.inputGroup}>
+                <TextInput
+                  label="Currency"
+                  value={formData.currency}
+                  onChangeText={(text) => setFormData({ ...formData, currency: text })}
+                  placeholder="USD"
+                  disabled={isPending}
+                  mode="outlined"
+                />
+              </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Note</Text>
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                value={formData.note}
-                onChangeText={(text) => setFormData({ ...formData, note: text })}
-                placeholder="Add a note"
-                multiline
-                numberOfLines={3}
-                editable={!isPending}
-              />
-            </View>
-          </ScrollView>
+              <View style={styles.inputGroup}>
+                <TextInput
+                  label="Note"
+                  value={formData.note}
+                  onChangeText={(text) => setFormData({ ...formData, note: text })}
+                  placeholder="Add a note"
+                  multiline
+                  numberOfLines={3}
+                  disabled={isPending}
+                  mode="outlined"
+                />
+              </View>
+            </ScrollView>
 
-          <View style={styles.footer}>
-            <TouchableOpacity
-              style={[styles.button, styles.cancelButton]}
-              onPress={handleClose}
-              disabled={isPending}
-            >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.submitButton, isPending && styles.disabledButton]}
-              onPress={handleSubmit}
-              disabled={isPending}
-            >
-              {isPending ? (
-                <ActivityIndicator color="#ffffff" />
-              ) : (
-                <Text style={styles.submitButtonText}>Create</Text>
-              )}
-            </TouchableOpacity>
-          </View>
+            <View style={styles.footer}>
+              <Button
+                mode="outlined"
+                onPress={handleClose}
+                disabled={isPending}
+                style={styles.button}
+              >
+                Cancel
+              </Button>
+              <Button
+                mode="contained"
+                onPress={handleSubmit}
+                disabled={isPending}
+                loading={isPending}
+                style={styles.button}
+              >
+                Create
+              </Button>
+            </View>
+          </Surface>
         </View>
-      </View>
-    </Modal>
+      </Modal>
 
-    <CategorySelectorModal
-      visible={categorySelectorVisible}
-      selectedCategory={formData.category as Category}
-      onSelect={(category) => setFormData({ ...formData, category })}
-      onClose={() => setCategorySelectorVisible(false)}
-    />
-  </>
+      <CategorySelectorModal
+        visible={categorySelectorVisible}
+        selectedCategory={formData.category as Category}
+        onSelect={(category) => setFormData({ ...formData, category })}
+        onClose={() => setCategorySelectorVisible(false)}
+      />
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    backgroundColor: '#ffffff',
-    borderRadius: 20,
     height: '75%',
     width: '100%',
     maxWidth: 500,
+    borderRadius: 16,
+    overflow: 'hidden',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  title: {
-    fontSize: 20,
-    fontFamily: 'Roboto-Bold',
-    color: '#111827',
-  },
-  closeButton: {
-    fontSize: 24,
-    color: '#6b7280',
-    fontFamily: 'Roboto-Regular',
+    paddingLeft: 20,
+    paddingRight: 8,
+    paddingVertical: 12,
   },
   form: {
     padding: 20,
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   label: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
-    color: '#374151',
     marginBottom: 8,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#111827',
-  },
-  textArea: {
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  typeSelector: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  typeButton: {
-    flex: 1,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  typeButtonActive: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
-  },
-  typeButtonText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Medium',
-    color: '#6b7280',
-  },
-  typeButtonTextActive: {
-    color: '#ffffff',
-  },
-  accountSelector: {
+  chipContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
   },
-  accountButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 20,
+  chip: {
+    marginRight: 4,
+    marginBottom: 4,
   },
-  accountButtonActive: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+  categoryButton: {
+    justifyContent: 'flex-start',
   },
-  accountButtonText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
-    color: '#6b7280',
-  },
-  accountButtonTextActive: {
-    color: '#ffffff',
+  categoryButtonContent: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
   },
   footer: {
     flexDirection: 'row',
     padding: 20,
     gap: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
   },
   button: {
     flex: 1,
-    padding: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  cancelButton: {
-    backgroundColor: '#f3f4f6',
-  },
-  cancelButtonText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Medium',
-    color: '#374151',
-  },
-  submitButton: {
-    backgroundColor: '#007AFF',
-  },
-  submitButtonText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Medium',
-    color: '#ffffff',
-  },
-  disabledButton: {
-    opacity: 0.6,
-  },
-  categorySelector: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    padding: 12,
-    backgroundColor: '#ffffff',
-  },
-  categorySelectorText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#111827',
-    flex: 1,
-  },
-  categorySelectorIcon: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginLeft: 8,
   },
 });
 
