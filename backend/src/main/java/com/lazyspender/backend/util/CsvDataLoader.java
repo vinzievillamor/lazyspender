@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CsvDataLoader implements CommandLineRunner {
 
-    private static final String CSV_FILE_PATH = "/mnt/c/Users/Vinzie/Downloads/Phone Link/report_2025-12-11_221623.csv";
+    private static final String CSV_FILE_PATH = "C:\\Users\\Vinzie\\Downloads\\Phone Link\\report_2025-12-11_221623.csv";
 
     private static final String DEFAULT_OWNER = "villamorvinzie";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

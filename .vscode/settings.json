@@ -9,7 +9,7 @@
   "java.configuration.runtimes": [
     {
       "name": "JavaSE-21",
-      "path": "/usr/lib/jvm/zulu-21-amd64",
+      "path": "C:\\Program Files\\Development\\zulu21.46.19-ca-jdk21.0.9-win_x64",
       "default": true
     }
   ],
