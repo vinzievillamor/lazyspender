@@ -2,6 +2,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useMemo, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { ActivityIndicator, Button, FAB, Text, useTheme } from "react-native-paper";
+import { spacing } from "../config/theme";
 import TransactionFormModal from "../components/TransactionFormModal";
 import TransactionItem from "../components/TransactionItem";
 import TransactionItemHeader from "../components/TransactionItemHeader";
@@ -161,25 +162,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loadingText: {
-    marginTop: 12,
+    marginTop: spacing.md,
   },
   errorText: {
     textAlign: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: spacing.xl,
   },
   footerLoader: {
-    paddingVertical: 20,
+    paddingVertical: spacing.xl,
     alignItems: "center",
   },
   footerText: {
-    marginTop: 8,
+    marginTop: spacing.sm,
   },
   retryButton: {
-    marginTop: 16,
+    marginTop: spacing.lg,
+    borderRadius: 12,
   },
   fab: {
     position: "absolute",
-    right: 16,
-    bottom: 16,
+    right: spacing.lg,
+    bottom: spacing.lg,
+    borderRadius: 16,
   },
 });

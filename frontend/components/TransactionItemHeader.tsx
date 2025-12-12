@@ -1,5 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
+import { spacing } from "../config/theme";
 
 interface TransactionItemHeaderProps {
   title: string;
@@ -9,7 +10,7 @@ export default function TransactionItemHeader({ title }: TransactionItemHeaderPr
   const theme = useTheme();
 
   return (
-    <View style={[styles.TransactionItemHeader, { backgroundColor: theme.colors.elevation.level1 }]}>
+    <View style={[styles.TransactionItemHeader, { backgroundColor: theme.colors.background }]}>
       <Text variant="labelLarge" style={[styles.TransactionItemHeaderText, { color: theme.colors.primary }]}>
         {title}
       </Text>
@@ -19,10 +20,11 @@ export default function TransactionItemHeader({ title }: TransactionItemHeaderPr
 
 const styles = StyleSheet.create({
   TransactionItemHeader: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    marginTop: spacing.md,
   },
   TransactionItemHeaderText: {
-    fontWeight: '600',
+    letterSpacing: 0.5,
   },
 });

@@ -6,6 +6,7 @@ import {
   View,
 } from 'react-native';
 import { Searchbar, Chip, Text, IconButton, Button, Surface } from 'react-native-paper';
+import { shadows, spacing } from '../config/theme';
 import { Category } from '../types/category';
 import { getCategoryIcon } from '../utils/categoryIcons';
 
@@ -75,6 +76,7 @@ const CategorySelectorModal: React.FC<CategorySelectorModalProps> = ({
               onChangeText={setSearchQuery}
               value={searchQuery}
               style={styles.searchbar}
+              elevation={0}
             />
           </View>
 
@@ -124,57 +126,62 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: spacing.xl,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     height: '80%',
     width: '100%',
     maxWidth: 600,
-    borderRadius: 16,
+    borderRadius: 24,
     overflow: 'hidden',
+    ...shadows.xl,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 8,
-    paddingVertical: 12,
+    paddingLeft: spacing.xl,
+    paddingRight: spacing.sm,
+    paddingVertical: spacing.md,
   },
   descriptionContainer: {
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.md,
   },
   searchContainer: {
-    paddingHorizontal: 20,
-    marginBottom: 20,
+    paddingHorizontal: spacing.xl,
+    marginBottom: spacing.xl,
   },
   searchbar: {
-    elevation: 0,
+    borderRadius: 12,
+    ...shadows.sm,
   },
   categoriesContainer: {
     flex: 1,
   },
   categoriesContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.xl,
   },
   categoryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: spacing.sm,
   },
   chip: {
-    marginRight: 4,
-    marginBottom: 4,
+    marginRight: 0,
+    marginBottom: 0,
   },
   footer: {
-    padding: 20,
+    padding: spacing.xl,
   },
   backButton: {
     width: '100%',
+    borderRadius: 12,
+    borderWidth: 0,
+    ...shadows.sm,
   },
 });
 

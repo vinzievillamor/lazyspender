@@ -6,7 +6,8 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Button, Chip, IconButton, SegmentedButtons, Surface, Text, TextInput } from 'react-native-paper';
+import { Button, Chip, IconButton, SegmentedButtons, Surface, Text, TextInput, useTheme } from 'react-native-paper';
+import { shadows, spacing } from '../config/theme';
 import { useUser } from '../contexts/UserContext';
 import { useCreateTransaction } from '../hooks/useTransactions';
 import { CreateTransactionRequest } from '../services/transaction.service';
@@ -21,6 +22,7 @@ interface TransactionFormModalProps {
 
 const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, onClose }) => {
   const { user } = useUser();
+  const theme = useTheme();
   const { mutate: createTransaction, isPending } = useCreateTransaction();
 
   const getInitialFormData = (): Partial<CreateTransactionRequest> => ({
@@ -99,6 +101,14 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                     { value: TransactionType.EXPENSE, label: 'Expense', disabled: isPending},
                     { value: TransactionType.INCOME, label: 'Income', disabled: isPending },
                   ]}
+                  style={styles.segmentedButtons}
+                  theme={{
+                    colors: {
+                      secondaryContainer: theme.colors.primaryContainer,
+                      onSecondaryContainer: theme.colors.primary,
+                      outline: 'transparent',
+                    }
+                  }}
                 />
               </View>
 
@@ -111,7 +121,20 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                       selected={formData.account === account}
                       onPress={() => setFormData({ ...formData, account })}
                       disabled={isPending}
-                      style={styles.chip}
+                      style={[
+                        styles.chip,
+                        formData.account === account && {
+                          backgroundColor: theme.colors.primaryContainer,
+                        }
+                      ]}
+                      textStyle={{
+                        color: formData.account === account ? theme.colors.primary : theme.colors.onSurfaceVariant
+                      }}
+                      theme={{
+                        colors: {
+                          outline: 'transparent',
+                        }
+                      }}
                     >
                       {account}
                     </Chip>
@@ -141,7 +164,15 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                   placeholder="0.00"
                   keyboardType="numeric"
                   disabled={isPending}
-                  mode="outlined"
+                  mode="flat"
+                  style={styles.input}
+                  underlineStyle={{ display: 'none' }}
+                  theme={{
+                    colors: {
+                      primary: theme.colors.primary,
+                      onSurfaceVariant: theme.colors.onSurfaceVariant,
+                    }
+                  }}
                 />
               </View>
 
@@ -152,7 +183,15 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                   onChangeText={(text) => setFormData({ ...formData, currency: text })}
                   placeholder="USD"
                   disabled={isPending}
-                  mode="outlined"
+                  mode="flat"
+                  style={styles.input}
+                  underlineStyle={{ display: 'none' }}
+                  theme={{
+                    colors: {
+                      primary: theme.colors.primary,
+                      onSurfaceVariant: theme.colors.onSurfaceVariant,
+                    }
+                  }}
                 />
               </View>
 
@@ -165,7 +204,15 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                   multiline
                   numberOfLines={3}
                   disabled={isPending}
-                  mode="outlined"
+                  mode="flat"
+                  style={styles.input}
+                  underlineStyle={{ display: 'none' }}
+                  theme={{
+                    colors: {
+                      primary: theme.colors.primary,
+                      onSurfaceVariant: theme.colors.onSurfaceVariant,
+                    }
+                  }}
                 />
               </View>
             </ScrollView>
@@ -176,6 +223,11 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                 onPress={handleClose}
                 disabled={isPending}
                 style={styles.button}
+                theme={{
+                  colors: {
+                    outline: 'transparent',
+                  }
+                }}
               >
                 Cancel
               </Button>
@@ -208,44 +260,59 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: spacing.xl,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     height: '75%',
     width: '100%',
     maxWidth: 500,
-    borderRadius: 16,
+    borderRadius: 24,
     overflow: 'hidden',
+    ...shadows.xl,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 8,
-    paddingVertical: 12,
+    paddingLeft: spacing.xl,
+    paddingRight: spacing.sm,
+    paddingVertical: spacing.md,
   },
   form: {
-    padding: 20,
+    padding: spacing.xl,
   },
   inputGroup: {
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
   label: {
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   chipContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: spacing.sm,
   },
   chip: {
-    marginRight: 4,
-    marginBottom: 4,
+    marginRight: 0,
+    marginBottom: 0,
+    borderRadius: 12,
+    ...shadows.sm,
+  },
+  segmentedButtons: {
+    borderRadius: 12,
+    ...shadows.sm,
+  },
+  input: {
+    borderRadius: 12,
+    backgroundColor: '#F8F9FA',
+    ...shadows.sm,
   },
   categoryButton: {
     justifyContent: 'flex-start',
+    borderRadius: 12,
+    borderWidth: 0,
+    ...shadows.sm,
   },
   categoryButtonContent: {
     flexDirection: 'row-reverse',
@@ -253,11 +320,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: 'row',
-    padding: 20,
-    gap: 12,
+    padding: spacing.xl,
+    gap: spacing.md,
   },
   button: {
     flex: 1,
+    borderRadius: 12,
+    borderWidth: 0,
+    ...shadows.sm,
   },
 });
 

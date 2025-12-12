@@ -1,5 +1,6 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Card, Text, useTheme } from "react-native-paper";
+import { shadows, spacing } from "../config/theme";
 
 export default function Dashboard() {
   const theme = useTheme();
@@ -7,7 +8,7 @@ export default function Dashboard() {
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.content}>
-        <Card style={styles.card}>
+        <Card style={styles.card} elevation={0}>
           <Card.Content>
             <Text variant="titleMedium" style={styles.sectionTitle}>
               More insights coming soon...
@@ -27,25 +28,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingVertical: 16,
+    paddingVertical: spacing.lg,
   },
   header: {
     fontWeight: "bold",
-    paddingHorizontal: 16,
-    marginBottom: 4,
+    paddingHorizontal: spacing.lg,
+    marginBottom: spacing.xs,
   },
   subtitle: {
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     opacity: 0.7,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   card: {
-    margin: 16,
-    marginTop: 8,
+    marginHorizontal: spacing.lg,
+    marginVertical: spacing.sm,
+    borderRadius: 20,
+    ...shadows.md,
   },
   sectionTitle: {
     fontWeight: "600",
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   placeholderText: {
     opacity: 0.6,
