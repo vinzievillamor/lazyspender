@@ -1,6 +1,6 @@
 import { apiClient } from '../config/api';
-import { Transaction, TransactionType } from '../types/transaction';
 import { PageResponse } from '../types/api';
+import { Transaction, TransactionType } from '../types/transaction';
 
 export interface GetTransactionsParams {
   page?: number;

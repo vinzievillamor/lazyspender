@@ -12,13 +12,12 @@ post {
 
 body:json {
   {
-    "owner": "john_doe",
+    "owner": "villamorvinzie",
     "account": "Credit Card",
     "category": "Food & Dining",
     "amount": 25.50,
     "note": "Lunch at restaurant",
-    "date": "2025-12-08T12:30:00Z",
-    "currency": "USD",
+    "date": "2025-12-12T23:30:00Z",
     "refCurrencyAmount": 25.50,
     "type": "EXPENSE"
   }
@@ -33,9 +32,9 @@ script:post-response {
 
 docs {
   # Create Transaction
-
+  
   Creates a new transaction (expense or income).
-
+  
   ## Required Fields
   - type: EXPENSE or INCOME
   - amount: Always positive (unsigned)
@@ -45,13 +44,13 @@ docs {
   - date: Transaction date
   - currency: Currency code
   - refCurrencyAmount: Amount in reference currency (always positive)
-
+  
   ## Optional Fields
   - note: Additional description
   - plannedPaymentId: Link to a planned payment (auto-set when confirming planned payments)
-
+  
   ## Examples
-
+  
   **Expense:**
   ```json
   {
@@ -60,7 +59,7 @@ docs {
     "category": "Food & Dining"
   }
   ```
-
+  
   **Income:**
   ```json
   {
@@ -69,7 +68,7 @@ docs {
     "category": "Salary"
   }
   ```
-
+  
   **Different Currency:**
   ```json
   {

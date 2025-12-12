@@ -6,7 +6,8 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Button, Chip, IconButton, SegmentedButtons, Surface, Text, TextInput, useTheme } from 'react-native-paper';
+import { Button, Chip, Divider, IconButton, SegmentedButtons, Surface, Text, TextInput, useTheme } from 'react-native-paper';
+import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
 import { shadows, spacing } from '../config/theme';
 import { useUser } from '../contexts/UserContext';
 import { useCreateTransaction } from '../hooks/useTransactions';
@@ -27,14 +28,61 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
 
   const getInitialFormData = (): Partial<CreateTransactionRequest> => ({
     type: TransactionType.EXPENSE,
-    currency: 'USD',
-    category: Category.ACTIVE_SPORT_FITNESS,
     account: user?.accounts[0],
     date: new Date().toISOString(),
   });
 
   const [formData, setFormData] = useState<Partial<CreateTransactionRequest>>(getInitialFormData());
   const [categorySelectorVisible, setCategorySelectorVisible] = useState(false);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [timePickerVisible, setTimePickerVisible] = useState(false);
+
+  const getSelectedDate = () => {
+    return formData.date ? new Date(formData.date) : new Date();
+  };
+
+  const getSelectedTime = () => {
+    const date = getSelectedDate();
+    return { hours: date.getHours(), minutes: date.getMinutes() };
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const handleDateConfirm = (params: { date?: Date | undefined }) => {
+    if (!params.date) return;
+
+    const currentDate = getSelectedDate();
+    const newDate = new Date(params.date);
+    newDate.setHours(currentDate.getHours());
+    newDate.setMinutes(currentDate.getMinutes());
+    newDate.setSeconds(currentDate.getSeconds());
+    newDate.setMilliseconds(currentDate.getMilliseconds());
+
+    setFormData({ ...formData, date: newDate.toISOString() });
+    setDatePickerVisible(false);
+  };
+
+  const handleTimeConfirm = ({ hours, minutes }: { hours: number; minutes: number }) => {
+    const currentDate = getSelectedDate();
+    currentDate.setHours(hours);
+    currentDate.setMinutes(minutes);
+
+    setFormData({ ...formData, date: currentDate.toISOString() });
+    setTimePickerVisible(false);
+  };
 
   const handleSubmit = () => {
     if (!user) {
@@ -93,12 +141,11 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
 
             <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
               <View style={styles.inputGroup}>
-                <Text variant="labelLarge" style={styles.label}>Type *</Text>
                 <SegmentedButtons
                   value={formData.type || TransactionType.EXPENSE}
                   onValueChange={(value) => setFormData({ ...formData, type: value as TransactionType })}
                   buttons={[
-                    { value: TransactionType.EXPENSE, label: 'Expense', disabled: isPending},
+                    { value: TransactionType.EXPENSE, label: 'Expense', disabled: isPending },
                     { value: TransactionType.INCOME, label: 'Income', disabled: isPending },
                   ]}
                   style={styles.segmentedButtons}
@@ -112,8 +159,9 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                 />
               </View>
 
-              <View style={styles.inputGroup}>
-                <Text variant="labelLarge" style={styles.label}>Account *</Text>
+              <Divider />
+
+              <View style={{ ...styles.inputGroup, marginTop: spacing.lg }}>
                 <View style={styles.chipContainer}>
                   {user?.accounts.map((account) => (
                     <Chip
@@ -143,7 +191,6 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
               </View>
 
               <View style={styles.inputGroup}>
-                <Text variant="labelLarge" style={styles.label}>Category *</Text>
                 <Button
                   mode="outlined"
                   onPress={() => setCategorySelectorVisible(true)}
@@ -177,22 +224,28 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
               </View>
 
               <View style={styles.inputGroup}>
-                <TextInput
-                  label="Currency"
-                  value={formData.currency}
-                  onChangeText={(text) => setFormData({ ...formData, currency: text })}
-                  placeholder="USD"
-                  disabled={isPending}
-                  mode="flat"
-                  style={styles.input}
-                  underlineStyle={{ display: 'none' }}
-                  theme={{
-                    colors: {
-                      primary: theme.colors.primary,
-                      onSurfaceVariant: theme.colors.onSurfaceVariant,
-                    }
-                  }}
-                />
+                <View style={styles.dateTimeContainer}>
+                  <Button
+                    mode="outlined"
+                    onPress={() => setDatePickerVisible(true)}
+                    disabled={isPending}
+                    icon="calendar"
+                    contentStyle={styles.dateTimeButtonContent}
+                    style={[styles.dateTimeButton, { flex: 1.5 }]}
+                  >
+                    {formatDate(getSelectedDate())}
+                  </Button>
+                  <Button
+                    mode="outlined"
+                    onPress={() => setTimePickerVisible(true)}
+                    disabled={isPending}
+                    icon="clock-outline"
+                    contentStyle={styles.dateTimeButtonContent}
+                    style={[styles.dateTimeButton, { flex: 1 }]}
+                  >
+                    {formatTime(getSelectedDate())}
+                  </Button>
+                </View>
               </View>
 
               <View style={styles.inputGroup}>
@@ -250,6 +303,24 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
         selectedCategory={formData.category as Category}
         onSelect={(category) => setFormData({ ...formData, category })}
         onClose={() => setCategorySelectorVisible(false)}
+      />
+
+      <DatePickerModal
+        locale="en"
+        mode="single"
+        visible={datePickerVisible}
+        onDismiss={() => setDatePickerVisible(false)}
+        date={getSelectedDate()}
+        onConfirm={handleDateConfirm}
+      />
+
+      <TimePickerModal
+        locale="en"
+        visible={timePickerVisible}
+        onDismiss={() => setTimePickerVisible(false)}
+        onConfirm={handleTimeConfirm}
+        hours={getSelectedTime().hours}
+        minutes={getSelectedTime().minutes}
       />
     </>
   );
@@ -311,8 +382,7 @@ const styles = StyleSheet.create({
   categoryButton: {
     justifyContent: 'flex-start',
     borderRadius: 12,
-    borderWidth: 0,
-    ...shadows.sm,
+    ...shadows.md,
   },
   categoryButtonContent: {
     flexDirection: 'row-reverse',
@@ -328,6 +398,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 0,
     ...shadows.sm,
+  },
+  dateTimeContainer: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  dateTimeButton: {
+    justifyContent: 'center',
+    borderRadius: 12,
+    borderWidth: 0,
+    ...shadows.md,
+  },
+  dateTimeButtonContent: {
+    justifyContent: 'center',
   },
 });
 
