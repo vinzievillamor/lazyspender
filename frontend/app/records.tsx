@@ -2,9 +2,9 @@ import { useIsFocused } from "@react-navigation/native";
 import { useMemo, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { ActivityIndicator, Button, FAB, Text, useTheme } from "react-native-paper";
-import SectionHeader from "../components/SectionHeader";
 import TransactionFormModal from "../components/TransactionFormModal";
 import TransactionItem from "../components/TransactionItem";
+import TransactionItemHeader from "../components/TransactionItemHeader";
 import { useTransactions } from "../hooks/useTransactions";
 import { Transaction } from "../types/transaction";
 
@@ -103,7 +103,7 @@ export default function Records() {
 
   const renderItem = ({ item }: { item: { type: 'header' | 'item'; title?: string; item?: Transaction } }) => {
     if (item.type === 'header') {
-      return <SectionHeader title={item.title!} />;
+      return <TransactionItemHeader title={item.title!} />;
     }
 
     return <TransactionItem transaction={item.item!} />;
