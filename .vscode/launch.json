@@ -31,7 +31,6 @@
       "env": {
         "SPRING_OUTPUT_ANSI_ENABLED": "ALWAYS"
       },
-      "preLaunchTask": "Start Firestore Emulator"
     }
   ]
 }
