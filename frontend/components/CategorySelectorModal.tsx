@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { Searchbar, Chip, Text, IconButton, Button, Surface } from 'react-native-paper';
 import { Category } from '../types/category';
+import { getCategoryIcon } from '../utils/categoryIcons';
 
 interface CategorySelectorModalProps {
   visible: boolean;
@@ -93,6 +94,7 @@ const CategorySelectorModal: React.FC<CategorySelectorModalProps> = ({
                     onPress={() => handleSelectCategory(category)}
                     style={styles.chip}
                     showSelectedOverlay={isSelected}
+                    icon={() => getCategoryIcon(category, 18)}
                   >
                     {category}
                   </Chip>
