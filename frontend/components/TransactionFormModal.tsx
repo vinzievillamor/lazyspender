@@ -135,7 +135,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
         <View style={styles.modalOverlay}>
           <Surface style={styles.modalContent}>
             <View style={styles.header}>
-              <Text variant="headlineSmall">New Transaction</Text>
+              <Text variant="titleLarge">New Transaction</Text>
               <IconButton icon="close" onPress={handleClose} disabled={isPending} />
             </View>
 

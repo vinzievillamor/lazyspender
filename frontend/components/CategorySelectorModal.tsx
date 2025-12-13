@@ -1,11 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Modal,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
-import { Searchbar, Chip, Text, IconButton, Button, Surface } from 'react-native-paper';
+import { Button, Chip, IconButton, Searchbar, Surface, Text } from 'react-native-paper';
 import { shadows, spacing } from '../config/theme';
 import { Category } from '../types/category';
 import { getCategoryIcon } from '../utils/categoryIcons';
@@ -58,15 +58,8 @@ const CategorySelectorModal: React.FC<CategorySelectorModalProps> = ({
         <Surface style={styles.modalContent}>
           {/* Header */}
           <View style={styles.header}>
-            <Text variant="headlineSmall">Select Category</Text>
+            <Text variant="titleLarge">Select Category</Text>
             <IconButton icon="close" onPress={handleClose} />
-          </View>
-
-          {/* Description */}
-          <View style={styles.descriptionContainer}>
-            <Text variant="bodyMedium">
-              Select a category for your transaction
-            </Text>
           </View>
 
           {/* Search Bar */}
