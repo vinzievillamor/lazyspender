@@ -5,6 +5,7 @@
     "source.sortMembers": "explicit"
   },
   "java.compile.nullAnalysis.mode": "automatic",
+  "java.autobuild.enabled": true,
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.configuration.runtimes": [
     {

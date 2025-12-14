@@ -1,0 +1,9 @@
+indexes:
+  - kind: transactions
+    properties:
+      - name: owner
+      - name: date
+  - kind: transactions
+    properties:
+      - name: type
+      - name: amount

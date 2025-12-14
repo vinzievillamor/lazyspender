@@ -17,6 +17,7 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
       <List.Item
         title={transaction.category}
         description={transaction.note}
+        descriptionStyle={{ color: theme.colors.onSurfaceVariant }}
         left={() => (
           <View style={styles.iconContainer}>
             {getCategoryIcon(transaction.category)}

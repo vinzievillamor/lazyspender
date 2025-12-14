@@ -3,11 +3,4 @@ spring:
     name: backend
   cloud:
     gcp:
-      project-id: lazyspender-local
-      datastore:
-        host: localhost:8081
-        namespace: lazyspender
-        emulator:
-          enabled: false
-
-
+      project-id: mindful-rhythm-426908-a5

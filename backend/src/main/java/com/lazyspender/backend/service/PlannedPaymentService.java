@@ -1,5 +1,12 @@
 package com.lazyspender.backend.service;
 
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.lazyspender.backend.dto.PlannedPaymentRequest;
 import com.lazyspender.backend.dto.PlannedPaymentResponse;
 import com.lazyspender.backend.dto.TransactionRequest;
@@ -8,17 +15,10 @@ import com.lazyspender.backend.mapper.PlannedPaymentMapper;
 import com.lazyspender.backend.model.ConfirmationType;
 import com.lazyspender.backend.model.PaymentStatus;
 import com.lazyspender.backend.model.PlannedPayment;
-import com.lazyspender.backend.model.Transaction;
 import com.lazyspender.backend.repository.PlannedPaymentRepository;
 import com.lazyspender.backend.repository.TransactionRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

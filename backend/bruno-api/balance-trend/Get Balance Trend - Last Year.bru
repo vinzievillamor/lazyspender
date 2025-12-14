@@ -1,0 +1,24 @@
+meta {
+  name: Get Balance Trend - Last Year
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/balance-trend?owner=villamorvinzie&accounts=Savings&period=LAST_YEAR
+  body: none
+  auth: none
+}
+
+params:query {
+  owner: villamorvinzie
+  accounts: Savings
+  period: LAST_YEAR
+}
+
+docs {
+  # Get Balance Trend - Last Year
+  
+  Retrieves balance trend data for specified accounts over the last year.
+  Shows yearly balance progression with data points for days with transaction activity.
+}

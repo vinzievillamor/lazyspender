@@ -1,0 +1,24 @@
+meta {
+  name: Get Balance Trend - This Month
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/balance-trend?owner=villamorvinzie&accounts=Savings&period=THIS_MONTH
+  body: none
+  auth: none
+}
+
+params:query {
+  owner: villamorvinzie
+  accounts: Savings
+  period: THIS_MONTH
+}
+
+docs {
+  # Get Balance Trend - This Month
+  
+  Retrieves balance trend data for specified accounts for the current month.
+  Shows daily balance progression from the 1st of the month to today.
+}

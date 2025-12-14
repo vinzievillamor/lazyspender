@@ -1,0 +1,56 @@
+meta {
+  name: Get Balance Trend - Last 2 Weeks
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/balance-trend?owner=villamorvinzie&accounts=Savings&period=LAST_12_WEEKS
+  body: none
+  auth: none
+}
+
+params:query {
+  owner: villamorvinzie
+  accounts: Savings
+  period: LAST_12_WEEKS
+}
+
+docs {
+  # Get Balance Trend - Last 2 Weeks
+  
+  Retrieves balance trend data for specified accounts over the last 2 weeks.
+  
+  ## Query Parameters
+  - owner: User identifier (required)
+  - accounts: Account names to include (required, can be multiple)
+  - period: Time period filter (required)
+    - LAST_2_WEEKS
+    - THIS_MONTH
+    - LAST_6_MONTHS
+    - LAST_YEAR
+    - FROM_START
+  
+  ## Response Format
+  Returns a BalanceTrendResponse object:
+  ```json
+  {
+    "totalBalance": 15000.50,
+    "currency": "PHP",
+    "dataPoints": [
+      {
+        "label": "Dec 1",
+        "timestamp": "2024-12-01T00:00:00Z",
+        "balance": 10000.00,
+        "income": 5000.00,
+        "expense": 2000.00
+      }
+    ],
+    "yAxisConfig": {
+      "minValue": 0,
+      "maxValue": 20000,
+      "interval": 5000
+    }
+  }
+  ```
+}
