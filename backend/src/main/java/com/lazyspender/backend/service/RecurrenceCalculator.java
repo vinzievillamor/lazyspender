@@ -3,10 +3,10 @@ package com.lazyspender.backend.service;
 import com.lazyspender.backend.model.EndType;
 import com.lazyspender.backend.model.PlannedPayment;
 import com.lazyspender.backend.model.RecurrenceType;
+import com.lazyspender.backend.util.DateTimeUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.*;
-import java.time.temporal.TemporalAdjusters;
 
 @Component
 public class RecurrenceCalculator {
@@ -37,13 +37,7 @@ public class RecurrenceCalculator {
      */
     private Instant calculateNextWeeklyDate(Instant currentDate, String dayOfWeekString) {
         DayOfWeek targetDayOfWeek = DayOfWeek.valueOf(dayOfWeekString);
-
-        LocalDate currentLocalDate = LocalDate.ofInstant(currentDate, ZoneId.of("UTC"));
-
-        // Find next occurrence of target day of week
-        LocalDate nextDate = currentLocalDate.with(TemporalAdjusters.next(targetDayOfWeek));
-
-        return nextDate.atStartOfDay(ZoneId.of("UTC")).toInstant();
+        return DateTimeUtils.nextDayOfWeek(currentDate, targetDayOfWeek);
     }
 
     /**
@@ -56,20 +50,7 @@ public class RecurrenceCalculator {
      */
     private Instant calculateNextMonthlyDate(Instant currentDate, String dayOfMonthString) {
         int targetDayOfMonth = Integer.parseInt(dayOfMonthString);
-
-        LocalDate currentLocalDate = LocalDate.ofInstant(currentDate, ZoneId.of("UTC"));
-
-        // Move to next month
-        LocalDate nextMonth = currentLocalDate.plusMonths(1);
-
-        // Handle edge case: if target day doesn't exist in next month (e.g., day 31 in Feb)
-        // use the last day of that month instead
-        int maxDayInNextMonth = nextMonth.lengthOfMonth();
-        int actualDay = Math.min(targetDayOfMonth, maxDayInNextMonth);
-
-        LocalDate nextDate = LocalDate.of(nextMonth.getYear(), nextMonth.getMonth(), actualDay);
-
-        return nextDate.atStartOfDay(ZoneId.of("UTC")).toInstant();
+        return DateTimeUtils.nextMonthDay(currentDate, targetDayOfMonth);
     }
 
     /**
@@ -87,7 +68,7 @@ public class RecurrenceCalculator {
         }
 
         if (plannedPayment.getEndType() == EndType.DATE) {
-            Instant endDate = Instant.parse(plannedPayment.getEndValue());
+            Instant endDate = DateTimeUtils.parseInstant(plannedPayment.getEndValue());
             Instant nextDue = plannedPayment.getNextDueDate();
             return nextDue != null && nextDue.isAfter(endDate);
         }

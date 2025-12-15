@@ -3,7 +3,8 @@
     "allow": [
       "Bash(cat:*)",
       "Bash(find:*)",
-      "Bash(./gradlew compileJava:*)"
+      "Bash(./gradlew compileJava:*)",
+      "Bash(git diff:*)"
     ]
   }
 }

@@ -1,7 +1,6 @@
 package com.lazyspender.backend.service;
 
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -17,6 +16,7 @@ import com.lazyspender.backend.model.Transaction;
 import com.lazyspender.backend.model.TransactionType;
 import com.lazyspender.backend.model.TrendPeriod;
 import com.lazyspender.backend.repository.TransactionRepository;
+import com.lazyspender.backend.util.DateTimeUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +28,8 @@ public class BalanceTrendService {
 
     public BalanceTrendResponse getBalanceTrend(String owner, List<String> accounts, TrendPeriod period) {
         // Calculate date range based on period
-        Instant endDate = Instant.now();
+        // Use end of today in UTC to capture all transactions for today
+        Instant endDate = DateTimeUtils.endOfTodayUtc();
         Instant startDate = calculateStartDate(period);
 
         // Fetch transactions using custom GQL query
@@ -70,7 +71,7 @@ public class BalanceTrendService {
     }
 
     private Instant calculateStartDate(TrendPeriod period) {
-        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime now = DateTimeUtils.toUtcZonedDateTime(DateTimeUtils.nowUtc());
         return switch (period) {
             case LAST_12_WEEKS -> now.minusWeeks(12).truncatedTo(ChronoUnit.DAYS).toInstant();
             case LAST_YEAR -> now.minusYears(1).truncatedTo(ChronoUnit.DAYS).toInstant();
@@ -115,9 +116,10 @@ public class BalanceTrendService {
 
         if (transactions.isEmpty()) {
             // Return a single data point for today with the opening balance
+            Instant now = DateTimeUtils.nowUtc();
             dataPoints.add(BalanceTrendDataPoint.builder()
-                    .label(formatDate(Instant.now(), period))
-                    .timestamp(Instant.now())
+                    .label(formatDate(now, period))
+                    .timestamp(now)
                     .balance(openingBalance)
                     .income(0)
                     .expense(0)
@@ -128,7 +130,7 @@ public class BalanceTrendService {
         // Group transactions based on period and calculate cumulative balance
         double cumulativeBalance = openingBalance;
         ZonedDateTime currentPeriodStart = getInitialPeriodStart(startDate, period);
-        ZonedDateTime endDateTime = ZonedDateTime.ofInstant(endDate, ZoneId.systemDefault());
+        ZonedDateTime endDateTime = DateTimeUtils.toUtcZonedDateTime(endDate);
 
         int transactionIndex = 0;
 
@@ -186,7 +188,7 @@ public class BalanceTrendService {
     }
 
     private ZonedDateTime getInitialPeriodStart(Instant startDate, TrendPeriod period) {
-        ZonedDateTime zdt = ZonedDateTime.ofInstant(startDate, ZoneId.systemDefault());
+        ZonedDateTime zdt = DateTimeUtils.toUtcZonedDateTime(startDate);
 
         return switch (period) {
             case FROM_START, LAST_YEAR -> zdt.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS);
@@ -205,7 +207,7 @@ public class BalanceTrendService {
     }
 
     private String formatDate(Instant instant, TrendPeriod period) {
-        ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
+        ZonedDateTime zdt = DateTimeUtils.toUtcZonedDateTime(instant);
         DateTimeFormatter formatter = switch (period) {
             case FROM_START, LAST_YEAR -> DateTimeFormatter.ofPattern("MMM yyyy");
             case LAST_12_WEEKS -> DateTimeFormatter.ofPattern("MMM d");

@@ -17,6 +17,7 @@ import com.lazyspender.backend.model.PaymentStatus;
 import com.lazyspender.backend.model.PlannedPayment;
 import com.lazyspender.backend.repository.PlannedPaymentRepository;
 import com.lazyspender.backend.repository.TransactionRepository;
+import com.lazyspender.backend.util.DateTimeUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -115,7 +116,7 @@ public class PlannedPaymentService {
     }
 
     public List<TransactionResponse> autoConfirmDuePayments() {
-        Instant now = Instant.now();
+        Instant now = DateTimeUtils.nowUtc();
 
         // Find all active planned payments with AUTO confirmation that are due
         List<PlannedPayment> duePayments = plannedPaymentRepository
