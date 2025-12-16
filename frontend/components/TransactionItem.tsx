@@ -41,6 +41,7 @@ export default function TransactionItem({ transaction, onPress }: TransactionIte
         )}
         style={styles.listItem}
         onPress={handleOnPress}
+        rippleColor="rgba(0, 0, 0, 0.1)"
       />
     </Surface>
   );
@@ -52,6 +53,7 @@ const styles = StyleSheet.create({
     marginVertical: spacing.xs,
     borderRadius: 16,
     ...shadows.sm,
+    overflow: 'hidden',
   },
   listItem: {
   },
