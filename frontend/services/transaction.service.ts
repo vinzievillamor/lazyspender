@@ -8,6 +8,7 @@ export interface GetTransactionsParams {
 }
 
 export interface CreateTransactionRequest {
+  id?: string;
   owner: string;
   account: string;
   category: string;
@@ -36,5 +37,13 @@ export const getAllTransactions = async (params: GetTransactionsParams = {}): Pr
  */
 export const createTransaction = async (request: CreateTransactionRequest): Promise<Transaction> => {
   const response = await apiClient.post<Transaction>('/api/transactions', request);
+  return response.data;
+};
+
+/**
+ * Update an existing transaction
+ */
+export const updateTransaction = async (id: string, request: CreateTransactionRequest): Promise<Transaction> => {
+  const response = await apiClient.put<Transaction>(`/api/transactions/${id}`, request);
   return response.data;
 };

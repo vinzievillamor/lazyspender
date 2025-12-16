@@ -6,11 +6,16 @@ import { getCategoryIcon } from "../utils/categoryIcons";
 
 interface TransactionItemProps {
   transaction: Transaction;
+  onPress: (transaction: Transaction) => void;
 }
 
-export default function TransactionItem({ transaction }: TransactionItemProps) {
+export default function TransactionItem({ transaction, onPress }: TransactionItemProps) {
   const theme = useTheme();
   const isIncome = transaction.type === TransactionType.INCOME;
+
+  const handleOnPress = () => {
+    onPress(transaction);
+  }
 
   return (
     <Surface style={styles.surface} elevation={1}>
@@ -35,6 +40,7 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
           </Text>
         )}
         style={styles.listItem}
+        onPress={handleOnPress}
       />
     </Surface>
   );

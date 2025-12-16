@@ -10,7 +10,7 @@ import { Button, Chip, Divider, IconButton, SegmentedButtons, Surface, Text, Tex
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
 import { shadows, spacing } from '../config/theme';
 import { useUser } from '../contexts/UserContext';
-import { useCreateTransaction } from '../hooks/useTransactions';
+import { useCreateTransaction, useUpdateTransaction } from '../hooks/useTransactions';
 import { CreateTransactionRequest } from '../services/transaction.service';
 import { Category } from '../types/category';
 import { TransactionType } from '../types/transaction';
@@ -19,18 +19,25 @@ import CategorySelectorModal from './CategorySelectorModal';
 interface TransactionFormModalProps {
   visible: boolean;
   onClose: () => void;
+  initialData: CreateTransactionRequest | undefined
 }
 
-const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, onClose }) => {
+const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, onClose, initialData }) => {
   const { user } = useUser();
   const theme = useTheme();
-  const { mutate: createTransaction, isPending } = useCreateTransaction();
+  const { mutate: createTransaction, isPending: isCreating } = useCreateTransaction();
+  const { mutate: updateTransaction, isPending: isUpdating } = useUpdateTransaction();
 
-  const getInitialFormData = (): Partial<CreateTransactionRequest> => ({
-    type: TransactionType.EXPENSE,
-    account: user?.accounts[0],
-    date: new Date().toISOString(),
-  });
+  const isPending = isCreating || isUpdating;
+  const isEditMode = !!initialData?.id;
+
+  const getInitialFormData = (): Partial<CreateTransactionRequest> => {
+    return initialData ?? ({
+      type: TransactionType.EXPENSE,
+      account: user?.accounts[0],
+      date: new Date().toISOString(),
+    });
+  };
 
   const [formData, setFormData] = useState<Partial<CreateTransactionRequest>>(getInitialFormData());
   const [categorySelectorVisible, setCategorySelectorVisible] = useState(false);
@@ -108,16 +115,29 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
       type: formData.type || TransactionType.EXPENSE,
     };
 
-    createTransaction(request, {
-      onSuccess: () => {
-        Alert.alert('Success', 'Transaction created successfully');
-        resetForm();
-        onClose();
-      },
-      onError: (error) => {
-        Alert.alert('Error', error instanceof Error ? error.message : 'Failed to create transaction');
-      },
-    });
+    if (isEditMode) {
+      updateTransaction({ id: initialData!.id!, request }, {
+        onSuccess: () => {
+          Alert.alert('Success', 'Transaction updated successfully');
+          resetForm();
+          onClose();
+        },
+        onError: (error) => {
+          Alert.alert('Error', error instanceof Error ? error.message : 'Failed to update transaction');
+        },
+      });
+    } else {
+      createTransaction(request, {
+        onSuccess: () => {
+          Alert.alert('Success', 'Transaction created successfully');
+          resetForm();
+          onClose();
+        },
+        onError: (error) => {
+          Alert.alert('Error', error instanceof Error ? error.message : 'Failed to create transaction');
+        },
+      });
+    }
   };
 
   const resetForm = () => {
@@ -135,7 +155,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
         <View style={styles.modalOverlay}>
           <Surface style={styles.modalContent}>
             <View style={styles.header}>
-              <Text variant="titleLarge">New Transaction</Text>
+              <Text variant="titleLarge">{isEditMode ? 'Update Transaction' : 'New Transaction'}</Text>
               <IconButton icon="close" onPress={handleClose} disabled={isPending} />
             </View>
 
@@ -206,7 +226,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
               <View style={styles.inputGroup}>
                 <TextInput
                   label="Amount *"
-                  value={formData.amount?.toString()}
+                  value={formData.amount?.toString() || ''}
                   onChangeText={(text) => setFormData({ ...formData, amount: parseFloat(text) || 0 })}
                   placeholder="0.00"
                   keyboardType="numeric"
@@ -251,7 +271,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
               <View style={styles.inputGroup}>
                 <TextInput
                   label="Note"
-                  value={formData.note}
+                  value={formData.note || ''}
                   onChangeText={(text) => setFormData({ ...formData, note: text })}
                   placeholder="Add a note"
                   multiline
@@ -291,7 +311,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                 loading={isPending}
                 style={styles.button}
               >
-                Create
+                {isEditMode ? 'Update' : 'Create'}
               </Button>
             </View>
           </Surface>

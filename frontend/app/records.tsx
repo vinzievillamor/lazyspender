@@ -1,14 +1,14 @@
+import { CreateTransactionRequest } from "@/services/transaction.service";
 import { useIsFocused } from "@react-navigation/native";
 import { useMemo, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { ActivityIndicator, Button, FAB, Text, useTheme } from "react-native-paper";
-import { spacing } from "../config/theme";
 import TransactionFormModal from "../components/TransactionFormModal";
 import TransactionItem from "../components/TransactionItem";
 import TransactionItemHeader from "../components/TransactionItemHeader";
+import { spacing } from "../config/theme";
 import { useTransactions } from "../hooks/useTransactions";
 import { Transaction } from "../types/transaction";
-
 const PAGE_SIZE = 20;
 
 interface SectionData {
@@ -52,6 +52,7 @@ const groupByDate = (transactions: Transaction[]): SectionData[] => {
 export default function Records() {
   const theme = useTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [clickedTransaction, setClickedTransaction] = useState<CreateTransactionRequest>();
   const isFocused = useIsFocused();
 
   const {
@@ -107,8 +108,25 @@ export default function Records() {
       return <TransactionItemHeader title={item.title!} />;
     }
 
-    return <TransactionItem transaction={item.item!} />;
+    return <TransactionItem transaction={item.item!} onPress={() => showFilledModal(item.item!)} />;
   };
+
+  const showFilledModal = (transaction: Transaction) => {
+    const ctr: CreateTransactionRequest = {
+      id: transaction.id,
+      owner: transaction.owner,
+      account: transaction.account,
+      category: transaction.category,
+      amount: transaction.amount,
+      date: transaction.date,
+      currency: transaction.currency,
+      refCurrencyAmount: transaction.refCurrencyAmount,
+      type: transaction.type,
+      note: transaction.note
+    };
+    setClickedTransaction(ctr);
+    setIsModalVisible(true);
+  }
 
   const renderFooter = () => {
     if (!isFetchingNextPage) return null;
@@ -125,6 +143,11 @@ export default function Records() {
     if (isFocused && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+    setClickedTransaction(undefined);
   };
 
   return (
@@ -145,8 +168,10 @@ export default function Records() {
       />
 
       <TransactionFormModal
+        key={clickedTransaction?.id || 'new'}
         visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
+        onClose={handleModalClose}
+        initialData={clickedTransaction}
       />
     </View>
   );

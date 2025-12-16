@@ -1,6 +1,6 @@
 import { PageResponse } from '@/types/api';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { createTransaction, CreateTransactionRequest, getAllTransactions, GetTransactionsParams } from '../services/transaction.service';
+import { createTransaction, CreateTransactionRequest, getAllTransactions, GetTransactionsParams, updateTransaction } from '../services/transaction.service';
 import { Transaction } from '../types/transaction';
 
 export const TRANSACTION_QUERY_KEYS = {
@@ -31,6 +31,17 @@ export const useCreateTransaction = () => {
 
   return useMutation({
     mutationFn: (request: CreateTransactionRequest) => createTransaction(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: TRANSACTION_QUERY_KEYS.lists() });
+    },
+  });
+};
+
+export const useUpdateTransaction = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, request }: { id: string; request: CreateTransactionRequest }) => updateTransaction(id, request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TRANSACTION_QUERY_KEYS.lists() });
     },
