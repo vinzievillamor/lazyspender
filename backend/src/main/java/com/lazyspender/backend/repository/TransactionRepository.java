@@ -28,4 +28,7 @@ public interface TransactionRepository extends DatastoreRepository<Transaction, 
 
     @Query("SELECT SUM(amount) FROM transactions WHERE owner = @owner AND type = @type AND date < @beforeDate")
     Double sumAmountByOwnerAndTypeAndDateBefore(@Param("owner") String owner, @Param("type") TransactionType type, @Param("beforeDate") Instant beforeDate);
+
+    @Query("SELECT DISTINCT ON (note) note FROM transactions WHERE owner = @owner ORDER BY note ASC")
+    List<String> findDistinctNotesByOwner(@Param("owner") String owner);
 }

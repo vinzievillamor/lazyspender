@@ -1,6 +1,6 @@
 import { PageResponse } from '@/types/api';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { createTransaction, CreateTransactionRequest, getAllTransactions, GetTransactionsParams, updateTransaction } from '../services/transaction.service';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createTransaction, CreateTransactionRequest, getAllTransactions, getDistinctNotes, GetTransactionsParams, updateTransaction } from '../services/transaction.service';
 import { Transaction } from '../types/transaction';
 
 export const TRANSACTION_QUERY_KEYS = {
@@ -47,3 +47,10 @@ export const useUpdateTransaction = () => {
     },
   });
 };
+
+export const useDistinctNotes = (owner: string) => {
+  return useQuery({
+    queryKey: ["notes"],
+    queryFn: () => getDistinctNotes(owner)
+  })
+}
