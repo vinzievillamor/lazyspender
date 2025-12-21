@@ -177,14 +177,30 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                       value={formData.type || TransactionType.EXPENSE}
                       onValueChange={(value) => setFormData({ ...formData, type: value as TransactionType })}
                       buttons={[
-                        { value: TransactionType.EXPENSE, label: 'Expense', disabled: isPending },
-                        { value: TransactionType.INCOME, label: 'Income', disabled: isPending },
+                        {
+                          value: TransactionType.EXPENSE,
+                          label: 'Expense',
+                          icon: 'arrow-down',
+                          disabled: isPending,
+                          showSelectedCheck: true,
+                        },
+                        {
+                          value: TransactionType.INCOME,
+                          label: 'Income',
+                          icon: 'arrow-up',
+                          disabled: isPending,
+                          showSelectedCheck: true,
+                        },
                       ]}
                       style={styles.segmentedButtons}
                       theme={{
                         colors: {
-                          secondaryContainer: theme.colors.primaryContainer,
-                          onSecondaryContainer: theme.colors.primary,
+                          secondaryContainer: formData.type === TransactionType.EXPENSE
+                            ? '#FFEBEE'
+                            : '#E8F5E9',
+                          onSecondaryContainer: formData.type === TransactionType.EXPENSE
+                            ? '#C62828'
+                            : '#2E7D32',
                           outline: 'transparent',
                         }
                       }}
@@ -335,6 +351,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
         onDismiss={() => setDatePickerVisible(false)}
         date={getSelectedDate()}
         onConfirm={handleDateConfirm}
+        presentationStyle="formSheet"
       />
 
       <TimePickerModal
@@ -394,8 +411,7 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   segmentedButtons: {
-    borderRadius: 12,
-    ...shadows.sm,
+    borderRadius: 12
   },
   input: {
     borderRadius: 12,
@@ -404,7 +420,10 @@ const styles = StyleSheet.create({
   },
   categoryChip: {
     borderRadius: 12,
-    ...shadows.md,
+    minHeight: 56,
+    justifyContent: 'center',
+    backgroundColor: '#F8F9FA',
+    ...shadows.sm,
   },
   categoryChipText: {
     flex: 1,
