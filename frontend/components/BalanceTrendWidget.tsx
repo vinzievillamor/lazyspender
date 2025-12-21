@@ -173,7 +173,7 @@ export const BalanceTrendWidget: React.FC = () => {
               width={availableWidth}
               height={250}
               spacing={chartSpacing}
-              endSpacing={0}
+              endSpacing={20}
               initialSpacing={50}
               color={theme.colors.primary}
               startFillColor={theme.colors.primary}
@@ -195,6 +195,7 @@ export const BalanceTrendWidget: React.FC = () => {
               stepValue={data?.yaxisConfig?.interval}
               maxValue={data?.yaxisConfig?.maxValue}
               curved
+              showScrollIndicator
               scrollToIndex={chartData.length - 1}
               isAnimated
             />
@@ -206,29 +207,7 @@ export const BalanceTrendWidget: React.FC = () => {
             </Text>
           </View>
         )}
-
-        {/* Account Filter Checkboxes */}
         <Divider style={styles.divider} />
-        {/* <View style={styles.accountsSection}>
-          <Text variant="labelMedium" style={styles.sectionLabel}>
-            Accounts
-          </Text>
-          <View style={styles.checkboxContainer}>
-            {user?.accounts.map((account) => (
-              <View key={account} style={styles.checkboxItem}>
-                <Checkbox.Item
-                  label={account}
-                  status={selectedAccounts.includes(account) ? 'checked' : 'unchecked'}
-                  onPress={() => toggleAccount(account)}
-                  labelStyle={styles.checkboxLabel}
-                  position="leading"
-                  mode="android"
-                  disabled={selectedAccounts.includes(account) && selectedAccounts.length === 1}
-                />
-              </View>
-            ))}
-          </View>
-        </View> */}
       </Card.Content>
     </Card>
   );

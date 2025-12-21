@@ -3,8 +3,7 @@ import { getBalanceTrend } from '../services/balanceTrend.service';
 import type { GetBalanceTrendParams } from '../types/balanceTrend';
 
 export const BALANCE_TREND_QUERY_KEYS = {
-  all: ['balance-trend'] as const,
-  trend: (params: GetBalanceTrendParams) => [...BALANCE_TREND_QUERY_KEYS.all, params] as const,
+  all: ['balance-trend'] as const
 };
 
 interface UseBalanceTrendOptions {
@@ -16,7 +15,7 @@ export const useBalanceTrend = (
   options: UseBalanceTrendOptions = {}
 ) => {
   return useQuery({
-    queryKey: BALANCE_TREND_QUERY_KEYS.trend(params),
+    queryKey: [...BALANCE_TREND_QUERY_KEYS.all, params],
     queryFn: () => getBalanceTrend(params),
     staleTime: 10 * 60 * 1000, // 10 minutes
     enabled: options.enabled,

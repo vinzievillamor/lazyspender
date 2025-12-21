@@ -121,7 +121,6 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
     if (isEditMode) {
       updateTransaction({ id: initialData!.id!, request }, {
         onSuccess: () => {
-          Alert.alert('Success', 'Transaction updated successfully');
           resetForm();
           onClose();
         },
@@ -132,7 +131,6 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
     } else {
       createTransaction(request, {
         onSuccess: () => {
-          Alert.alert('Success', 'Transaction created successfully');
           resetForm();
           onClose();
         },
