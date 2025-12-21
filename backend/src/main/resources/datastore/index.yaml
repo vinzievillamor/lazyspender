@@ -7,3 +7,7 @@ indexes:
     properties:
       - name: type
       - name: amount
+  - kind: transactions
+    properties:
+      - name: owner
+      - name: note

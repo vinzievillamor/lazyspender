@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, ReactNode, useContext } from 'react';
 import { useUserByOwner } from '../hooks/useUsers';
 import { User } from '../types/user';
 
@@ -14,7 +14,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 interface UserProviderProps {
   children: ReactNode;
-  owner?: string;
+  owner: string;
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({

@@ -1,14 +1,26 @@
 package com.lazyspender.backend.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.lazyspender.backend.dto.PageResponse;
 import com.lazyspender.backend.dto.TransactionRequest;
 import com.lazyspender.backend.dto.TransactionResponse;
 import com.lazyspender.backend.service.TransactionService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -58,5 +70,11 @@ public class TransactionController {
     public ResponseEntity<Void> deleteTransaction(@PathVariable(name = "id") String id) {
         transactionService.deleteTransaction(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/distinct-notes")
+    public ResponseEntity<List<String>> getDistinctNotes(@RequestParam(name = "owner") String owner) {
+        List<String> distinctNotes = transactionService.getDistinctNotesByOwner(owner);
+        return ResponseEntity.ok(distinctNotes);
     }
 }

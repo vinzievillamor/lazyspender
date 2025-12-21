@@ -1,0 +1,46 @@
+meta {
+  name: Get Distinct Notes
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/transactions/distinct-notes?owner=villamorvinzie
+  body: none
+  auth: none
+}
+
+params:query {
+  owner: villamorvinzie
+}
+
+docs {
+  # Get Distinct Notes
+
+  Retrieves all distinct note values from transactions for a specific owner.
+  Results are sorted alphabetically in ascending order.
+
+  ## Query Parameters
+  - owner: The owner username (required)
+
+  ## GQL Query Equivalent
+  ```sql
+  SELECT DISTINCT ON (note) note
+  FROM transactions
+  WHERE owner = 'villamorvinzie'
+  ORDER BY note ASC
+  ```
+
+  ## Response
+  Returns an array of unique note strings:
+  ```json
+  [
+    "Groceries",
+    "Rent",
+    "Salary",
+    "Utilities"
+  ]
+  ```
+
+  Example: /api/transactions/distinct-notes?owner=villamorvinzie
+}

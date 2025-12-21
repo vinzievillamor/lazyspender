@@ -47,3 +47,8 @@ export const updateTransaction = async (id: string, request: CreateTransactionRe
   const response = await apiClient.put<Transaction>(`/api/transactions/${id}`, request);
   return response.data;
 };
+
+export const getDistinctNotes = async (owner: string) => {
+  const response = await apiClient.get<string[]>(`/api/transactions/distinct-notes?owner=${owner}`)
+  return response.data;
+}

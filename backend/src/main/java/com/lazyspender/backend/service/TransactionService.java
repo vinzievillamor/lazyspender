@@ -65,6 +65,10 @@ public class TransactionService {
         transactionRepository.deleteById(id);
     }
 
+    public List<String> getDistinctNotesByOwner(String owner) {
+        return transactionRepository.findDistinctNotesByOwner(owner);
+    }
+
     private PageResponse<TransactionResponse> mapToPageResponse(Page<Transaction> transactionPage) {
         List<TransactionResponse> content = transactionPage.getContent().stream()
                 .map(transactionMapper::toResponse)

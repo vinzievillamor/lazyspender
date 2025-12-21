@@ -10,11 +10,12 @@ import { Button, Chip, Divider, IconButton, SegmentedButtons, Surface, Text, Tex
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
 import { shadows, spacing } from '../config/theme';
 import { useUser } from '../contexts/UserContext';
-import { useCreateTransaction, useUpdateTransaction } from '../hooks/useTransactions';
+import { useCreateTransaction, useDistinctNotes, useUpdateTransaction } from '../hooks/useTransactions';
 import { CreateTransactionRequest } from '../services/transaction.service';
 import { Category } from '../types/category';
 import { TransactionType } from '../types/transaction';
 import { getCategoryIcon } from '../utils/categoryIcons';
+import AutocompleteInputText from './AutocompleteInputText';
 import CategorySelectorModal from './CategorySelectorModal';
 
 interface TransactionFormModalProps {
@@ -28,6 +29,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
   const theme = useTheme();
   const { mutate: createTransaction, isPending: isCreating } = useCreateTransaction();
   const { mutate: updateTransaction, isPending: isUpdating } = useUpdateTransaction();
+  const { data: distinctNotes } = useDistinctNotes(user!.owner);
 
   const isPending = isCreating || isUpdating;
   const isEditMode = !!initialData?.id;
@@ -170,139 +172,129 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                 </View>
 
                 <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
-              <View style={styles.inputGroup}>
-                <SegmentedButtons
-                  value={formData.type || TransactionType.EXPENSE}
-                  onValueChange={(value) => setFormData({ ...formData, type: value as TransactionType })}
-                  buttons={[
-                    { value: TransactionType.EXPENSE, label: 'Expense', disabled: isPending },
-                    { value: TransactionType.INCOME, label: 'Income', disabled: isPending },
-                  ]}
-                  style={styles.segmentedButtons}
-                  theme={{
-                    colors: {
-                      secondaryContainer: theme.colors.primaryContainer,
-                      onSecondaryContainer: theme.colors.primary,
-                      outline: 'transparent',
-                    }
-                  }}
-                />
-              </View>
-
-              <Divider />
-
-              <View style={{ ...styles.inputGroup, marginTop: spacing.lg }}>
-                <View style={styles.chipContainer}>
-                  {user?.accounts.map((account) => (
-                    <Chip
-                      key={account}
-                      selected={formData.account === account}
-                      onPress={() => setFormData({ ...formData, account })}
-                      disabled={isPending}
-                      style={[
-                        styles.chip,
-                        formData.account === account && {
-                          backgroundColor: theme.colors.primaryContainer,
-                        }
+                  <View style={styles.inputGroup}>
+                    <SegmentedButtons
+                      value={formData.type || TransactionType.EXPENSE}
+                      onValueChange={(value) => setFormData({ ...formData, type: value as TransactionType })}
+                      buttons={[
+                        { value: TransactionType.EXPENSE, label: 'Expense', disabled: isPending },
+                        { value: TransactionType.INCOME, label: 'Income', disabled: isPending },
                       ]}
-                      textStyle={{
-                        color: formData.account === account ? theme.colors.primary : theme.colors.onSurfaceVariant
+                      style={styles.segmentedButtons}
+                      theme={{
+                        colors: {
+                          secondaryContainer: theme.colors.primaryContainer,
+                          onSecondaryContainer: theme.colors.primary,
+                          outline: 'transparent',
+                        }
                       }}
+                    />
+                  </View>
+
+                  <Divider />
+
+                  <View style={{ ...styles.inputGroup, marginTop: spacing.lg }}>
+                    <View style={styles.chipContainer}>
+                      {user?.accounts.map((account) => (
+                        <Chip
+                          key={account}
+                          selected={formData.account === account}
+                          onPress={() => setFormData({ ...formData, account })}
+                          disabled={isPending}
+                          style={[
+                            styles.chip,
+                            formData.account === account && {
+                              backgroundColor: theme.colors.primaryContainer,
+                            }
+                          ]}
+                          textStyle={{
+                            color: formData.account === account ? theme.colors.primary : theme.colors.onSurfaceVariant
+                          }}
+                          theme={{
+                            colors: {
+                              outline: 'transparent',
+                            }
+                          }}
+                        >
+                          {account}
+                        </Chip>
+                      ))}
+                    </View>
+                  </View>
+
+                  <View style={styles.inputGroup}>
+                    <Chip
+                      onPress={() => setCategorySelectorVisible(true)}
+                      disabled={isPending}
+                      icon={formData.category ? () => getCategoryIcon(formData.category as Category, 18) : 'chevron-down'}
+                      style={styles.categoryChip}
+                      textStyle={styles.categoryChipText}
                       theme={{
                         colors: {
                           outline: 'transparent',
                         }
                       }}
                     >
-                      {account}
+                      {formData.category || 'Select a category'}
                     </Chip>
-                  ))}
-                </View>
-              </View>
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <Chip
-                  onPress={() => setCategorySelectorVisible(true)}
-                  disabled={isPending}
-                  icon={formData.category ? () => getCategoryIcon(formData.category as Category, 18) : 'chevron-down'}
-                  style={styles.categoryChip}
-                  textStyle={styles.categoryChipText}
-                  theme={{
-                    colors: {
-                      outline: 'transparent',
-                    }
-                  }}
-                >
-                  {formData.category || 'Select a category'}
-                </Chip>
-              </View>
+                  <View style={styles.inputGroup}>
+                    <TextInput
+                      label="Amount *"
+                      value={formData.amount?.toString() || ''}
+                      onChangeText={(text) => setFormData({ ...formData, amount: parseFloat(text) || 0 })}
+                      placeholder="0.00"
+                      keyboardType="numeric"
+                      disabled={isPending}
+                      mode="flat"
+                      style={styles.input}
+                      underlineStyle={{ display: 'none' }}
+                      theme={{
+                        colors: {
+                          primary: theme.colors.primary,
+                          onSurfaceVariant: theme.colors.onSurfaceVariant,
+                        }
+                      }}
+                    />
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <TextInput
-                  label="Amount *"
-                  value={formData.amount?.toString() || ''}
-                  onChangeText={(text) => setFormData({ ...formData, amount: parseFloat(text) || 0 })}
-                  placeholder="0.00"
-                  keyboardType="numeric"
-                  disabled={isPending}
-                  mode="flat"
-                  style={styles.input}
-                  underlineStyle={{ display: 'none' }}
-                  theme={{
-                    colors: {
-                      primary: theme.colors.primary,
-                      onSurfaceVariant: theme.colors.onSurfaceVariant,
-                    }
-                  }}
-                />
-              </View>
+                  <View style={styles.inputGroup}>
+                    <View style={styles.dateTimeContainer}>
+                      <Button
+                        mode="outlined"
+                        onPress={() => setDatePickerVisible(true)}
+                        disabled={isPending}
+                        icon="calendar"
+                        contentStyle={styles.dateTimeButtonContent}
+                        style={[styles.dateTimeButton, { flex: 1.5 }]}
+                      >
+                        {formatDate(getSelectedDate())}
+                      </Button>
+                      <Button
+                        mode="outlined"
+                        onPress={() => setTimePickerVisible(true)}
+                        disabled={isPending}
+                        icon="clock-outline"
+                        contentStyle={styles.dateTimeButtonContent}
+                        style={[styles.dateTimeButton, { flex: 1 }]}
+                      >
+                        {formatTime(getSelectedDate())}
+                      </Button>
+                    </View>
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <View style={styles.dateTimeContainer}>
-                  <Button
-                    mode="outlined"
-                    onPress={() => setDatePickerVisible(true)}
-                    disabled={isPending}
-                    icon="calendar"
-                    contentStyle={styles.dateTimeButtonContent}
-                    style={[styles.dateTimeButton, { flex: 1.5 }]}
-                  >
-                    {formatDate(getSelectedDate())}
-                  </Button>
-                  <Button
-                    mode="outlined"
-                    onPress={() => setTimePickerVisible(true)}
-                    disabled={isPending}
-                    icon="clock-outline"
-                    contentStyle={styles.dateTimeButtonContent}
-                    style={[styles.dateTimeButton, { flex: 1 }]}
-                  >
-                    {formatTime(getSelectedDate())}
-                  </Button>
-                </View>
-              </View>
-
-              <View style={styles.inputGroup}>
-                <TextInput
-                  label="Note"
-                  value={formData.note || ''}
-                  onChangeText={(text) => setFormData({ ...formData, note: text })}
-                  placeholder="Add a note"
-                  multiline
-                  numberOfLines={3}
-                  disabled={isPending}
-                  mode="flat"
-                  style={styles.input}
-                  underlineStyle={{ display: 'none' }}
-                  theme={{
-                    colors: {
-                      primary: theme.colors.primary,
-                      onSurfaceVariant: theme.colors.onSurfaceVariant,
-                    }
-                  }}
-                />
-              </View>
-            </ScrollView>
+                  <View style={styles.inputGroup}>
+                    <AutocompleteInputText
+                      label="Note"
+                      value={formData.note || ''}
+                      onChangeText={(text) => setFormData({ ...formData, note: text })}
+                      placeholder="Add a note"
+                      disabled={isPending}
+                      suggestions={distinctNotes?.filter(text => text.trim().length > 0)}
+                    />
+                  </View>
+                </ScrollView>
 
                 <View style={styles.footer}>
                   <Button
