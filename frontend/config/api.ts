@@ -1,7 +1,8 @@
 import axios from 'axios';
+import Constants from 'expo-constants';
 
-// API base URL - can be overridden by environment variable
-const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:8080';
+// API base URL - configured via app.config.js and .env file
+const API_BASE_URL = Constants.expoConfig?.extra?.apiBaseUrl || 'https://lazyspender-api-272563214847.us-east1.run.app';
 
 // Create axios instance with default config
 export const apiClient = axios.create({
