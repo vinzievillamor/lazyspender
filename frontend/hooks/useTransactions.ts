@@ -2,6 +2,7 @@ import { PageResponse } from '@/types/api';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createTransaction, CreateTransactionRequest, getAllTransactions, getDistinctNotes, GetTransactionsParams, updateTransaction } from '../services/transaction.service';
 import { Transaction } from '../types/transaction';
+import { BALANCE_TREND_QUERY_KEYS } from './useBalanceTrend';
 
 export const TRANSACTION_QUERY_KEYS = {
   all: ['transactions'] as const,
@@ -33,6 +34,7 @@ export const useCreateTransaction = () => {
     mutationFn: (request: CreateTransactionRequest) => createTransaction(request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TRANSACTION_QUERY_KEYS.lists() });
+      queryClient.invalidateQueries({ queryKey: BALANCE_TREND_QUERY_KEYS.all });
     },
   });
 };
@@ -44,6 +46,7 @@ export const useUpdateTransaction = () => {
     mutationFn: ({ id, request }: { id: string; request: CreateTransactionRequest }) => updateTransaction(id, request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TRANSACTION_QUERY_KEYS.lists() });
+      queryClient.invalidateQueries({ queryKey: BALANCE_TREND_QUERY_KEYS.all });
     },
   });
 };
