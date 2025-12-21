@@ -291,7 +291,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                       onChangeText={(text) => setFormData({ ...formData, note: text })}
                       placeholder="Add a note"
                       disabled={isPending}
-                      suggestions={distinctNotes?.filter(text => text.trim().length > 0)}
+                      suggestions={distinctNotes?.filter(text => text && text.length > 0)}
                     />
                   </View>
                 </ScrollView>
