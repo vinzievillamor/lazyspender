@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 import { List, Surface, TextInput, useTheme } from "react-native-paper";
 import { shadows } from '../config/theme';
 
@@ -54,7 +54,11 @@ const AutocompleteInputText = (prop: AutocompleteInputTextProps) => {
     }
 
     return (
-        <View>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}
+        >
+            {generateSuggestions()}
             <TextInput
                 label={prop.label}
                 value={value}
@@ -71,22 +75,24 @@ const AutocompleteInputText = (prop: AutocompleteInputTextProps) => {
                     }
                 }}
             />
-            {generateSuggestions()}
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        width: '100%',
+    },
     input: {
         borderRadius: 12,
         backgroundColor: '#F8F9FA',
         ...shadows.sm,
     },
     suggestionContainer: {
-        marginTop: 4,
+        marginBottom: 4,
         borderRadius: 12,
         backgroundColor: '#FFFFFF',
-        maxHeight: 200,
+        ...shadows.sm,
     },
     suggestionItem: {
         paddingVertical: 8,
