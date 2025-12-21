@@ -14,6 +14,7 @@ import { useCreateTransaction, useUpdateTransaction } from '../hooks/useTransact
 import { CreateTransactionRequest } from '../services/transaction.service';
 import { Category } from '../types/category';
 import { TransactionType } from '../types/transaction';
+import { getCategoryIcon } from '../utils/categoryIcons';
 import CategorySelectorModal from './CategorySelectorModal';
 
 interface TransactionFormModalProps {
@@ -154,12 +155,21 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
       <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={handleClose}>
         <View style={styles.modalOverlay}>
           <Surface style={styles.modalContent}>
-            <View style={styles.header}>
-              <Text variant="titleLarge">{isEditMode ? 'Update Transaction' : 'New Transaction'}</Text>
-              <IconButton icon="close" onPress={handleClose} disabled={isPending} />
-            </View>
 
-            <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
+            {categorySelectorVisible ? (
+              <CategorySelectorModal
+                selectedCategory={formData.category as Category}
+                onSelect={(category) => setFormData({ ...formData, category })}
+                onClose={() => setCategorySelectorVisible(false)}
+              />
+            ) : (
+              <>
+                <View style={styles.header}>
+                  <Text variant="titleLarge">{isEditMode ? 'Update Transaction' : 'New Transaction'}</Text>
+                  <IconButton icon="close" onPress={handleClose} disabled={isPending} />
+                </View>
+
+                <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
               <View style={styles.inputGroup}>
                 <SegmentedButtons
                   value={formData.type || TransactionType.EXPENSE}
@@ -211,16 +221,20 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
               </View>
 
               <View style={styles.inputGroup}>
-                <Button
-                  mode="outlined"
+                <Chip
                   onPress={() => setCategorySelectorVisible(true)}
                   disabled={isPending}
-                  icon="chevron-down"
-                  contentStyle={styles.categoryButtonContent}
-                  style={styles.categoryButton}
+                  icon={formData.category ? () => getCategoryIcon(formData.category as Category, 18) : 'chevron-down'}
+                  style={styles.categoryChip}
+                  textStyle={styles.categoryChipText}
+                  theme={{
+                    colors: {
+                      outline: 'transparent',
+                    }
+                  }}
                 >
                   {formData.category || 'Select a category'}
-                </Button>
+                </Chip>
               </View>
 
               <View style={styles.inputGroup}>
@@ -290,40 +304,37 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
               </View>
             </ScrollView>
 
-            <View style={styles.footer}>
-              <Button
-                mode="outlined"
-                onPress={handleClose}
-                disabled={isPending}
-                style={styles.button}
-                theme={{
-                  colors: {
-                    outline: 'transparent',
-                  }
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                mode="contained"
-                onPress={handleSubmit}
-                disabled={isPending}
-                loading={isPending}
-                style={styles.button}
-              >
-                {isEditMode ? 'Update' : 'Create'}
-              </Button>
-            </View>
+                <View style={styles.footer}>
+                  <Button
+                    mode="outlined"
+                    onPress={handleClose}
+                    disabled={isPending}
+                    style={styles.button}
+                    theme={{
+                      colors: {
+                        outline: 'transparent',
+                      }
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    mode="contained"
+                    onPress={handleSubmit}
+                    disabled={isPending}
+                    loading={isPending}
+                    style={styles.button}
+                  >
+                    {isEditMode ? 'Update' : 'Create'}
+                  </Button>
+                </View>
+              </>
+            )}
           </Surface>
         </View>
       </Modal>
 
-      <CategorySelectorModal
-        visible={categorySelectorVisible}
-        selectedCategory={formData.category as Category}
-        onSelect={(category) => setFormData({ ...formData, category })}
-        onClose={() => setCategorySelectorVisible(false)}
-      />
+
 
       <DatePickerModal
         locale="en"
@@ -399,14 +410,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F9FA',
     ...shadows.sm,
   },
-  categoryButton: {
-    justifyContent: 'flex-start',
+  categoryChip: {
     borderRadius: 12,
     ...shadows.md,
   },
-  categoryButtonContent: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
+  categoryChipText: {
+    flex: 1,
   },
   footer: {
     flexDirection: 'row',
