@@ -1,3 +1,4 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -7,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import { Button, Chip, Divider, IconButton, SegmentedButtons, Surface, Text, TextInput, useTheme } from 'react-native-paper';
-import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
+import { TimePickerModal } from 'react-native-paper-dates';
 import { shadows, spacing } from '../config/theme';
 import { useUser } from '../contexts/UserContext';
 import { useCreateTransaction, useDistinctNotes, useUpdateTransaction } from '../hooks/useTransactions';
@@ -71,11 +72,16 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
     });
   };
 
-  const handleDateConfirm = (params: { date?: Date | undefined }) => {
-    if (!params.date) return;
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    if (event.type === 'dismissed') {
+      setDatePickerVisible(false);
+      return;
+    }
+
+    if (!selectedDate) return;
 
     const currentDate = getSelectedDate();
-    const newDate = new Date(params.date);
+    const newDate = new Date(selectedDate);
     newDate.setHours(currentDate.getHours());
     newDate.setMinutes(currentDate.getMinutes());
     newDate.setSeconds(currentDate.getSeconds());
@@ -282,6 +288,11 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                         icon="calendar"
                         contentStyle={styles.dateTimeButtonContent}
                         style={[styles.dateTimeButton, { flex: 1.5 }]}
+                        theme={{
+                          colors: {
+                            outline: 'transparent',
+                          }
+                        }}
                       >
                         {formatDate(getSelectedDate())}
                       </Button>
@@ -292,6 +303,11 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                         icon="clock-outline"
                         contentStyle={styles.dateTimeButtonContent}
                         style={[styles.dateTimeButton, { flex: 1 }]}
+                        theme={{
+                          colors: {
+                            outline: 'transparent',
+                          }
+                        }}
                       >
                         {formatTime(getSelectedDate())}
                       </Button>
@@ -340,17 +356,16 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
         </View>
       </Modal>
 
-
-
-      <DatePickerModal
-        locale="en"
-        mode="single"
-        visible={datePickerVisible}
-        onDismiss={() => setDatePickerVisible(false)}
-        date={getSelectedDate()}
-        onConfirm={handleDateConfirm}
-        presentationStyle="formSheet"
-      />
+      {datePickerVisible && (
+        <DateTimePicker
+          value={getSelectedDate()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+          themeVariant="light"
+          accentColor={theme.colors.primary}
+        />
+      )}
 
       <TimePickerModal
         locale="en"
@@ -445,7 +460,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 12,
     borderWidth: 0,
-    ...shadows.md,
+    backgroundColor: '#F8F9FA',
+    ...shadows.sm,
   },
   dateTimeButtonContent: {
     justifyContent: 'center',
