@@ -6,9 +6,10 @@
       "name": "Launch Frontend",
       "request": "launch",
       "cwd": "${workspaceFolder}/frontend",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "npx",
       "runtimeArgs": [
-        "start"
+        "expo",
+        "run:android"
       ],
       "console": "integratedTerminal",
       "skipFiles": [

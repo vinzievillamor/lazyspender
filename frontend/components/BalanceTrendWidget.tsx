@@ -129,7 +129,7 @@ export const BalanceTrendWidget: React.FC = () => {
               <IconButton
                 icon="dots-vertical"
                 size={24}
-                onPress={() => setMenuVisible(true)}
+                onPress={() => setMenuVisible(prev => !prev)}
                 style={styles.menuButton}
               />
             }
@@ -140,7 +140,7 @@ export const BalanceTrendWidget: React.FC = () => {
                 key={option.value}
                 onPress={() => {
                   setSelectedPeriod(option.value);
-                  setMenuVisible(false);
+                  setTimeout(() => setMenuVisible(false), 1);
                 }}
                 title={option.label}
                 leadingIcon={selectedPeriod === option.value ? 'check' : undefined}

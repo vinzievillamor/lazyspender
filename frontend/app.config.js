@@ -40,6 +40,31 @@ module.exports = {
             backgroundColor: "#000000"
           }
         }
+      ],
+      [
+        "@react-native-community/datetimepicker",
+        {
+          android: {
+            datePicker: {
+              colorAccent: {
+                light: "#6B9FFF",
+                dark: "#A8C7FF"
+              },
+              textColorPrimary: {
+                light: "#1A1C1E",
+                dark: "#F1F0F4"
+              },
+              textColorSecondary: {
+                light: "#42474E",
+                dark: "#9CA3AF"
+              },
+              windowBackground: {
+                light: "#FFFFFF",
+                dark: "#2F3033"
+              }
+            }
+          }
+        }
       ]
     ],
     experiments: {
