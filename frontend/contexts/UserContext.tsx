@@ -19,7 +19,7 @@ interface UserProviderProps {
 
 export const UserProvider: React.FC<UserProviderProps> = ({
   children,
-  owner = 'villamorvinzie'
+  owner
 }) => {
   const { data: user, isLoading, isError, error, refetch } = useUserByOwner(owner);
 

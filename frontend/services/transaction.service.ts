@@ -52,3 +52,10 @@ export const getDistinctNotes = async (owner: string) => {
   const response = await apiClient.get<string[]>(`/api/transactions/distinct-notes?owner=${owner}`)
   return response.data;
 }
+
+/**
+ * Delete a transaction
+ */
+export const deleteTransaction = async (id: string): Promise<void> => {
+  await apiClient.delete(`/api/transactions/${id}`);
+}
