@@ -3,11 +3,11 @@ import { useIsFocused } from "@react-navigation/native";
 import { useMemo, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { ActivityIndicator, Button, FAB, Text, useTheme } from "react-native-paper";
+import SwipeableTransactionItem from "../components/SwipeableTransactionItem";
 import TransactionFormModal from "../components/TransactionFormModal";
-import TransactionItem from "../components/TransactionItem";
 import TransactionItemHeader from "../components/TransactionItemHeader";
 import { spacing } from "../config/theme";
-import { useTransactions } from "../hooks/useTransactions";
+import { useDeleteTransaction, useTransactions } from "../hooks/useTransactions";
 import { Transaction } from "../types/transaction";
 const PAGE_SIZE = 20;
 
@@ -66,6 +66,8 @@ export default function Records() {
     refetch,
   } = useTransactions({ pageSize: PAGE_SIZE, enabled: isFocused });
 
+  const deleteTransactionMutation = useDeleteTransaction();
+
   const transactions = useMemo(() => {
     return data?.pages.flatMap((page) => page.content) ?? [];
   }, [data]);
@@ -103,12 +105,23 @@ export default function Records() {
     });
   });
 
+  const handleDeleteTransaction = (transactionId: string) => {
+    deleteTransactionMutation.mutate(transactionId);
+  };
+
   const renderItem = ({ item }: { item: { type: 'header' | 'item'; title?: string; item?: Transaction } }) => {
     if (item.type === 'header') {
       return <TransactionItemHeader title={item.title!} />;
     }
 
-    return <TransactionItem transaction={item.item!} onPress={() => showFilledModal(item.item!)} />;
+    return (
+      <SwipeableTransactionItem
+        key={item.item!.id}
+        transaction={item.item!}
+        onPress={() => showFilledModal(item.item!)}
+        onDelete={handleDeleteTransaction}
+      />
+    );
   };
 
   const showFilledModal = (transaction: Transaction) => {
@@ -155,7 +168,9 @@ export default function Records() {
       <FlatList
         data={flatData}
         renderItem={renderItem}
-        keyExtractor={(_item: any, index: number) => index.toString()}
+        keyExtractor={(item: any) =>
+          item.type === 'header' ? `header-${item.title}` : `item-${item.item.id}`
+        }
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}

@@ -71,8 +71,8 @@ export default function RootLayout() {
   return (
     <PaperProvider theme={customTheme}>
       <QueryClientProvider client={queryClient}>
-        <UserProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
+        <UserProvider owner="villamorvinzie">
+          <GestureHandlerRootView>
             <Drawer
               drawerContent={(props) => <CustomDrawerContent {...props} />}
               screenOptions={{
