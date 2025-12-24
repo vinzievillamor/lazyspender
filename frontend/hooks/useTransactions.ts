@@ -1,7 +1,8 @@
 import { PageResponse } from '@/types/api';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createTransaction, CreateTransactionRequest, deleteTransaction, getAllTransactions, getDistinctNotes, GetTransactionsParams, updateTransaction } from '../services/transaction.service';
 import { Transaction } from '../types/transaction';
+import { BALANCE_TREND_QUERY_KEYS } from './useBalanceTrend';
 
 export const TRANSACTION_QUERY_KEYS = {
   all: ['transactions'] as const,
@@ -52,6 +53,7 @@ export const useCreateTransaction = () => {
           };
         }
       );
+      invalidateBalanceTrend(queryClient);
     },
   });
 };
@@ -80,6 +82,7 @@ export const useUpdateTransaction = () => {
           };
         }
       );
+      invalidateBalanceTrend(queryClient);
     },
   });
 };
@@ -138,6 +141,11 @@ export const useDeleteTransaction = () => {
     onSettled: () => {
       // Refetch to ensure we're in sync with the server
       queryClient.invalidateQueries({ queryKey: TRANSACTION_QUERY_KEYS.lists() });
+      invalidateBalanceTrend(queryClient);
     },
   });
 };
+
+const invalidateBalanceTrend = (queryClient: QueryClient) => {
+  queryClient.invalidateQueries({ queryKey: BALANCE_TREND_QUERY_KEYS.all })
+}
