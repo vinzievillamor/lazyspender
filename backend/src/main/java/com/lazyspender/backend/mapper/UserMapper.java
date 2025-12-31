@@ -1,11 +1,12 @@
 package com.lazyspender.backend.mapper;
 
-import com.lazyspender.backend.dto.UserRequest;
-import com.lazyspender.backend.dto.UserResponse;
-import com.lazyspender.backend.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
+import com.lazyspender.backend.dto.UserRequest;
+import com.lazyspender.backend.dto.UserResponse;
+import com.lazyspender.backend.model.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

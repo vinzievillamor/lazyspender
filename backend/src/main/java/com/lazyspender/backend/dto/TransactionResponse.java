@@ -25,4 +25,5 @@ public class TransactionResponse {
     private double refCurrencyAmount;
     private String plannedPaymentId;
     private TransactionType type;
+    private boolean confirm;
 }

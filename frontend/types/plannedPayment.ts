@@ -1,11 +1,9 @@
 export enum RecurrenceType {
-  WEEKLY = 'WEEKLY',
   MONTHLY = 'MONTHLY'
 }
 
 export enum EndType {
   OCCURRENCE = 'OCCURRENCE',
-  DATE = 'DATE',
   NEVER = 'NEVER'
 }
 
@@ -27,7 +25,7 @@ export interface PlannedPayment {
   account: string;
   category: string;
   amount: number;
-  description: string;
+  note: string;
   currency: string;
   startDate: string;
   recurrenceType: RecurrenceType;
@@ -37,4 +35,19 @@ export interface PlannedPayment {
   confirmationType: ConfirmationType;
   status: PaymentStatus;
   nextDueDate: string;
+}
+
+export interface CreatePlannedPaymentRequest {
+  owner: string;
+  account: string;
+  category: string;
+  amount: number;
+  note?: string;
+  currency?: string;
+  startDate: string;
+  recurrenceType: RecurrenceType;
+  recurrenceValue: string;
+  endType: EndType;
+  endValue?: string;
+  confirmationType: ConfirmationType;
 }

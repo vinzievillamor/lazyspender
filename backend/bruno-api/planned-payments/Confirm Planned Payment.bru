@@ -1,0 +1,25 @@
+meta {
+  name: Confirm Planned Payment
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/planned-payments/{{plannedPaymentId}}/confirm
+  body: none
+  auth: none
+}
+
+docs {
+  # Confirm Planned Payment
+
+  Manually confirms a planned payment, creating a transaction and advancing the next due date.
+
+  - Creates a transaction with the planned payment details
+  - Advances the nextDueDate to the next occurrence
+  - If the planned payment reaches its occurrence limit, marks it as COMPLETED
+
+  Replace {{plannedPaymentId}} with the actual UUID.
+
+  Returns the created transaction.
+}

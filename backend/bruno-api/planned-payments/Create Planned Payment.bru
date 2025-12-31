@@ -16,8 +16,8 @@ body:json {
     "account": "Checking Account",
     "category": "Housing",
     "amount": -1200.00,
-    "description": "Monthly rent payment",
-    "currency": "USD",
+    "note": "Monthly rent payment",
+    "currency": "",
     "startDate": "2025-12-01T09:00:00Z",
     "recurrenceType": "MONTHLY",
     "recurrenceValue": "1",
@@ -39,15 +39,11 @@ docs {
   
   Creates a new planned/recurring payment.
   
-  ## Recurrence Types
-  - DAILY: recurrenceValue = "1" (number of days)
-  - WEEKLY: recurrenceValue = "MONDAY" | "TUESDAY" | etc.
+  ## Recurrence Types (Only MONTHLY supported)
   - MONTHLY: recurrenceValue = "1-31" (day of month)
-  - YEARLY: recurrenceValue = "1" (number of years)
   
-  ## End Types
+  ## End Types (DATE not supported)
   - NEVER: endValue = null
-  - DATE: endValue = "2026-12-31T23:59:59Z" (ISO date)
   - OCCURRENCE: endValue = "12" (number of times)
   
   ## Confirmation Types
