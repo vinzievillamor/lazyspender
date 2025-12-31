@@ -33,9 +33,9 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "envFile": "${workspaceFolder}/frontend/.env.local",
       "env": {
-        "NODE_ENV": "development"
+        "NODE_ENV": "development",
+        "API_BASE_URL": "http://172.17.48.1:8080"
       }
     },
     {
