@@ -28,7 +28,7 @@ public class PlannedPayment {
 
     private double amount;
 
-    private String description;
+    private String note;
 
     private String currency;
 

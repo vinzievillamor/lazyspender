@@ -1,11 +1,12 @@
 package com.lazyspender.backend.mapper;
 
-import com.lazyspender.backend.dto.PlannedPaymentRequest;
-import com.lazyspender.backend.dto.PlannedPaymentResponse;
-import com.lazyspender.backend.model.PlannedPayment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
+import com.lazyspender.backend.dto.PlannedPaymentRequest;
+import com.lazyspender.backend.dto.PlannedPaymentResponse;
+import com.lazyspender.backend.model.PlannedPayment;
 
 @Mapper(componentModel = "spring")
 public interface PlannedPaymentMapper {

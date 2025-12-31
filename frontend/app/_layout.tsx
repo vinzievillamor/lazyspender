@@ -62,6 +62,24 @@ function CustomDrawerContent(props: any) {
             }
           }}
         />
+        <PaperDrawer.Item
+          label="Planned Payments"
+          active={pathname === "/planned-payments"}
+          onPress={() => router.push("/planned-payments")}
+          icon="calendar-clock"
+          style={[
+            styles.drawerItem,
+            pathname === "/planned-payments" && {
+              backgroundColor: theme.colors.primaryContainer,
+            }
+          ]}
+          theme={{
+            colors: {
+              onSurface: pathname === "/planned-payments" ? theme.colors.primary : theme.colors.onSurfaceVariant,
+              onSurfaceVariant: pathname === "/planned-payments" ? theme.colors.primary : theme.colors.onSurfaceVariant,
+            }
+          }}
+        />
       </PaperDrawer.Section>
     </DrawerContentScrollView>
   );

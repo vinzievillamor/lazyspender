@@ -22,7 +22,7 @@ public class PlannedPaymentResponse {
     private String account;
     private String category;
     private double amount;
-    private String description;
+    private String note;
     private String currency;
 
     private Instant startDate;

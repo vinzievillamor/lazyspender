@@ -1,16 +1,17 @@
 package com.lazyspender.backend.dto;
 
+import java.time.Instant;
+
 import com.lazyspender.backend.model.ConfirmationType;
 import com.lazyspender.backend.model.EndType;
 import com.lazyspender.backend.model.RecurrenceType;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
 
 @Data
 @Builder
@@ -30,10 +31,8 @@ public class PlannedPaymentRequest {
     @NotNull(message = "Amount is required")
     private double amount;
 
-    @NotBlank(message = "Description is required")
-    private String description;
+    private String note;
 
-    @NotBlank(message = "Currency is required")
     private String currency;
 
     @NotNull(message = "Start date is required")

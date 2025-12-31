@@ -3,25 +3,7 @@
   "configurations": [
     {
       "type": "node",
-      "name": "Launch Frontend",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/frontend",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": [
-        "run",
-        "start"
-      ],
-      "console": "integratedTerminal",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "env": {
-        "NODE_ENV": "development"
-      }
-    },
-    {
-      "type": "node",
-      "name": "Launch Frontend (Android)",
+      "name": "Launch Frontend (Default)",
       "request": "launch",
       "cwd": "${workspaceFolder}/frontend",
       "runtimeExecutable": "npm",
@@ -33,6 +15,25 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    {
+      "type": "node",
+      "name": "Launch Frontend (Local)",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "android"
+      ],
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "envFile": "${workspaceFolder}/frontend/.env.local",
       "env": {
         "NODE_ENV": "development"
       }

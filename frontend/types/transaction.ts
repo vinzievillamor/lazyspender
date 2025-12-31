@@ -15,4 +15,5 @@ export interface Transaction {
   refCurrencyAmount: number;
   plannedPaymentId: string;
   type: TransactionType;
+  confirm: boolean;
 }

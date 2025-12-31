@@ -1,0 +1,21 @@
+meta {
+  name: Get Planned Payment Transactions
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/planned-payments/{{plannedPaymentId}}/transactions
+  body: none
+  auth: none
+}
+
+docs {
+  # Get Planned Payment Transactions
+
+  Retrieves all transactions linked to a specific planned payment.
+
+  Replace {{plannedPaymentId}} with the actual UUID.
+
+  Returns a list of transactions that were created from this planned payment.
+}

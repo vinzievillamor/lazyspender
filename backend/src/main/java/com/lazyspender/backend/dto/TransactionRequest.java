@@ -41,4 +41,7 @@ public class TransactionRequest {
 
     @NotNull(message = "Transaction type is required")
     private TransactionType type;
+
+    @Builder.Default
+    private boolean confirm = true;
 }
