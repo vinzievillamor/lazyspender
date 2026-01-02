@@ -4,7 +4,9 @@
       "Bash(cat:*)",
       "Bash(find:*)",
       "Bash(./gradlew compileJava:*)",
-      "Bash(git diff:*)"
+      "Bash(git diff:*)",
+      "Bash(dir:*)",
+      "Bash(tree:*)"
     ]
   }
 }
