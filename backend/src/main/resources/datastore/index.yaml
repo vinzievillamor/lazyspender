@@ -11,3 +11,28 @@ indexes:
     properties:
       - name: owner
       - name: note
+  - kind: transactions
+    properties:
+      - name: date
+      - name: amount
+  - kind: transactions
+    properties:
+      - name: category
+      - name: date
+      - name: amount
+  - kind: transactions
+    properties:
+      - name: note
+      - name: amount
+  - kind: transactions
+    properties:
+      - name: owner
+      - name: type
+      - name: category
+      - name: date
+  - kind: transactions
+    properties:
+      - name: owner
+      - name: type
+      - name: date
+      - name: amount

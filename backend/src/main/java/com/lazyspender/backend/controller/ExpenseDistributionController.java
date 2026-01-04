@@ -1,0 +1,33 @@
+package com.lazyspender.backend.controller;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.lazyspender.backend.dto.ExpenseDistributionResponse;
+import com.lazyspender.backend.model.TrendPeriod;
+import com.lazyspender.backend.service.ExpenseDistributionService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/expense-distribution")
+@RequiredArgsConstructor
+public class ExpenseDistributionController {
+
+    private final ExpenseDistributionService expenseDistributionService;
+
+    @GetMapping
+    public ResponseEntity<ExpenseDistributionResponse> getExpenseDistribution(
+            @RequestParam(name = "owner") String owner,
+            @RequestParam(name = "accounts") List<String> accounts,
+            @RequestParam(name = "period") TrendPeriod period) {
+
+        ExpenseDistributionResponse response = expenseDistributionService.getExpenseDistribution(owner, accounts, period);
+        return ResponseEntity.ok(response);
+    }
+}

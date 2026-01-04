@@ -4,3 +4,19 @@ spring:
   cloud:
     gcp:
       project-id: mindful-rhythm-426908-a5
+
+app:
+  expense-categories:
+    - Allowance
+    - Food & Drinks
+    - Groceries
+    - Health & Medical
+    - Holidays & Events
+    - Housing
+    - Life & Entertainment
+    - Others
+    - Pets, animals
+    - Shopping
+    - Sports & Fitness
+    - Technology & Communication
+    - Transportation
