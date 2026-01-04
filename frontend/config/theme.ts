@@ -109,6 +109,12 @@ export const customColors = {
     teal: '#26C6DA',
     yellow: '#FFC107',
     gray: '#757575',
+    indigo: '#5C6BC0',
+    deepOrange: '#FF7043',
+    cyan: '#00BCD4',
+    magenta: '#E91E63',
+    lightGreen: '#8BC34A',
+    amber: '#FFB300',
   },
 
   // Chart colors
