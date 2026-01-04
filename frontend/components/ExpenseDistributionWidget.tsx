@@ -23,18 +23,18 @@ const getCategoryColor = (category: string): string => {
   const colorMap: Record<string, string> = {
     [Category.ALLOWANCE]: customColors.iconForegrounds.green,
     [Category.FOOD_DRINKS]: customColors.iconForegrounds.orange,
-    [Category.GROCERIES]: customColors.iconForegrounds.teal,
+    [Category.GROCERIES]: customColors.iconForegrounds.cyan,
     [Category.HEALTH_MEDICAL]: customColors.iconForegrounds.pink,
     [Category.HOLIDAYS_EVENTS]: customColors.iconForegrounds.purple,
     [Category.HOUSING]: customColors.iconForegrounds.blue,
-    [Category.INCOME]: customColors.income,
-    [Category.LIFE_ENTERTAINMENT]: customColors.iconForegrounds.purple,
+    [Category.INCOME]: customColors.iconForegrounds.lightGreen,
+    [Category.LIFE_ENTERTAINMENT]: customColors.iconForegrounds.magenta,
     [Category.OTHERS]: customColors.iconForegrounds.gray,
-    [Category.PETS_ANIMALS]: customColors.iconForegrounds.yellow,
-    [Category.SHOPPING]: customColors.iconForegrounds.pink,
-    [Category.SPORTS_FITNESS]: customColors.iconForegrounds.green,
-    [Category.TECHNOLOGY_COMMUNICATION]: customColors.iconForegrounds.blue,
-    [Category.TRANSPORTATION]: customColors.iconForegrounds.teal,
+    [Category.PETS_ANIMALS]: customColors.iconForegrounds.amber,
+    [Category.SHOPPING]: customColors.iconForegrounds.yellow,
+    [Category.SPORTS_FITNESS]: customColors.iconForegrounds.teal,
+    [Category.TECHNOLOGY_COMMUNICATION]: customColors.iconForegrounds.indigo,
+    [Category.TRANSPORTATION]: customColors.iconForegrounds.deepOrange,
   };
 
   return colorMap[category] || customColors.iconForegrounds.gray;
