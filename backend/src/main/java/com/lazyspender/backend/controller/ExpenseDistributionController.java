@@ -1,5 +1,7 @@
 package com.lazyspender.backend.controller;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lazyspender.backend.dto.ContributorsResponse;
 import com.lazyspender.backend.dto.ExpenseDistributionResponse;
 import com.lazyspender.backend.model.TrendPeriod;
 import com.lazyspender.backend.service.ExpenseDistributionService;
@@ -30,4 +33,15 @@ public class ExpenseDistributionController {
         ExpenseDistributionResponse response = expenseDistributionService.getExpenseDistribution(owner, accounts, period);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/contributors")
+    public ResponseEntity<ContributorsResponse> getMethodName(
+        @RequestParam(name = "owner") String owner,
+        @RequestParam(name = "category") String category,
+        @RequestParam(name = "period") TrendPeriod period
+    ) {
+        final var response = expenseDistributionService.getTopContributors(owner, URLDecoder.decode(category, StandardCharsets.UTF_8), period);
+        return ResponseEntity.ok(response);
+    }
+    
 }

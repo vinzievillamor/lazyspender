@@ -1,5 +1,10 @@
 import { apiClient } from '../config/api';
-import type { ExpenseDistributionResponse, GetExpenseDistributionParams } from '../types/expenseDistribution';
+import type {
+  ContributorsResponse,
+  ExpenseDistributionResponse,
+  GetContributorsParams,
+  GetExpenseDistributionParams,
+} from '../types/expenseDistribution';
 
 export const getExpenseDistribution = async (
   params: GetExpenseDistributionParams
@@ -8,6 +13,19 @@ export const getExpenseDistribution = async (
     params: {
       owner: params.owner,
       accounts: params.accounts,
+      period: params.period,
+    },
+  });
+  return response.data;
+};
+
+export const getTopContributors = async (
+  params: GetContributorsParams
+): Promise<ContributorsResponse> => {
+  const response = await apiClient.get<ContributorsResponse>('/api/expense-distribution/contributors', {
+    params: {
+      owner: params.owner,
+      category: params.category,
       period: params.period,
     },
   });

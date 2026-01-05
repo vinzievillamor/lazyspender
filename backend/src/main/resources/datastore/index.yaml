@@ -36,3 +36,7 @@ indexes:
       - name: type
       - name: date
       - name: amount
+  - kind: transactions
+    properties:
+      - name: category
+      - name: date

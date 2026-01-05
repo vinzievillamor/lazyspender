@@ -18,3 +18,22 @@ export interface GetExpenseDistributionParams {
   accounts: string[];
   period: TrendPeriod;
 }
+
+export interface ContributorItem {
+  note: string;
+  amount: number;
+  count: number;
+}
+
+export interface ContributorsResponse {
+  category: string;
+  totalCategoryAmount: number;
+  currency: string;
+  contributors: ContributorItem[];
+}
+
+export interface GetContributorsParams {
+  owner: string;
+  category: string;
+  period: TrendPeriod;
+}

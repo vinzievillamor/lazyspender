@@ -1,7 +1,7 @@
 meta {
   name: Delete User
   type: http
-  seq: 6
+  seq: 4
 }
 
 delete {
@@ -12,16 +12,16 @@ delete {
 
 docs {
   # Delete User
-
+  
   Deletes a user by their ID.
-
+  
   ## Path Parameters
   - id: User ID (UUID string)
-
+  
   ## Response
   - 204 No Content: User successfully deleted
   - 404 Not Found: User not found
-
+  
   ## Warning
   This is a destructive operation. In a production environment:
   - Consider soft deletion (marking as inactive) instead

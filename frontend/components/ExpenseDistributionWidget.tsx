@@ -4,9 +4,10 @@ import { PieChart } from 'react-native-gifted-charts';
 import { ActivityIndicator, Card, Divider, IconButton, Menu, Text, useTheme } from 'react-native-paper';
 import { customColors, customTheme, spacing } from '../config/theme';
 import { useUser } from '../contexts/UserContext';
-import { useExpenseDistribution } from '../hooks/useExpenseDistribution';
+import { useExpenseDistribution, useTopContributors } from '../hooks/useExpenseDistribution';
 import { TrendPeriod } from '../types/balanceTrend';
 import { Category } from '../types/category';
+import { TopContributorsList } from './TopContributorsList';
 
 const PERIOD_OPTIONS = [
   { value: TrendPeriod.LAST_12_WEEKS, label: 'Last 12 weeks' },
@@ -48,6 +49,9 @@ export const ExpenseDistributionWidget: React.FC = () => {
   const [selectedAccounts, setSelectedAccounts] = useState<string[]>(user?.accounts || []);
   const [menuVisible, setMenuVisible] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
+  // Initialize with first category expanded (will be set when data loads)
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   // Update selected accounts when user data loads
   React.useEffect(() => {
@@ -67,6 +71,26 @@ export const ExpenseDistributionWidget: React.FC = () => {
     }
   );
 
+  // Fetch contributors when a category is expanded
+  const { data: contributorsData, isLoading: isContributorsLoading } = useTopContributors(
+    {
+      owner: user?.owner || '',
+      category: expandedCategory || '',
+      period: selectedPeriod,
+    },
+    {
+      enabled: !!user?.owner && !!expandedCategory,
+    }
+  );
+
+  // Set initial expanded category when distribution data loads
+  React.useEffect(() => {
+    if (!initialLoadDone && data?.distribution && data.distribution.length > 0) {
+      setExpandedCategory(data.distribution[0].category);
+      setInitialLoadDone(true);
+    }
+  }, [data?.distribution, initialLoadDone]);
+
   // Transform distribution data for PieChart
   const pieData = useMemo(() => {
     if (!data?.distribution || data.distribution.length === 0) {
@@ -77,7 +101,13 @@ export const ExpenseDistributionWidget: React.FC = () => {
       value: item.amount,
       color: getCategoryColor(item.category),
       focused: focusedIndex === index,
-      onPress: () => setFocusedIndex(index),
+      onPress: () => {
+        setFocusedIndex(index);
+        // Toggle expansion for this category
+        setExpandedCategory(prev =>
+          prev === item.category ? null : item.category
+        );
+      },
     }));
   }, [data?.distribution, focusedIndex]);
 
@@ -196,29 +226,28 @@ export const ExpenseDistributionWidget: React.FC = () => {
           </View>
         )}
 
-        {/* Legend */}
-        {pieData.length > 0 && (
-          <>
-            <Divider style={styles.divider} />
-            <View style={styles.legendContainer}>
-              {data?.distribution.map((item, index) => (
-                <View key={item.category} style={styles.legendItem}>
-                  <View style={[styles.legendColor, { backgroundColor: getCategoryColor(item.category) }]} />
-                  <View style={styles.legendTextContainer}>
-                    <Text variant="bodySmall" style={styles.legendCategory} numberOfLines={1}>
-                      {item.category}
-                    </Text>
-                    <Text variant="bodySmall" style={styles.legendAmount}>
-                      {data.currency} {item.amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </Text>
-                  </View>
-                  <Text variant="bodySmall" style={styles.legendPercentage}>
-                    {item.percentage.toFixed(1)}%
-                  </Text>
-                </View>
-              ))}
+        {/* Top 10 Contributors Section (Expandable) */}
+        {expandedCategory && focusedItem && (
+          <View style={styles.contributorsSection}>
+            <View style={styles.contributorsHeader}>
+              <View style={[styles.expandIndicator, { backgroundColor: getCategoryColor(expandedCategory) }]} />
+              <Text variant="titleSmall" style={styles.contributorsTitle}>
+                {expandedCategory}
+              </Text>
+              <IconButton
+                icon="close"
+                size={20}
+                onPress={() => setExpandedCategory(null)}
+                style={styles.closeButton}
+              />
             </View>
-          </>
+            <TopContributorsList
+              contributors={contributorsData?.contributors || []}
+              currency={data?.currency || 'PHP'}
+              isLoading={isContributorsLoading}
+              categoryColor={getCategoryColor(expandedCategory)}
+            />
+          </View>
         )}
 
         <Divider style={styles.divider} />
@@ -341,5 +370,28 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     minWidth: 50,
     textAlign: 'right',
+  },
+  contributorsSection: {
+    marginTop: spacing.md,
+    backgroundColor: customTheme.colors.surfaceVariant,
+    borderRadius: customTheme.roundness,
+    padding: spacing.md,
+  },
+  contributorsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  expandIndicator: {
+    width: 4,
+    height: 20,
+    borderRadius: 2,
+    marginRight: spacing.sm,
+  },
+  contributorsTitle: {
+    flex: 1,
+    fontWeight: '600',
+  },
+  closeButton: {
+    margin: 0,
   },
 });

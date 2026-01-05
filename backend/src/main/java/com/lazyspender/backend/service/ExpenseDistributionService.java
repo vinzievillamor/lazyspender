@@ -4,8 +4,11 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -20,10 +23,14 @@ import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 import com.google.cloud.datastore.aggregation.Aggregation;
 import com.lazyspender.backend.config.ExpenseConfigProperties;
+import com.lazyspender.backend.dto.ContributorItem;
+import com.lazyspender.backend.dto.ContributorsResponse;
 import com.lazyspender.backend.dto.ExpenseDistributionItem;
 import com.lazyspender.backend.dto.ExpenseDistributionResponse;
+import com.lazyspender.backend.model.Transaction;
 import com.lazyspender.backend.model.TransactionType;
 import com.lazyspender.backend.model.TrendPeriod;
+import com.lazyspender.backend.repository.TransactionRepository;
 import com.lazyspender.backend.util.DateTimeUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -32,11 +39,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExpenseDistributionService {
 
-    private final Datastore datastore;
-    private final ExpenseConfigProperties expenseConfig;
-
     private static final String KIND = "transactions";
     private static final String AMOUNT_ALIAS = "total_amount";
+    private static int TOP_CONTRIBUTORS_COUNT = 10;
+
+    private final Datastore datastore;
+    private final TransactionRepository transactionRepository;
+    private final ExpenseConfigProperties expenseConfig;
 
     public ExpenseDistributionResponse getExpenseDistribution(String owner, List<String> accounts, TrendPeriod period) {
         Instant endDate = DateTimeUtils.endOfTodayUtc();
@@ -81,6 +90,38 @@ public class ExpenseDistributionService {
                 .build();
     }
 
+    public ContributorsResponse getTopContributors(String owner, String category, TrendPeriod trendPeriod) {
+        final var endDate = DateTimeUtils.endOfTodayUtc();
+        final var startDate = calculateStartDate(trendPeriod);
+        final var transactions = transactionRepository.findByOwnerAndCategoryWithinDateRange(owner, category, startDate,
+                endDate);
+        // Compute sum of amounts
+        final var totalCategoryAmount = transactions.stream().mapToDouble(transaction -> transaction.getAmount()).sum();
+        // Group transactions by note and summarize
+        final var txnsGroupByNotes = transactions.stream()
+                .collect(Collectors.groupingBy(Transaction::getNote,
+                        Collectors.summarizingDouble(Transaction::getAmount)));
+        final var contributors = txnsGroupByNotes.entrySet()
+                .stream()
+                .sorted(Comparator
+                        .comparingDouble((Map.Entry<String, DoubleSummaryStatistics> t) -> t.getValue().getSum())
+                        .reversed())
+                .limit(TOP_CONTRIBUTORS_COUNT)
+                .map(contrib -> ContributorItem
+                        .builder()
+                        .amount(contrib.getValue().getSum())
+                        .count((int) contrib.getValue().getCount())
+                        .note(contrib.getKey())
+                        .build())
+                .toList();
+        return ContributorsResponse.builder()
+                .category(category)
+                .currency("PHP")
+                .totalCategoryAmount(totalCategoryAmount)
+                .contributors(contributors)
+                .build();
+    }
+
     private double runSumAggregationQuery(String owner, String category, Timestamp startDate, Timestamp endDate) {
         // Build entity query with filters
         EntityQuery baseQuery = Query.newEntityQueryBuilder()
@@ -90,8 +131,7 @@ public class ExpenseDistributionService {
                         PropertyFilter.eq("type", TransactionType.EXPENSE.name()),
                         PropertyFilter.eq("category", category),
                         PropertyFilter.ge("date", startDate),
-                        PropertyFilter.le("date", endDate)
-                ))
+                        PropertyFilter.le("date", endDate)))
                 .build();
 
         // Build aggregation query with SUM

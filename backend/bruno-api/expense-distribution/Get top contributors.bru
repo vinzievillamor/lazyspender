@@ -1,0 +1,22 @@
+meta {
+  name: Get top contributors
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/expense-distribution/contributors?owner=villamorvinzie&category=Transportation&period=FROM_START
+  body: none
+  auth: inherit
+}
+
+params:query {
+  owner: villamorvinzie
+  category: Transportation
+  period: FROM_START
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
