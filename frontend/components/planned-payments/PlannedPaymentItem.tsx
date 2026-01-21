@@ -103,7 +103,7 @@ export default function PlannedPaymentItem({
     return `${completedCount}/${total}`;
   };
 
-  const isDueToday = new Date(plannedPayment.nextDueDate).toDateString() === new Date().toDateString();
+  const isDueToday = new Date().getTime() >= new Date(plannedPayment.nextDueDate).getTime();
   const showConfirmButton = plannedPayment.confirmationType === ConfirmationType.MANUAL &&
     plannedPayment.status === PaymentStatus.ACTIVE &&
     isDueToday;
