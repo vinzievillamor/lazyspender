@@ -1,0 +1,22 @@
+meta {
+  name: Start backfill transaction planned payments
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/backfill/transaction-planned-payments
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "owner": "villamorvinzie"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

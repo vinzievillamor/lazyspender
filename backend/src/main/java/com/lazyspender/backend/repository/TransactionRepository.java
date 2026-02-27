@@ -41,4 +41,10 @@ public interface TransactionRepository extends DatastoreRepository<Transaction, 
             @Param("category") String category,
             @Param("startDate") Instant startDate,
             @Param("endDate") Instant endDate);
+
+    @Query("SELECT * FROM transactions WHERE owner = @owner AND note = @note AND category = @category")
+    List<Transaction> findAllByOwnerAndCategoryAndNote(
+        @Param("owner") String owner, 
+        @Param("note") String note, 
+        @Param("category") String category);
 }

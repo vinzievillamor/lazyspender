@@ -1,21 +1,23 @@
 package com.lazyspender.backend.service;
 
-import com.lazyspender.backend.dto.PageResponse;
-import com.lazyspender.backend.dto.TransactionRequest;
-import com.lazyspender.backend.dto.TransactionResponse;
-import com.lazyspender.backend.mapper.TransactionMapper;
-import com.lazyspender.backend.model.Transaction;
-import com.lazyspender.backend.repository.TransactionRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.lazyspender.backend.dto.PageResponse;
+import com.lazyspender.backend.dto.TransactionRequest;
+import com.lazyspender.backend.dto.TransactionResponse;
+import com.lazyspender.backend.mapper.TransactionMapper;
+import com.lazyspender.backend.model.Transaction;
+import com.lazyspender.backend.repository.TransactionRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +69,17 @@ public class TransactionService {
 
     public List<String> getDistinctNotesByOwner(String owner) {
         return transactionRepository.findDistinctNotesByOwner(owner);
+    }
+
+    public List<TransactionResponse> getTransactionsByOwnerAndCategoryAndNote(
+        String owner,
+        String category,
+        String note) {
+
+        return transactionRepository.findAllByOwnerAndCategoryAndNote(owner, note, category)
+            .stream()
+            .map(transactionMapper::toResponse)
+            .collect(Collectors.toList());
     }
 
     private PageResponse<TransactionResponse> mapToPageResponse(Page<Transaction> transactionPage) {

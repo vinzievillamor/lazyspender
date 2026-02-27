@@ -53,7 +53,7 @@ export default function PlannedPaymentItem({
   completedCount
 }: PlannedPaymentItemProps) {
   const theme = useTheme();
-  const isExpense = plannedPayment.amount < 0;
+  const isExpense = true // TODO: support planned payment as income
   const swipeableRef = useRef<any>(null);
   const opacity = useSharedValue(1);
   const scale = useSharedValue(1);

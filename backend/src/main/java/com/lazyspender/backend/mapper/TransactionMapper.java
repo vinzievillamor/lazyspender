@@ -16,6 +16,10 @@ public interface TransactionMapper {
 
     TransactionResponse toResponse(Transaction transaction);
 
+    Transaction toEntity(TransactionResponse response);
+
+    TransactionRequest toRequest(Transaction transaction);
+
     @Mapping(target = "id", ignore = true)
     void updateEntityFromRequest(TransactionRequest request, @MappingTarget Transaction transaction);
 }
