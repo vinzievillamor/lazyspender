@@ -123,7 +123,7 @@ public class PlannedPaymentService {
                 .currency(plannedPayment.getCurrency())
                 .refCurrencyAmount(plannedPayment.getAmount())
                 .plannedPaymentId(plannedPaymentId)
-                .type(plannedPayment.getAmount() < 0 ? TransactionType.EXPENSE : TransactionType.INCOME)
+                .type(TransactionType.EXPENSE)
                 .build();
 
         TransactionResponse transaction = transactionService.createTransaction(txRequest);
