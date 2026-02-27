@@ -52,6 +52,7 @@ export default function PlannedPaymentItem({
   onDelete,
   completedCount
 }: PlannedPaymentItemProps) {
+
   const theme = useTheme();
   const isExpense = true // TODO: support planned payment as income
   const swipeableRef = useRef<any>(null);
@@ -103,7 +104,7 @@ export default function PlannedPaymentItem({
     return `${completedCount}/${total}`;
   };
 
-  const isDueToday = new Date(plannedPayment.nextDueDate).toDateString() === new Date().toDateString();
+  const isDueToday = new Date(plannedPayment.nextDueDate) <= new Date();
   const showConfirmButton = plannedPayment.confirmationType === ConfirmationType.MANUAL &&
     plannedPayment.status === PaymentStatus.ACTIVE &&
     isDueToday;

@@ -33,7 +33,7 @@ const PlannedPaymentDetailModal: React.FC<PlannedPaymentDetailModalProps> = ({
   if (!plannedPayment) return null;
 
   const completedCount = transactions?.length || 0;
-  const isExpense = plannedPayment.amount < 0;
+  const isExpense = true;
   const totalPaid = completedCount * Math.abs(plannedPayment.amount);
 
   const getProgressText = () => {
