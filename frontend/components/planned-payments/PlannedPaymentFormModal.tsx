@@ -112,7 +112,7 @@ const PlannedPaymentFormModal: React.FC<PlannedPaymentFormModalProps> = ({ visib
       owner: user.owner,
       account: formData.account,
       category: formData.category,
-      amount: isExpense ? -Math.abs(formData.amount) : Math.abs(formData.amount),
+      amount: formData.amount,
       note: formData.note,
       startDate: formData.startDate || new Date().toISOString(),
       recurrenceType: RecurrenceType.MONTHLY,
