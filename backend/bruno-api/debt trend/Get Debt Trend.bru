@@ -1,0 +1,26 @@
+meta {
+  name: Get Debt Trend
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/debt-trend?from=2020-01-01T00:00:00Z&to=2027-01-01T00:00:00Z&aggregationStrategy=MONTHLY
+  body: none
+  auth: inherit
+}
+
+params:query {
+  from: 2020-01-01T00:00:00Z
+  to: 2027-01-01T00:00:00Z
+  aggregationStrategy: MONTHLY
+}
+
+headers {
+  owner: villamorvinzie
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

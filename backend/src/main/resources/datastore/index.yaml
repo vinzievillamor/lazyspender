@@ -40,3 +40,7 @@ indexes:
     properties:
       - name: category
       - name: date
+  - kind: transactions
+    properties:
+    - name: plannedPaymentId
+    - name: date

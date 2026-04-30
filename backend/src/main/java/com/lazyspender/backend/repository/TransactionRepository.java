@@ -47,4 +47,11 @@ public interface TransactionRepository extends DatastoreRepository<Transaction, 
         @Param("owner") String owner, 
         @Param("note") String note, 
         @Param("category") String category);
+
+    @Query("SELECT * FROM transactions WHERE plannedPaymentId = @plannedPaymentId AND date >= @from AND date <= @to")
+    Page<Transaction> findAllByPlannedPaymentIdAndWithinDateRange(
+        @Param("plannedPaymentId") String plannedPaymentId, 
+        @Param("from") Instant from, 
+        @Param("to") Instant to, 
+        Pageable pageable);
 }
