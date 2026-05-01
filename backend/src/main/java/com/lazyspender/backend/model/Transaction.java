@@ -9,6 +9,7 @@ import com.google.cloud.spring.data.datastore.core.mapping.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "transactions")
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Transaction {
 
     @Id
@@ -25,14 +27,19 @@ public class Transaction {
 
     private String account;
 
+    @EqualsAndHashCode.Include
     private String category;
 
+    @EqualsAndHashCode.Include
     private double amount;
 
+    @EqualsAndHashCode.Include
     private String note;
 
+    @EqualsAndHashCode.Include
     private Instant date;
 
+    @EqualsAndHashCode.Include
     private String currency;
 
     private double refCurrencyAmount;

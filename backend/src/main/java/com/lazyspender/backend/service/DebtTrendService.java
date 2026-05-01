@@ -5,6 +5,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -63,13 +64,18 @@ public class DebtTrendService {
             GetDebtTrendQuery query) {
         return plannedPayment -> {
             final var page = PageRequest.ofSize(256);
-            final var transactions = new ArrayList<Transaction>();
+            final var transactions = new HashSet<Transaction>();
+
+            transactions.add(toTransaction(plannedPayment));
+
             var transactionsSlice = transactionRepository.findAllByPlannedPaymentIdAndWithinDateRange(
                     plannedPayment.getId(),
                     query.from(),
                     query.to(),
                     page);
+
             transactions.addAll(transactionsSlice.getContent());
+
             while (transactionsSlice.hasNext()) {
                 transactionsSlice = transactionRepository.findAllByPlannedPaymentIdAndWithinDateRange(
                         plannedPayment.getId(),
@@ -78,8 +84,19 @@ public class DebtTrendService {
                         transactionsSlice.getPageable().next());
                 transactions.addAll(transactionsSlice.getContent());
             }
-            return transactions;
+
+            return new ArrayList<>(transactions);
         };
+    }
+
+    private Transaction toTransaction(PlannedPaymentResponse plannedPaymentResponse) {
+        return Transaction.builder()
+                .amount(plannedPaymentResponse.getAmount())
+                .category(plannedPaymentResponse.getCategory())
+                .currency(plannedPaymentResponse.getCurrency())
+                .date(plannedPaymentResponse.getNextDueDate())
+                .note(plannedPaymentResponse.getNote())
+                .build();
     }
 
     public Debt getDebt(Transaction transaction, AggregationStrategy aggregationStrategy) {
