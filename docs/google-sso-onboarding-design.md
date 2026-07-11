@@ -14,7 +14,7 @@ Today there is no authentication: the frontend hardcodes a single `owner` string
 ## Auth Flow
 
 1. User taps "Sign in with Google" on a new `app/login.tsx` screen.
-2. Frontend uses `expo-auth-session/providers/google` to obtain a Google ID token (OIDC JWT) directly from Google. This works inside Expo Go / the managed workflow — no custom dev client or eject required, keeping the "start simple" constraint.
+2. Frontend uses `expo-auth-session/providers/google` to obtain a Google ID token (OIDC JWT) directly from Google. **Correction:** Expo Go can no longer be used for OAuth redirects (Google/Expo have both deprecated the flows that made that possible) — a Development Build is required. This project already depends on `expo-dev-client` and has an APK build pipeline, so this isn't a new requirement, just a corrected assumption versus the original "no custom dev client" framing below.
 3. Frontend calls `POST /api/auth/google` with the Google ID token.
 4. Backend verifies the token using `GoogleIdTokenVerifier` (from `google-api-client`): checks the signature against Google's published public keys, confirms `aud` matches our OAuth client ID, confirms it isn't expired. The raw token is never trusted without this step.
 5. Backend extracts `sub` (stable Google user id), `email`, `name`, `picture` from the verified payload and upserts a `User` by `googleId` — creating a new `User` on first login. No hardcoded user remains to migrate toward; see **Migration of Existing Data** below for how prior data gets reassigned.
@@ -105,9 +105,18 @@ The hardcoded `"villamorvinzie"` owner is being removed outright rather than aut
 |------|--------|
 | `app/_layout.tsx` | Remove the hardcoded `<UserProvider owner="villamorvinzie">` entirely; wrap the tree in `AuthProvider`, which mounts `UserProvider` with the real authenticated owner once a session resolves, otherwise renders the login route |
 | `config/api.ts` | Axios request interceptor attaches `Authorization: Bearer <token>`; response interceptor on 401 clears the stored token and routes to `/login` |
-| `contexts/UserContext.tsx` | `owner` now comes from `AuthContext` rather than a prop hardcoded at the call site |
+| `contexts/UserContext.tsx` | Switches from its current (already broken — `GET /api/users/owner/{owner}` doesn't exist on the backend) owner-based lookup to `GET /api/users/me`, which is Principal-scoped and needs no client-supplied param |
+| `app/records.tsx` (via `hooks/useTransactions.ts`) | The transactions list currently calls the **unscoped** `GET /api/transactions`, which returns every user's transactions, not just the signed-in user's. Must switch to the already-existing `GET /api/transactions/mine`. This is the one required behavior fix bundled into this feature — without it, SSO adds a login screen but not actual per-user data isolation on the main list view |
 
 New Expo dependency: `expo-auth-session`, `expo-secure-store` (if not already present).
+
+**Client ID strategy for native platforms:** the single existing Google OAuth client (`app.google.client-id` on the backend) is used today purely as the token-verification audience and is almost certainly a "Web application" type client. Google does not allow custom URL-scheme redirects (e.g. `frontend://...`) for Web-type clients — only Android/iOS client types support that. Native sign-in therefore needs two more OAuth clients registered in the same GCP project (`mindful-rhythm-426908-a5`):
+- **Android**: package name `com.vinzie.lazyspender`, plus the SHA-1 fingerprint of the signing cert used for builds (from the existing APK build pipeline / `eas credentials`).
+- **iOS**: a real bundle ID — `app.config.js` currently ships the Expo-generated placeholder `com.anonymous.frontend`, which should be replaced before registering with Google/App Store.
+
+The frontend passes all three client IDs (`webClientId`, `iosClientId`, `androidClientId`) to `expo-auth-session`'s Google provider, but per Google/Firebase's documented pattern the resulting ID token's `aud` is still the **web** client ID regardless of platform — so the backend's existing single-audience `GoogleIdTokenVerifier` check needs no change once the native clients exist.
+
+**Known, deliberate follow-up (not part of v1):** `planned-payments`, `balance-trend`, `expense-distribution`, and transaction create/update all still thread a client-supplied `owner` through query params/request bodies on the frontend. The backend now ignores/overwrites all of it (derives `owner` from the JWT `Principal` instead), so this isn't a bug — just dead weight left for a later cleanup pass, not required for the feature to function correctly.
 
 ---
 
@@ -121,6 +130,8 @@ New Expo dependency: `expo-auth-session`, `expo-secure-store` (if not already pr
 
 ## Open Decisions
 - **Secret storage**: HMAC signing secret needs to live in a Cloud Run secret (matching how other prod config is handled) rather than checked into `application.yaml`.
+- **iOS bundle identifier**: TBD, needs to replace the Expo-generated placeholder (`com.anonymous.frontend`) before an iOS Google OAuth client can be registered.
+- **Android/iOS Google OAuth client creation**: TBD — external Google Cloud Console setup (package name + SHA-1 for Android, bundle ID for iOS), not something doable from the repo. Owner: user.
 
 ## Resolved Decisions
 - **Session JWT lifetime**: 24 hours. Re-auth via Google after expiry, roughly once a day.
