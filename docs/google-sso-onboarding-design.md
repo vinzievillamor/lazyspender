@@ -17,14 +17,11 @@ Today there is no authentication: the frontend hardcodes a single `owner` string
 2. Frontend uses `expo-auth-session/providers/google` to obtain a Google ID token (OIDC JWT) directly from Google. This works inside Expo Go / the managed workflow — no custom dev client or eject required, keeping the "start simple" constraint.
 3. Frontend calls `POST /api/auth/google` with the Google ID token.
 4. Backend verifies the token using `GoogleIdTokenVerifier` (from `google-api-client`): checks the signature against Google's published public keys, confirms `aud` matches our OAuth client ID, confirms it isn't expired. The raw token is never trusted without this step.
-5. Backend extracts `sub` (stable Google user id), `email`, `name`, `picture` from the verified payload and upserts a `User`:
-   - Look up by `googleId` first.
-   - Fall back to lookup by `email` once, to pick up the pre-existing hardcoded `"villamorvinzie"` user on their first real login (one-time convergence, no separate migration script needed).
-   - Otherwise create a new `User`.
-6. Backend mints its own short-lived signed session JWT (`sub` = user id, `owner` = email, expiry ~1h), signed with an HMAC secret stored as a Cloud Run env var/secret — not the Google token itself, so the app controls session lifetime independently of Google's token TTL.
+5. Backend extracts `sub` (stable Google user id), `email`, `name`, `picture` from the verified payload and upserts a `User` by `googleId` — creating a new `User` on first login. No hardcoded user remains to migrate toward; see **Migration of Existing Data** below for how prior data gets reassigned.
+6. Backend mints its own signed session JWT (`sub` = user id, `owner` = email, expiry **24 hours**), signed with an HMAC secret stored as a Cloud Run env var/secret. We mint our own token rather than forwarding Google's ID token as the session credential: Google ID tokens are designed to expire in ~1 hour and prove identity at a point in time, not to serve as a day-long API session credential. Getting a 24h session out of Google directly would mean requesting offline access, storing Google refresh tokens, and calling Google's token endpoint to mint a new ID token periodically — more moving parts than signing our own JWT. A self-minted token also means every subsequent request is validated locally (HMAC check), with no network dependency on Google after the initial handshake.
 7. Frontend stores the session JWT in `expo-secure-store`. An axios interceptor in `config/api.ts` attaches it as `Authorization: Bearer <token>` on every request.
 8. A Spring Security filter chain validates the Bearer token on each request and populates a `SecurityContext` with the authenticated `owner`. Non-auth endpoints require this; `/api/auth/**` is public.
-9. On 401 (expired/invalid token), the frontend clears the stored token and redirects to `/login`. Expiry is handled by re-running the Google sign-in flow (silent where possible) rather than building refresh-token rotation.
+9. On 401 (expired/invalid token), the frontend clears the stored token and redirects to `/login`. With a 24h lifetime this means re-running the Google sign-in flow (silent where possible) about once a day, rather than building refresh-token rotation.
 
 ```
 ┌─────────┐   Google ID token   ┌──────────────┐   verify + upsert   ┌────────┐
@@ -56,6 +53,12 @@ private String pictureUrl;
 `owner` is kept as-is (it's already the scoping key across `Transaction`/`PlannedPayment`) but is now derived server-side from the verified email, never accepted from the client for write/read authorization decisions.
 
 No new Datastore composite indexes are needed — lookups are by single-property equality (`googleId`, `email`), which Datastore supports without a composite index.
+
+---
+
+## Migration of Existing Data
+
+The hardcoded `"villamorvinzie"` owner is being removed outright rather than auto-converged via an email match. Existing `Transaction`/`PlannedPayment` records under that owner string will be reassigned manually after the real Google sign-in exists, using a one-off script in `migration/` triggered via `BackfillController` (`POST /api/backfill/...`) — the same pattern already used for `BackfillPlannedPaymentsIdForTransaction`. This is deliberately deferred and manual: run once, after the user has signed in with their Google account and their real `owner` value is known.
 
 ---
 
@@ -100,7 +103,7 @@ No new Datastore composite indexes are needed — lookups are by single-property
 ### Files to modify
 | File | Change |
 |------|--------|
-| `app/_layout.tsx` | Wrap the tree in `AuthProvider` instead of hardcoding `<UserProvider owner="villamorvinzie">`; mount `UserProvider` with the real authenticated owner once `AuthContext` resolves a session, otherwise render the login route |
+| `app/_layout.tsx` | Remove the hardcoded `<UserProvider owner="villamorvinzie">` entirely; wrap the tree in `AuthProvider`, which mounts `UserProvider` with the real authenticated owner once a session resolves, otherwise renders the login route |
 | `config/api.ts` | Axios request interceptor attaches `Authorization: Bearer <token>`; response interceptor on 401 clears the stored token and routes to `/login` |
 | `contexts/UserContext.tsx` | `owner` now comes from `AuthContext` rather than a prop hardcoded at the call site |
 
@@ -117,6 +120,8 @@ New Expo dependency: `expo-auth-session`, `expo-secure-store` (if not already pr
 - Server-side token revocation / logout-everywhere.
 
 ## Open Decisions
-- **Session JWT lifetime**: proposed 1 hour, re-auth via Google after expiry — confirm this cadence is acceptable for the app's usage pattern.
 - **Secret storage**: HMAC signing secret needs to live in a Cloud Run secret (matching how other prod config is handled) rather than checked into `application.yaml`.
-- **Existing hardcoded user**: the design assumes `"villamorvinzie"`'s real Gmail address matches what's already in the `User.owner`/data today — worth confirming before relying on the email-fallback upsert to converge them automatically.
+
+## Resolved Decisions
+- **Session JWT lifetime**: 24 hours. Re-auth via Google after expiry, roughly once a day.
+- **Existing hardcoded user**: removed outright, not auto-converged. A manual backfill (see **Migration of Existing Data**) reassigns old data to the real owner after first Google sign-in.
