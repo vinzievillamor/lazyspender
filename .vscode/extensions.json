@@ -1,5 +1,14 @@
 {
     "recommendations": [
-        "expo.vscode-expo-tools"
+        // Frontend (Expo / React Native / TypeScript)
+        "expo.vscode-expo-tools",
+        "dbaeumer.vscode-eslint",
+        "msjsdiag.vscode-react-native",
+
+        // Backend (Java 21 / Spring Boot / Gradle)
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-gradle",
+        "vmware.vscode-spring-boot",
+        "redhat.vscode-yaml"
     ]
 }
