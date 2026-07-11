@@ -22,11 +22,11 @@ export interface CreateTransactionRequest {
 }
 
 /**
- * Get all transactions with pagination
+ * Get the signed-in user's transactions with pagination
  */
 export const getAllTransactions = async (params: GetTransactionsParams = {}): Promise<PageResponse<Transaction>> => {
   const { page = 0, size = 20 } = params;
-  const response = await apiClient.get<PageResponse<Transaction>>('/api/transactions', {
+  const response = await apiClient.get<PageResponse<Transaction>>('/api/transactions/mine', {
     params: { page, size },
   });
   return response.data;

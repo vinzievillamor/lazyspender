@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Constants from 'expo-constants';
+import { clearStoredToken, getStoredToken } from './authStorage';
 
 // API base URL - configured via app.config.js and .env file
 const API_BASE_URL = Constants.expoConfig?.extra?.apiBaseUrl || 'https://lazyspender-api-272563214847.us-east1.run.app';
@@ -13,14 +14,21 @@ export const apiClient = axios.create({
   timeout: 10000, // 10 seconds
 });
 
-// Request interceptor for adding auth tokens (if needed in future)
+// Set by AuthContext so a 401 here can clear the in-memory auth state too,
+// not just the persisted token - this module has no access to React context.
+let onUnauthorized: (() => void) | null = null;
+
+export const setUnauthorizedHandler = (handler: (() => void) | null) => {
+  onUnauthorized = handler;
+};
+
+// Request interceptor: attach the stored session JWT, if any
 apiClient.interceptors.request.use(
-  (config) => {
-    // You can add authentication tokens here in the future
-    // const token = getAuthToken();
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+  async (config) => {
+    const token = await getStoredToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -33,11 +41,14 @@ apiClient.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
-    // Handle common errors here
+  async (error) => {
     if (error.response) {
       // Server responded with error status
       console.error('API Error:', error.response.status, error.response.data);
+      if (error.response.status === 401) {
+        await clearStoredToken();
+        onUnauthorized?.();
+      }
     } else if (error.request) {
       // Request made but no response received
       console.error('Network Error:', error.message);

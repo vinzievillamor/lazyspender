@@ -29,6 +29,7 @@ module.exports = {
     },
     plugins: [
       "expo-router",
+      "expo-secure-store",
       [
         "expo-splash-screen",
         {
@@ -72,7 +73,10 @@ module.exports = {
       reactCompiler: true
     },
     extra: {
-      apiBaseUrl: process.env.API_BASE_URL || "https://lazyspender-api-272563214847.us-east1.run.app"
+      apiBaseUrl: process.env.API_BASE_URL || "https://lazyspender-api-272563214847.us-east1.run.app",
+      googleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
+      googleIosClientId: process.env.GOOGLE_IOS_CLIENT_ID,
+      googleAndroidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID
     }
   }
 };

@@ -4,9 +4,10 @@ import { usePathname, useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Drawer as PaperDrawer, PaperProvider, Text, useTheme } from "react-native-paper";
+import { ActivityIndicator, Drawer as PaperDrawer, PaperProvider, Text, useTheme } from "react-native-paper";
 import { queryClient } from "../config/queryClient";
 import customTheme, { spacing } from "../config/theme";
+import { AuthProvider, useAuthContext } from "../contexts/AuthContext";
 import { UserProvider } from "../contexts/UserContext";
 
 function CustomDrawerContent(props: any) {
@@ -85,62 +86,93 @@ function CustomDrawerContent(props: any) {
   );
 }
 
+function AppNavigator() {
+  const { isAuthenticated, isLoading } = useAuthContext();
+  const theme = useTheme();
+
+  if (isLoading) {
+    return (
+      <View style={[styles.splash, { backgroundColor: theme.colors.background }]}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  const drawer = (
+    <GestureHandlerRootView>
+      <Drawer
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
+        screenOptions={{
+          drawerStyle: {
+            backgroundColor: customTheme.colors.background,
+          },
+          drawerActiveTintColor: customTheme.colors.primary,
+          drawerInactiveTintColor: customTheme.colors.onSurfaceVariant,
+          headerStyle: {
+            backgroundColor: customTheme.colors.surface,
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
+          headerTitleStyle: {
+            letterSpacing: 0.15
+          },
+          headerTintColor: customTheme.colors.onSurface,
+        }}
+      >
+        <Drawer.Protected guard={isAuthenticated}>
+          <Drawer.Screen
+            name="dashboard"
+            options={{
+              drawerLabel: "Dashboard",
+              title: "Dashboard",
+            }}
+          />
+          <Drawer.Screen
+            name="records"
+            options={{
+              drawerLabel: "Records",
+              title: "Records",
+            }}
+          />
+          <Drawer.Screen
+            name="planned-payments"
+            options={{
+              drawerLabel: "Planned Payments",
+              title: "Planned Payments",
+            }}
+          />
+          <Drawer.Screen
+            name="index"
+            options={{
+              drawerItemStyle: { display: "none" },
+            }}
+          />
+        </Drawer.Protected>
+        <Drawer.Protected guard={!isAuthenticated}>
+          <Drawer.Screen
+            name="login"
+            options={{
+              drawerItemStyle: { display: "none" },
+              headerShown: false,
+              swipeEnabled: false,
+            }}
+          />
+        </Drawer.Protected>
+      </Drawer>
+    </GestureHandlerRootView>
+  );
+
+  return isAuthenticated ? <UserProvider>{drawer}</UserProvider> : drawer;
+}
+
 export default function RootLayout() {
   return (
     <PaperProvider theme={customTheme}>
       <QueryClientProvider client={queryClient}>
-        <UserProvider owner="villamorvinzie">
-          <GestureHandlerRootView>
-            <Drawer
-              drawerContent={(props) => <CustomDrawerContent {...props} />}
-              screenOptions={{
-                drawerStyle: {
-                  backgroundColor: customTheme.colors.background,
-                },
-                drawerActiveTintColor: customTheme.colors.primary,
-                drawerInactiveTintColor: customTheme.colors.onSurfaceVariant,
-                headerStyle: {
-                  backgroundColor: customTheme.colors.surface,
-                  elevation: 0,
-                  shadowOpacity: 0,
-                  borderBottomWidth: 0,
-                },
-                headerTitleStyle: {
-                  letterSpacing: 0.15
-                },
-                headerTintColor: customTheme.colors.onSurface,
-              }}
-            >
-              <Drawer.Screen
-                name="dashboard"
-                options={{
-                  drawerLabel: "Dashboard",
-                  title: "Dashboard",
-                }}
-              />
-              <Drawer.Screen
-                name="records"
-                options={{
-                  drawerLabel: "Records",
-                  title: "Records",
-                }}
-              />
-              <Drawer.Screen
-                name="planned-payments"
-                options={{
-                  drawerLabel: "Planned Payments",
-                  title: "Planned Payments",
-                }}
-              />
-              <Drawer.Screen
-                name="index"
-                options={{
-                  drawerItemStyle: { display: "none" },
-                }}
-              />
-            </Drawer>
-          </GestureHandlerRootView>
-        </UserProvider>
+        <AuthProvider>
+          <AppNavigator />
+        </AuthProvider>
       </QueryClientProvider>
     </PaperProvider>
   );
@@ -166,5 +198,10 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.md,
     marginVertical: spacing.xs,
     borderRadius: 12,
+  },
+  splash: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

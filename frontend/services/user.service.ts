@@ -10,10 +10,10 @@ export const getUserById = async (id: string): Promise<User> => {
 };
 
 /**
- * Get user by owner
+ * Get the signed-in user (owner is derived from the session JWT)
  */
-export const getUserByOwner = async (owner: string): Promise<User> => {
-  const response = await apiClient.get<User>(`/api/users/owner/${owner}`);
+export const getCurrentUser = async (): Promise<User> => {
+  const response = await apiClient.get<User>('/api/users/me');
   return response.data;
 };
 

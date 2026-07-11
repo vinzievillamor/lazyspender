@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext } from 'react';
-import { useUserByOwner } from '../hooks/useUsers';
+import { useCurrentUser } from '../hooks/useUsers';
 import { User } from '../types/user';
 
 interface UserContextType {
@@ -14,14 +14,10 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 interface UserProviderProps {
   children: ReactNode;
-  owner: string;
 }
 
-export const UserProvider: React.FC<UserProviderProps> = ({
-  children,
-  owner
-}) => {
-  const { data: user, isLoading, isError, error, refetch } = useUserByOwner(owner);
+export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+  const { data: user, isLoading, isError, error, refetch } = useCurrentUser();
 
   const value: UserContextType = {
     user,

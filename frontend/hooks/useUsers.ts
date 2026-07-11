@@ -1,10 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createUser, getUserByOwner } from '../services/user.service';
+import { createUser, getCurrentUser } from '../services/user.service';
 import { User } from '../types/user';
 
-export const useUserByOwner = (owner: string) => useQuery({
-  queryKey: [owner],
-  queryFn: () => getUserByOwner(owner)
+export const CURRENT_USER_QUERY_KEY = ['users', 'me'] as const;
+
+export const useCurrentUser = () => useQuery({
+  queryKey: CURRENT_USER_QUERY_KEY,
+  queryFn: () => getCurrentUser()
 });
 
 export const useCreateUser = () => useMutation({
