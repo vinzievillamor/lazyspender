@@ -8,7 +8,7 @@ This is a monorepo with two independent projects that talk to each other over HT
 
 - `backend/` — Spring Boot 3 (Java 21) REST API, deployed to Cloud Run, backed by Google Cloud Firestore in Datastore mode
 - `frontend/` — Expo / React Native app (file-based routing via `expo-router`)
-- `docs/` — design/planning notes for individual features (e.g. `expense-distribution-widget-plan.md`)
+- `docs/` — durable design rationale for individual features: *why* something is built the way it is (e.g. `expense-distribution-widget-plan.md` on Datastore's aggregation limits). Committed, since this stays useful after the feature ships. Step-by-step "how to build X" implementation plans belong in Claude Code's Plan mode instead (not committed) — `docs/` is not the place for in-progress task checklists.
 
 There is no root-level build; each project is built and run independently from its own directory.
 
