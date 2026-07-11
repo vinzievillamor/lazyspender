@@ -45,7 +45,7 @@ export const ExpenseDistributionWidget: React.FC = () => {
   const theme = useTheme();
   const { user, isLoading: isUserLoading } = useUser();
 
-  const [selectedPeriod, setSelectedPeriod] = useState<TrendPeriod>(TrendPeriod.FROM_START);
+  const [selectedPeriod, setSelectedPeriod] = useState<TrendPeriod>(TrendPeriod.LAST_12_WEEKS);
   const [selectedAccounts, setSelectedAccounts] = useState<string[]>(user?.accounts || []);
   const [menuVisible, setMenuVisible] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
