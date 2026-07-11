@@ -3,6 +3,7 @@ indexes:
     properties:
       - name: owner
       - name: date
+        direction: desc
   - kind: transactions
     properties:
       - name: type
