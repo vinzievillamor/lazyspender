@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -18,7 +19,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request) {
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request, Principal principal) {
+        request.setOwner(principal.getName());
         UserResponse response = userService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -29,9 +31,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/owner/{owner}")
-    public ResponseEntity<UserResponse> getUserByOwner(@PathVariable("owner") String owner) {
-        UserResponse response = userService.getByOwner(owner);
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getCurrentUser(Principal principal) {
+        UserResponse response = userService.getByOwner(principal.getName());
         return ResponseEntity.ok(response);
     }
 
@@ -42,7 +44,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable("id") String id, @Valid @RequestBody UserRequest request) {
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable("id") String id, @Valid @RequestBody UserRequest request, Principal principal) {
+        request.setOwner(principal.getName());
         UserResponse response = userService.update(id, request);
         return ResponseEntity.ok(response);
     }

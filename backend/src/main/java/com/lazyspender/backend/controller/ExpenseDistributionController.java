@@ -2,6 +2,7 @@ package com.lazyspender.backend.controller;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -26,21 +27,23 @@ public class ExpenseDistributionController {
 
     @GetMapping
     public ResponseEntity<ExpenseDistributionResponse> getExpenseDistribution(
-            @RequestParam(name = "owner") String owner,
+            Principal principal,
             @RequestParam(name = "accounts") List<String> accounts,
             @RequestParam(name = "period") TrendPeriod period) {
 
-        ExpenseDistributionResponse response = expenseDistributionService.getExpenseDistribution(owner, accounts, period);
+        ExpenseDistributionResponse response =
+                expenseDistributionService.getExpenseDistribution(principal.getName(), accounts, period);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/contributors")
     public ResponseEntity<ContributorsResponse> getMethodName(
-        @RequestParam(name = "owner") String owner,
+        Principal principal,
         @RequestParam(name = "category") String category,
         @RequestParam(name = "period") TrendPeriod period
     ) {
-        final var response = expenseDistributionService.getTopContributors(owner, URLDecoder.decode(category, StandardCharsets.UTF_8), period);
+        final var response = expenseDistributionService.getTopContributors(
+                principal.getName(), URLDecoder.decode(category, StandardCharsets.UTF_8), period);
         return ResponseEntity.ok(response);
     }
     

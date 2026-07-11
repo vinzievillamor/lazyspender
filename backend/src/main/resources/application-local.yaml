@@ -7,3 +7,9 @@ spring:
       datastore:
         host: localhost:8081
         namespace: lazyspender
+
+app:
+  jwt:
+    secret: "local-dev-only-secret-do-not-use-in-prod-32chars-minimum"
+  google:
+    client-id: "272563214847-l060k25bkrrgeunjlg53745uvd474itu.apps.googleusercontent.com"

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,9 @@ public class PlannedPaymentController {
     private final PlannedPaymentService plannedPaymentService;
 
     @PostMapping
-    public ResponseEntity<PlannedPaymentResponse> createPlannedPayment(@Valid @RequestBody PlannedPaymentRequest request) {
+    public ResponseEntity<PlannedPaymentResponse> createPlannedPayment(
+            @Valid @RequestBody PlannedPaymentRequest request, Principal principal) {
+        request.setOwner(principal.getName());
         PlannedPaymentResponse response = plannedPaymentService.createPlannedPayment(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -34,13 +37,13 @@ public class PlannedPaymentController {
 
     @GetMapping
     public ResponseEntity<List<PlannedPaymentResponse>> getPlannedPayments(
-            @RequestParam(name = "owner") String owner,
+            Principal principal,
             @RequestParam(name = "status", required = false) PaymentStatus status) {
         List<PlannedPaymentResponse> response;
         if (status != null) {
-            response = plannedPaymentService.getPlannedPaymentsByStatus(owner, status);
+            response = plannedPaymentService.getPlannedPaymentsByStatus(principal.getName(), status);
         } else {
-            response = plannedPaymentService.getAllPlannedPayments(owner);
+            response = plannedPaymentService.getAllPlannedPayments(principal.getName());
         }
         return ResponseEntity.ok(response);
     }
@@ -48,7 +51,9 @@ public class PlannedPaymentController {
     @PutMapping("/{id}")
     public ResponseEntity<PlannedPaymentResponse> updatePlannedPayment(
             @PathVariable(name = "id") String id,
-            @Valid @RequestBody PlannedPaymentRequest request) {
+            @Valid @RequestBody PlannedPaymentRequest request,
+            Principal principal) {
+        request.setOwner(principal.getName());
         PlannedPaymentResponse response = plannedPaymentService.updatePlannedPayment(id, request);
         return ResponseEntity.ok(response);
     }

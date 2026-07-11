@@ -1,5 +1,6 @@
 package com.lazyspender.backend.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -23,11 +24,11 @@ public class BalanceTrendController {
 
     @GetMapping
     public ResponseEntity<BalanceTrendResponse> getBalanceTrend(
-            @RequestParam(name = "owner") String owner,
+            Principal principal,
             @RequestParam(name = "accounts") List<String> accounts,
             @RequestParam(name = "period") TrendPeriod period) {
 
-        BalanceTrendResponse response = balanceTrendService.getBalanceTrend(owner, accounts, period);
+        BalanceTrendResponse response = balanceTrendService.getBalanceTrend(principal.getName(), accounts, period);
         return ResponseEntity.ok(response);
     }
 }

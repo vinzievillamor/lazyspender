@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends DatastoreRepository<User, String> {
     Optional<User> findByOwner(String owner);
+    Optional<User> findByGoogleId(String googleId);
+    Optional<User> findByEmail(String email);
 }

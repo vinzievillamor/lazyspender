@@ -13,7 +13,6 @@ import lombok.Data;
 @Builder(toBuilder = true)
 public class TransactionRequest {
 
-    @NotBlank(message = "Owner is required")
     private String owner;
 
     @NotBlank(message = "Account is required")

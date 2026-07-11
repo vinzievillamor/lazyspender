@@ -21,4 +21,8 @@ public class User {
     private String id;
     private String owner;
     private List<String> accounts;
+    private String googleId;
+    private String email;
+    private String name;
+    private String pictureUrl;
 }

@@ -5,14 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserRequest {
+public class AuthResponse {
+    private String token;
+    private String id;
     private String owner;
-
-    private List<String> accounts;
+    private String email;
+    private String name;
+    private String pictureUrl;
 }

@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlannedPaymentRequest {
 
-    @NotBlank(message = "Owner is required")
     private String owner;
 
     @NotBlank(message = "Account is required")
