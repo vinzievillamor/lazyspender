@@ -7,7 +7,10 @@
       "Bash(git diff:*)",
       "Bash(dir:*)",
       "Bash(tree:*)",
-      "Bash(gh run *)"
+      "Bash(gh run *)",
+      "Bash(sed -n '52,90p' /tmp/lazyspender-bootrun3.log)",
+      "Bash(lsof -ti:8080)",
+      "Bash(xargs kill -9)"
     ]
   }
 }
