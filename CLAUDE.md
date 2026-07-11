@@ -17,11 +17,10 @@ There is no root-level build; each project is built and run independently from i
 ### Commands
 
 ```bash
-./gradlew bootRun --args='--spring.profiles.active=local'   # run locally against Firestore emulator
+./gradlew bootRun --args='--spring.profiles.active=local'   # run locally against the real (prod) Firestore instance
 ./gradlew build                                             # compile + run tests
 ./gradlew test                                               # run tests only
 ./gradlew test --tests "com.lazyspender.backend.BackendApplicationTests"  # single test class
-docker-compose up -d                                         # start Firestore emulator (localhost:8081) before running locally
 ```
 
 There is currently only a placeholder Spring context test (`BackendApplicationTests`) — no meaningful test coverage exists yet.
@@ -34,8 +33,8 @@ Standard layered Spring Boot structure: `controller` → `service` → `reposito
 
 - **Persistence**: Google Cloud Firestore in **Datastore mode**, accessed via `spring-cloud-gcp-starter-data-datastore`. Repositories extend `DatastoreRepository` (see `TransactionRepository`, `PlannedPaymentRepository`). Custom queries use GQL via `@Query` with named params.
 - **Datastore has no `GROUP BY`/`JOIN`/native aggregation across arbitrary fields.** Reporting features (balance trend, expense distribution, contributors) work around this with parallel per-category/per-owner `SUM(amount)` queries or in-memory aggregation — see `BalanceTrendService`, `ExpenseDistributionService`, `docs/expense-distribution-widget-plan.md` for the reasoning.
-- **Composite indexes are hand-declared** in `src/main/resources/datastore/index.yaml`. Any new query that filters/sorts on more than one property (or a property that isn't already indexed for that combination) requires adding a matching index entry here, or the emulator/production Datastore will reject the query at runtime.
-- **Profiles**: `application.yaml` (default/prod, GCP project `mindful-rhythm-426908-a5`) vs `application-local.yaml` (local, points at the Firestore emulator on `localhost:8081`, project `lazyspender-local`). Run locally with `spring.profiles.active=local` and `docker-compose up -d` for the emulator first.
+- **Composite indexes are hand-declared** in `src/main/resources/datastore/index.yaml`. Any new query that filters/sorts on more than one property (or a property that isn't already indexed for that combination) requires adding a matching index entry here, or Datastore will reject the query at runtime.
+- **Profiles**: `application.yaml` (default/prod config) vs `application-local.yaml` (local-only overrides, e.g. dev JWT secret / Google client ID). Both talk to the same real GCP project (`mindful-rhythm-426908-a5`) — there is no emulator; `spring.profiles.active=local` just swaps a few app-level settings, not the datastore target. Be careful: local runs read/write real production data.
 - **Domain model**: `Transaction` (owner, account, category, amount, currency, `type`: INCOME/EXPENSE, optional `plannedPaymentId` linking it back to a recurring payment) and `PlannedPayment` (recurrence config: type/value/end condition, `ConfirmationType` MANUAL vs AUTO, `PaymentStatus` lifecycle ACTIVE/PAUSED/COMPLETED/CANCELLED). `PlannedPaymentService.confirmPlannedPayment` is the key piece of business logic: it creates a `Transaction` from the planned payment, advances `nextDueDate` via `RecurrenceCalculator`, and marks the payment COMPLETED once its end condition is met. `autoConfirmDuePayments` batches this for AUTO-confirmation payments that are due.
 - **Note**: `PlannedPaymentService.validateRequest` currently only allows `RecurrenceType.MONTHLY` and rejects `EndType.DATE`, even though the model/enum support more (DAILY/WEEKLY/YEARLY, DATE end) — check this validation before assuming those variants work end-to-end.
 - **CORS** is opened broadly for local dev / Expo (`WebConfig`): localhost any port, `exp://`, and private network ranges (192.168.x.x, 10.x.x.x).
