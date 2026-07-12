@@ -14,7 +14,7 @@ Today there is no authentication: the frontend hardcodes a single `owner` string
 ## Auth Flow
 
 1. User taps "Sign in with Google" on a new `app/login.tsx` screen.
-2. Frontend uses `expo-auth-session/providers/google` to obtain a Google ID token (OIDC JWT) directly from Google. **Correction:** Expo Go can no longer be used for OAuth redirects (Google/Expo have both deprecated the flows that made that possible) — a Development Build is required. This project already depends on `expo-dev-client` and has an APK build pipeline, so this isn't a new requirement, just a corrected assumption versus the original "no custom dev client" framing below.
+2. Frontend uses `@react-native-google-signin/google-signin` (native Google Identity Services, via Play Services on Android / Credential Manager) to obtain a Google ID token (OIDC JWT) directly from Google. **Correction (2026-07-12):** the original design assumed `expo-auth-session/providers/google`, a browser-redirect OAuth flow. That's now a dead end on Android specifically: Google requires custom URI redirect schemes to contain a period (this app's `frontend` scheme doesn't), and is deprecating custom-URI-scheme OAuth on Android entirely regardless ("risk of app impersonation"), with no fixed sunset date. The native library sidesteps this — there's no redirect URI involved. Either way, a Development Build is required (Expo Go can't host either flow); this project already depends on `expo-dev-client` and has an APK build pipeline, so that isn't a new requirement.
 3. Frontend calls `POST /api/auth/google` with the Google ID token.
 4. Backend verifies the token using `GoogleIdTokenVerifier` (from `google-api-client`): checks the signature against Google's published public keys, confirms `aud` matches our OAuth client ID, confirms it isn't expired. The raw token is never trusted without this step.
 5. Backend extracts `sub` (stable Google user id), `email`, `name`, `picture` from the verified payload and upserts a `User` by `googleId` — creating a new `User` on first login. No hardcoded user remains to migrate toward; see **Migration of Existing Data** below for how prior data gets reassigned.
@@ -60,61 +60,62 @@ No new Datastore composite indexes are needed — lookups are by single-property
 
 The hardcoded `"villamorvinzie"` owner is being removed outright rather than auto-converged via an email match. Existing `Transaction`/`PlannedPayment` records under that owner string will be reassigned manually after the real Google sign-in exists, using a one-off script in `migration/` triggered via `BackfillController` (`POST /api/backfill/...`) — the same pattern already used for `BackfillPlannedPaymentsIdForTransaction`. This is deliberately deferred and manual: run once, after the user has signed in with their Google account and their real `owner` value is known.
 
+**Status (2026-07-12): still pending.** Real Google sign-in now works end-to-end and has provisioned a real `User` row in production Firestore (verified — signing in lands on the dashboard, currently empty since no data is reassigned yet). The reassignment migration script itself hasn't been written; `migration/` currently only has `BackfillNotesMigration.java` and `BackfillPlannedPaymentsIdForTransaction.java`, neither of which reassigns `owner`. Old data under `"villamorvinzie"` is effectively orphaned (invisible to the new signed-in owner) until this backfill is written and run.
+
 ---
 
-## Backend Changes
+## Backend Changes — as built
 
 ### New dependencies (`backend/build.gradle`)
 - `org.springframework.boot:spring-boot-starter-security` — stateless filter chain, no CSRF (pure JSON API, no cookies/sessions).
-- `com.google.api-client:google-api-client` — `GoogleIdTokenVerifier` for validating Google ID tokens.
-- `io.jsonwebtoken:jjwt-api` / `jjwt-impl` / `jjwt-jackson` — signing and validating the app's own session JWTs.
+- `com.google.api-client:google-api-client:2.7.0` — `GoogleIdTokenVerifier` for validating Google ID tokens.
+- `io.jsonwebtoken:jjwt-api` / `jjwt-impl` / `jjwt-jackson` (`0.12.6`) — signing and validating the app's own session JWTs.
 
-### Files to create
+### Files created
 | File | Purpose |
 |------|---------|
 | `dto/GoogleAuthRequest.java` | Wraps the incoming Google ID token |
 | `dto/AuthResponse.java` | App session JWT + basic user info returned to the frontend |
 | `service/AuthService.java` | Verifies Google ID token, upserts `User`, delegates JWT minting |
-| `service/JwtService.java` | Signs/parses/validates app session JWTs |
-| `security/JwtAuthenticationFilter.java` | Reads `Authorization: Bearer`, validates, populates `SecurityContext` |
-| `security/SecurityConfig.java` | Stateless filter chain config; `permitAll()` on `/api/auth/**`, auth required elsewhere |
+| `service/JwtService.java` | Signs/parses/validates app session JWTs; embeds `owner` as a custom claim alongside `sub`/`iat`/`exp` |
+| `config/JwtConfigProperties.java` | Binds `app.jwt.secret` — `${JWT_SECRET}` env var in prod (`application.yaml`), a literal dev-only value in `application-local.yaml` |
+| `security/JwtAuthenticationFilter.java` | Reads `Authorization: Bearer`, validates via `JwtService`, populates `SecurityContext` with a `UsernamePasswordAuthenticationToken` whose principal name *is* the owner string |
+| `security/SecurityConfig.java` | Stateless filter chain (`SessionCreationPolicy.STATELESS`), CSRF disabled, `permitAll()` on `/api/auth/**` and `/error`, `authenticated()` everywhere else, JWT filter registered before `UsernamePasswordAuthenticationFilter` |
 | `controller/AuthController.java` | `POST /api/auth/google` |
 
-### Files to modify
+### Files modified
 | File | Change |
 |------|--------|
-| `model/User.java` | Add `googleId`, `email`, `name`, `pictureUrl` |
-| `repository/UserRepository.java` | Add `findByGoogleId`, keep `findByOwner`/`findByEmail` |
-| All controllers currently accepting an `owner` path/query param for scoping | Read `owner` from `SecurityContext` instead of (or in addition to, with a match check against) the client-supplied value — this is the actual authorization boundary; without it, SSO only adds a login screen but not real per-user isolation |
-| `config/WebConfig.java` | No change to CORS breadth, but confirm `Authorization` header is allowed |
+| `model/User.java` | Added `googleId`, `email`, `name`, `pictureUrl` |
+| `repository/UserRepository.java` | Added `findByGoogleId`, kept `findByOwner`/`findByEmail` |
+| `TransactionController`, `UserController`, `PlannedPaymentController`, `BalanceTrendController`, `ExpenseDistributionController`, `BackfillController` | **Done.** Every read/write path now derives `owner` from the authenticated `Principal` (`principal.getName()`) rather than a client-supplied value — writes call `request.setOwner(principal.getName())`, reads call the service directly with `principal.getName()`. This is the real authorization boundary the design called for; client-supplied `owner` in any request body/query param is now ignored server-side (see **Known frontend dead weight** below). The old broken `GET /api/users/owner/{owner}` was removed in favor of `GET /api/users/me`. |
+| `config/WebConfig.java` | Confirmed `Authorization` header is allowed under the existing broad CORS config; no breadth change |
 
 ---
 
-## Frontend Changes
+## Frontend Changes — as built
 
-### Files to create
+### Files created
 | File | Purpose |
 |------|---------|
-| `app/login.tsx` | "Sign in with Google" screen, outside the drawer navigator |
+| `app/login.tsx` | "Sign in with Google" screen |
 | `services/auth.service.ts` | Calls `POST /api/auth/google` |
-| `hooks/useAuth.ts` | Wraps sign-in, sign-out, current-session state |
-| `contexts/AuthContext.tsx` | Holds session JWT (via `expo-secure-store`), exposes `isAuthenticated` |
+| `hooks/useAuth.ts` | Wraps sign-in, sign-out, current-session state (native Google Sign-In, see below) |
+| `contexts/AuthContext.tsx` | Holds session JWT (via `expo-secure-store`), exposes `isAuthenticated`/`isLoading` |
 
-### Files to modify
+### Files modified
 | File | Change |
 |------|--------|
-| `app/_layout.tsx` | Remove the hardcoded `<UserProvider owner="villamorvinzie">` entirely; wrap the tree in `AuthProvider`, which mounts `UserProvider` with the real authenticated owner once a session resolves, otherwise renders the login route |
-| `config/api.ts` | Axios request interceptor attaches `Authorization: Bearer <token>`; response interceptor on 401 clears the stored token and routes to `/login` |
-| `contexts/UserContext.tsx` | Switches from its current (already broken — `GET /api/users/owner/{owner}` doesn't exist on the backend) owner-based lookup to `GET /api/users/me`, which is Principal-scoped and needs no client-supplied param |
-| `app/records.tsx` (via `hooks/useTransactions.ts`) | The transactions list currently calls the **unscoped** `GET /api/transactions`, which returns every user's transactions, not just the signed-in user's. Must switch to the already-existing `GET /api/transactions/mine`. This is the one required behavior fix bundled into this feature — without it, SSO adds a login screen but not actual per-user data isolation on the main list view |
+| `app/_layout.tsx` | The hardcoded `<UserProvider owner="villamorvinzie">` is gone. Root tree is `PaperProvider` → `QueryClientProvider` → `AuthProvider` → `AppNavigator`. `AppNavigator` uses `expo-router`'s `<Drawer.Protected guard={isAuthenticated}>` / `guard={!isAuthenticated}` to gate the real screens vs. the `login` route in the same `Drawer` navigator (rather than a manual redirect), and only mounts `<UserProvider>` (now prop-less — it self-fetches via `/api/users/me`) once `isAuthenticated` is true |
+| `config/api.ts` | Axios request interceptor attaches `Authorization: Bearer <token>`; response interceptor on 401 clears the stored token and invokes an `onUnauthorized` handler wired to `AuthContext`'s sign-out |
+| `contexts/UserContext.tsx` / `services/user.service.ts` | `getCurrentUser()` now calls `GET /api/users/me` — Principal-scoped, no client-supplied param. The old broken owner-path lookup is gone |
+| `services/transaction.service.ts` / `app/records.tsx` (via `hooks/useTransactions.ts`) | `getAllTransactions()` now calls `GET /api/transactions/mine` instead of the old unscoped `GET /api/transactions` — the required per-user data isolation fix bundled into this feature |
 
-New Expo dependency: `expo-auth-session`, `expo-secure-store` (if not already present).
+New Expo dependencies: `@react-native-google-signin/google-signin` (+ its Expo config plugin), `expo-secure-store`.
 
-**Client ID strategy for native platforms:** the single existing Google OAuth client (`app.google.client-id` on the backend) is used today purely as the token-verification audience and is almost certainly a "Web application" type client. Google does not allow custom URL-scheme redirects (e.g. `frontend://...`) for Web-type clients — only Android/iOS client types support that. Native sign-in therefore needs two more OAuth clients registered in the same GCP project (`mindful-rhythm-426908-a5`):
-- **Android**: package name `com.vinzie.lazyspender`, plus the SHA-1 fingerprint of the signing cert used for builds (from the existing APK build pipeline / `eas credentials`).
-- **iOS**: a real bundle ID — `app.config.js` currently ships the Expo-generated placeholder `com.anonymous.frontend`, which should be replaced before registering with Google/App Store.
+**Client ID strategy for native platforms:** the single existing Google OAuth client (`app.google.client-id` on the backend) is used today purely as the token-verification audience and is almost certainly a "Web application" type client. `@react-native-google-signin/google-signin` needs an Android OAuth client registered in the same GCP project (`mindful-rhythm-426908-a5`) to authenticate at all — package name `com.vinzie.lazyspender` plus the SHA-1 fingerprint of the signing cert used for builds. Unlike the old redirect-scheme approach, this Android client ID is never passed programmatically (the library resolves it automatically from the SHA-1 + package name registered against it) — only `webClientId` is passed to `GoogleSignin.configure()`, and that's what fixes the resulting ID token's `aud` to the web client regardless of platform, so the backend's existing single-audience `GoogleIdTokenVerifier` check needs no change. An iOS client + a real bundle ID (`app.config.js` currently ships the Expo-generated placeholder `com.anonymous.frontend`) are still needed before iOS sign-in works — deferred, see Open Decisions.
 
-The frontend passes all three client IDs (`webClientId`, `iosClientId`, `androidClientId`) to `expo-auth-session`'s Google provider, but per Google/Firebase's documented pattern the resulting ID token's `aud` is still the **web** client ID regardless of platform — so the backend's existing single-audience `GoogleIdTokenVerifier` check needs no change once the native clients exist.
+Because native Android sign-in validates the calling app via the signing cert's SHA-1, a stable release-signing identity shared across local/CI builds is a hard prerequisite — see `frontend/plugins/withAndroidReleaseSigning.js`, which patches the generated `build.gradle` on every prebuild so debug and release builds route through the same signing config when release keystore Gradle properties are supplied.
 
 **Known, deliberate follow-up (not part of v1):** `planned-payments`, `balance-trend`, `expense-distribution`, and transaction create/update all still thread a client-supplied `owner` through query params/request bodies on the frontend. The backend now ignores/overwrites all of it (derives `owner` from the JWT `Principal` instead), so this isn't a bug — just dead weight left for a later cleanup pass, not required for the feature to function correctly.
 
@@ -136,3 +137,4 @@ The frontend passes all three client IDs (`webClientId`, `iosClientId`, `android
 ## Resolved Decisions
 - **Session JWT lifetime**: 24 hours. Re-auth via Google after expiry, roughly once a day.
 - **Existing hardcoded user**: removed outright, not auto-converged. A manual backfill (see **Migration of Existing Data**) reassigns old data to the real owner after first Google sign-in.
+- **Android sign-in library (2026-07-12)**: `@react-native-google-signin/google-signin` (native Google Identity Services) instead of `expo-auth-session`'s browser-redirect flow. Forced by Google deprecating custom-URI-scheme OAuth redirects on Android — the redirect-based approach was discovered to be a dead end only after implementing and testing it on a real Android build (no emulator for this kind of native-platform issue). iOS still uses the same library but isn't wired up yet (see Open Decisions above).
