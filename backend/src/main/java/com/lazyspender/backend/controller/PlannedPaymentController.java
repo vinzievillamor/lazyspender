@@ -4,6 +4,7 @@ import com.lazyspender.backend.dto.PlannedPaymentRequest;
 import com.lazyspender.backend.dto.PlannedPaymentResponse;
 import com.lazyspender.backend.dto.TransactionResponse;
 import com.lazyspender.backend.model.PaymentStatus;
+import com.lazyspender.backend.security.AuthContext;
 import com.lazyspender.backend.service.PlannedPaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -23,8 +23,10 @@ public class PlannedPaymentController {
 
     @PostMapping
     public ResponseEntity<PlannedPaymentResponse> createPlannedPayment(
-            @Valid @RequestBody PlannedPaymentRequest request, Principal principal) {
-        request.setOwner(principal.getName());
+            @Valid @RequestBody PlannedPaymentRequest request) {
+        request.setOwner(AuthContext.getOwner());
+        request.setCreatedBy(AuthContext.getRequestingUser());
+        request.setModifiedBy(AuthContext.getRequestingUser());
         PlannedPaymentResponse response = plannedPaymentService.createPlannedPayment(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -37,13 +39,12 @@ public class PlannedPaymentController {
 
     @GetMapping
     public ResponseEntity<List<PlannedPaymentResponse>> getPlannedPayments(
-            Principal principal,
             @RequestParam(name = "status", required = false) PaymentStatus status) {
         List<PlannedPaymentResponse> response;
         if (status != null) {
-            response = plannedPaymentService.getPlannedPaymentsByStatus(principal.getName(), status);
+            response = plannedPaymentService.getPlannedPaymentsByStatus(AuthContext.getOwner(), status);
         } else {
-            response = plannedPaymentService.getAllPlannedPayments(principal.getName());
+            response = plannedPaymentService.getAllPlannedPayments(AuthContext.getOwner());
         }
         return ResponseEntity.ok(response);
     }
@@ -51,9 +52,9 @@ public class PlannedPaymentController {
     @PutMapping("/{id}")
     public ResponseEntity<PlannedPaymentResponse> updatePlannedPayment(
             @PathVariable(name = "id") String id,
-            @Valid @RequestBody PlannedPaymentRequest request,
-            Principal principal) {
-        request.setOwner(principal.getName());
+            @Valid @RequestBody PlannedPaymentRequest request) {
+        request.setOwner(AuthContext.getOwner());
+        request.setModifiedBy(AuthContext.getRequestingUser());
         PlannedPaymentResponse response = plannedPaymentService.updatePlannedPayment(id, request);
         return ResponseEntity.ok(response);
     }

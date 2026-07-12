@@ -51,4 +51,8 @@ public class PlannedPayment {
     private PaymentStatus status;
 
     private Instant nextDueDate;
+
+    private String createdBy;
+
+    private String modifiedBy;
 }

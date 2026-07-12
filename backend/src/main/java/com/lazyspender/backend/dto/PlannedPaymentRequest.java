@@ -50,4 +50,8 @@ public class PlannedPaymentRequest {
 
     @NotNull(message = "Confirmation type is required")
     private ConfirmationType confirmationType;
+
+    private String createdBy;
+
+    private String modifiedBy;
 }
