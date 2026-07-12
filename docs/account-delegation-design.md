@@ -26,10 +26,14 @@ This keeps the Datastore-mode aggregation workarounds (`docs/expense-distributio
 
 ## Data Model
 
-New entity, `backend/src/main/java/com/lazyspender/backend/model/AccountAccess.java`:
+New entity, `backend/src/main/java/com/lazyspender/backend/model/AccountAccess.java`, following the same Lombok shape as the existing `Transaction`/`PlannedPayment` models (`@Data` + `@Builder(toBuilder = true)` + both constructors, so there's no hand-written getter/setter/builder boilerplate to maintain):
 
 ```java
 @Entity(name = "accountAccess")
+@Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountAccess {
     @Id
     private String id;
@@ -79,46 +83,54 @@ private String modifiedBy;  // real signed-in identity of the last editor
 
 New `ActingOwnerFilter extends OncePerRequestFilter`, registered via `http.addFilterAfter(actingOwnerFilter, JwtAuthenticationFilter.class)` in `SecurityConfig`.
 
-**Where the real actor gets stashed**: rather than threading it through an `Authentication`/`Principal` parameter on every controller method (which means touching every method signature just to expose one extra string), it goes on a small request-scoped bean, `ActingContext` (`backend/src/main/java/com/lazyspender/backend/security/ActingContext.java`) — the same shape as Spring Security's own `SecurityContextHolder`, but request-scoped and DI'd instead of a static `ThreadLocal`, so it fits this codebase's existing constructor-injection style (`@RequiredArgsConstructor` everywhere) and needs no manual cleanup (Spring destroys the scoped instance when the request ends):
+**Where the real actor gets stashed**: rather than threading it through an `Authentication`/`Principal` parameter on every controller method (touching every method signature to expose one extra string), or a request-scoped bean (still means adding a constructor parameter to every controller/service that needs it), this goes on a static holder, `AuthContext` (`backend/src/main/java/com/lazyspender/backend/security/AuthContext.java`) — deliberately generic, not "acting"-specific, since it's the one place both the effective and real signed-in identity are read from. It mirrors exactly how Spring Security's own `SecurityContextHolder` already works in this codebase: a static class backed by a `ThreadLocal`, called directly with no injection anywhere. Lombok's `@UtilityClass` removes the usual private-constructor/`static`-modifier boilerplate that pattern requires — it makes the class `final`, gives it a private constructor, and implicitly makes every field/method static:
 
 ```java
-@Component
-@RequestScope
-public class ActingContext {
-    private String actualOwner; // set only when acting on a delegated profile; null otherwise
+@UtilityClass
+public class AuthContext {
+    private final ThreadLocal<String> actualOwner = new ThreadLocal<>();
 
     public String getEffectiveOwner() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     public String getActualOwner() {
-        return actualOwner != null ? actualOwner : getEffectiveOwner();
+        String actual = actualOwner.get();
+        return actual != null ? actual : getEffectiveOwner();
     }
 
-    void setActualOwner(String actualOwner) {
-        this.actualOwner = actualOwner;
+    void setActualOwner(String owner) {
+        actualOwner.set(owner);
+    }
+
+    void clear() {
+        actualOwner.remove();
     }
 }
 ```
 
-`ActingOwnerFilter` depends on both `AccountAccessService` and `ActingContext` (injecting a request-scoped bean into a singleton filter works transparently — `@RequestScope` defaults to a CGLIB scoped proxy, so the filter's reference always resolves to the current request's instance):
+`ActingOwnerFilter` (still `@Component @RequiredArgsConstructor`-injected with `AccountAccessService`, like any other Spring-managed collaborator — only the identity holder itself is static) sets `AuthContext` directly and clears it in a `finally` block. A bare `ThreadLocal` left set after the response is written would otherwise leak into whichever next request the servlet container hands the same pooled thread:
 
 ```java
 @Override
 protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws ServletException, IOException {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String actingOwner = request.getHeader("X-Acting-Owner");
+    try {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String actingOwner = request.getHeader("X-Acting-Owner");
 
-    if (auth != null && actingOwner != null && !actingOwner.equals(auth.getName())) {
-        AccessRole required = HttpMethod.GET.matches(request.getMethod()) ? AccessRole.READ : AccessRole.COLLABORATOR;
-        accountAccessService.assertAccess(actingOwner, auth.getName(), required); // throws AccessDeniedException if not ACCEPTED / insufficient role
-        actingContext.setActualOwner(auth.getName());
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(actingOwner, null, Collections.emptyList()));
+        if (auth != null && actingOwner != null && !actingOwner.equals(auth.getName())) {
+            AccessRole required = HttpMethod.GET.matches(request.getMethod()) ? AccessRole.READ : AccessRole.COLLABORATOR;
+            accountAccessService.assertAccess(actingOwner, auth.getName(), required); // throws AccessDeniedException if not ACCEPTED / insufficient role
+            AuthContext.setActualOwner(auth.getName());
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(actingOwner, null, Collections.emptyList()));
+        }
+
+        chain.doFilter(request, response);
+    } finally {
+        AuthContext.clear();
     }
-
-    chain.doFilter(request, response);
 }
 ```
 
@@ -126,24 +138,23 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
 
 This check happens **live on every request** (not cached in the JWT), so a revoke takes effect on the manager's very next call — the JWT itself stays valid for 24h regardless of grant state, so this is the only thing making revocation actually immediate.
 
-**Why this is a bigger win than it first looks**: `TransactionController`, `PlannedPaymentController`, `BalanceTrendController`, `ExpenseDistributionController`, `UserController#getCurrentUser` need **no signature changes at all** — they already call `principal.getName()` for owner scoping today, and can switch that one call to `actingContext.getEffectiveOwner()` (equivalent value once the filter has run, but now framework-independent of whichever parameter happens to be in scope) or, in most of them, drop the `Principal`/`Authentication` parameter entirely once every owner-lookup goes through `ActingContext`. Create/update endpoints that need attribution just inject `ActingContext` once via the constructor like every other collaborator and call both accessors — no per-method parameter at all:
+**Why this is a bigger win than it first looks**: `TransactionController`, `PlannedPaymentController`, `BalanceTrendController`, `ExpenseDistributionController`, `UserController#getCurrentUser` need **no signature or constructor changes at all** — they already call `principal.getName()` for owner scoping today, and can switch that one call to the static `AuthContext.getEffectiveOwner()` (equivalent value once the filter has run) or drop the `Principal`/`Authentication` parameter entirely. Create/update endpoints that need attribution call `AuthContext.getActualOwner()` the same way — nothing added to the constructor, nothing to inject:
 
 ```java
 @RequiredArgsConstructor
 public class TransactionController {
     private final TransactionService transactionService;
-    private final ActingContext actingContext;
 
     @PostMapping
     public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody TransactionRequest request) {
-        request.setOwner(actingContext.getEffectiveOwner());
-        request.setCreatedBy(actingContext.getActualOwner());
+        request.setOwner(AuthContext.getEffectiveOwner());
+        request.setCreatedBy(AuthContext.getActualOwner());
         ...
     }
 }
 ```
 
-The client still sends `X-Acting-Owner` (it has to say *which* profile it wants — there's no server-side session to remember that in a stateless JWT API), but the header is meaningless without a validated `ACCEPTED` grant behind it; the filter is the only thing that can turn it into a trusted identity, and `ActingContext` is the only place that identity is read back out.
+The client still sends `X-Acting-Owner` (it has to say *which* profile it wants — there's no server-side session to remember that in a stateless JWT API), but the header is meaningless without a validated `ACCEPTED` grant behind it; the filter is the only thing that can turn it into a trusted identity, and `AuthContext` is the only place that identity is read back out.
 
 ---
 
@@ -201,3 +212,4 @@ All of these authorize by checking the caller's own identity matches `grantorOwn
 2. **Re-invite history** — always insert a new `AccountAccess` row; `REJECTED`/`REVOKED` rows are retained as history and shown in "People I've shared with." Duplicate-invite guard checks only *active* (`PENDING`/`ACCEPTED`) rows for the pair.
 3. **"Viewing as" label** — persistent, always visible while acting on a delegated profile (see Frontend section above), not just a one-time toast on switch.
 4. **Authorization enforcement point** — a single `ActingOwnerFilter` (not a per-endpoint header check) resolves and validates `X-Acting-Owner` once, before any controller runs; see Authorization layer above. `/api/account-access/**` itself is excluded from this resolution so managing your own grants is never accidentally done under a delegated identity.
+5. **Identity holder shape** — `AuthContext` is a static Lombok `@UtilityClass` over a `ThreadLocal`, not a request-scoped Spring bean, matching how `SecurityContextHolder` already works in this codebase. No constructor injection is needed in any controller/service that reads it; `ActingOwnerFilter` is the only place that writes to it, and clears it in a `finally` block so nothing leaks across pooled threads.
