@@ -163,6 +163,17 @@ export default function Records() {
     setClickedTransaction(undefined);
   };
 
+  const renderEmpty = () => (
+    <View style={styles.emptyContainer}>
+      <Text variant="bodyLarge" style={styles.emptyText}>
+        No records yet
+      </Text>
+      <Text variant="bodyMedium" style={styles.emptySubtext}>
+        Tap the + button to add one
+      </Text>
+    </View>
+  );
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <FlatList
@@ -174,6 +185,8 @@ export default function Records() {
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
+        ListEmptyComponent={renderEmpty}
+        contentContainerStyle={flatData.length === 0 ? styles.emptyList : undefined}
       />
 
       <FAB
@@ -224,5 +237,20 @@ const styles = StyleSheet.create({
     right: spacing.lg,
     bottom: spacing.lg,
     borderRadius: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    color: "#666",
+  },
+  emptySubtext: {
+    color: "#999",
+    marginTop: spacing.sm,
+  },
+  emptyList: {
+    flex: 1,
   },
 });
