@@ -16,6 +16,8 @@ env:
   SERVICE_NAME: lazyspender-api
   WORKLOAD_IDENTITY_PROVIDER: projects/272563214847/locations/global/workloadIdentityPools/github-pool/providers/github-provider
   DEPLOYER_SERVICE_ACCOUNT: github-actions-deployer@mindful-rhythm-426908-a5.iam.gserviceaccount.com
+  # OAuth client ID, not a secret - same value as GOOGLE_WEB_CLIENT_ID in frontend/.env and application-local.yaml
+  GOOGLE_CLIENT_ID: 272563214847-l060k25bkrrgeunjlg53745uvd474itu.apps.googleusercontent.com
 
 jobs:
   build-test:
@@ -78,6 +80,13 @@ jobs:
       - name: Push image
         run: docker push --all-tags ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}
 
+      - name: Write env vars file
+        run: |
+          cat > env-vars.yaml <<EOF
+          GOOGLE_CLIENT_ID: "${{ env.GOOGLE_CLIENT_ID }}"
+          JWT_SECRET: "${{ secrets.JWT_SECRET }}"
+          EOF
+
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
@@ -90,4 +99,5 @@ jobs:
             --timeout=300 \
             --max-instances=3 \
             --allow-unauthenticated \
+            --env-vars-file=env-vars.yaml \
             --quiet
