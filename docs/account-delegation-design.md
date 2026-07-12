@@ -44,10 +44,13 @@ public class AccountAccess {
 
 `AccessRole { COLLABORATOR, READ }`, `AccessStatus { PENDING, ACCEPTED, REJECTED, REVOKED }`.
 
+Re-invites always insert a **new row** rather than resurrecting an old one — `REJECTED`/`REVOKED` rows are kept as history (visible in "People I've shared with"). This means a `(grantorOwner, granteeOwner)` pair can have several historical rows over time, but at most one row in an "active" status (`PENDING` or `ACCEPTED`) at once — enforced at invite time.
+
 Repository queries needed (`AccountAccessRepository extends DatastoreRepository<AccountAccess, String>`):
 - `findByGranteeOwnerAndStatus(String granteeOwner, AccessStatus status)` — profile switcher list (ACCEPTED) and pending-invite bell (PENDING).
-- `findByGrantorOwnerAndStatus(String grantorOwner, AccessStatus status)` — "people who can manage my account" screen.
-- `findByGrantorOwnerAndGranteeOwner(String grantorOwner, String granteeOwner)` — checked on invite (prevent duplicates) and on every acting-as request (authorization check).
+- `findByGrantorOwnerAndStatus(String grantorOwner, AccessStatus status)` — "people who can manage my account" screen (call separately per status, or fetch all and let the frontend group by status, to also show REJECTED/REVOKED history).
+- `findByGrantorOwnerAndGranteeOwnerAndStatus(String grantorOwner, String granteeOwner, AccessStatus status)` — the authorization check (looks specifically for an `ACCEPTED` row for the pair; at most one can exist given the invariant above).
+- `findByGrantorOwnerAndGranteeOwnerAndStatusIn(String grantorOwner, String granteeOwner, List<AccessStatus> statuses)` — duplicate-invite guard, checked against `[PENDING, ACCEPTED]` before inserting a new invite.
 
 New composite indexes in `index.yaml` (filtering on two properties together):
 ```yaml
@@ -72,28 +75,75 @@ private String modifiedBy;  // real signed-in identity of the last editor
 
 ## Authorization layer
 
-New `AccountAccessService.resolveEffectiveOwner(String principalOwner, String actingOwnerHeader, AccessRole minimumRole)`:
-- `actingOwnerHeader` null or equal to `principalOwner` → return `principalOwner`, no DB check (self-access is always allowed).
-- Otherwise, look up `AccountAccess` by `(grantorOwner = actingOwnerHeader, granteeOwner = principalOwner)`. Must exist, be `ACCEPTED`, and have `role` at least `minimumRole` (`COLLABORATOR` satisfies both; `READ` only satisfies a `READ` requirement). If not, throw `ResponseStatusException(HttpStatus.FORBIDDEN)` — matches the codebase's existing pattern of throwing directly from services rather than a global `@ControllerAdvice` (there isn't one today).
+**Decision: resolve and validate `X-Acting-Owner` in one filter, not per-endpoint.** A per-controller header check (as originally sketched) means every new or modified endpoint has to remember to call it — one missed call silently trusts the wrong owner, or worse, trusts the client-supplied `owner` in a request body outright. Instead, this is enforced exactly once, in the filter chain, before any controller runs at all — mirroring how `JwtAuthenticationFilter` already establishes identity today (`backend/src/main/java/com/lazyspender/backend/security/JwtAuthenticationFilter.java`).
 
-This check happens **live on every request** (not cached in the JWT), so a revoke takes effect on the manager's very next call — important since revocation should be immediate, and the JWT is otherwise valid for 24h regardless of grant state.
+New `ActingOwnerFilter extends OncePerRequestFilter`, registered via `http.addFilterAfter(actingOwnerFilter, JwtAuthenticationFilter.class)` in `SecurityConfig`.
 
-Controllers gain an `X-Acting-Owner` header, resolved explicitly at the top of each handler, mirroring the existing explicit `request.setOwner(principal.getName())` style rather than introducing an interceptor/AOP:
+**Where the real actor gets stashed**: rather than threading it through an `Authentication`/`Principal` parameter on every controller method (which means touching every method signature just to expose one extra string), it goes on a small request-scoped bean, `ActingContext` (`backend/src/main/java/com/lazyspender/backend/security/ActingContext.java`) — the same shape as Spring Security's own `SecurityContextHolder`, but request-scoped and DI'd instead of a static `ThreadLocal`, so it fits this codebase's existing constructor-injection style (`@RequiredArgsConstructor` everywhere) and needs no manual cleanup (Spring destroys the scoped instance when the request ends):
 
 ```java
-@PostMapping
-public ResponseEntity<TransactionResponse> createTransaction(
-        @Valid @RequestBody TransactionRequest request,
-        @RequestHeader(value = "X-Acting-Owner", required = false) String actingOwner,
-        Principal principal) {
-    String owner = accountAccessService.resolveEffectiveOwner(principal.getName(), actingOwner, AccessRole.COLLABORATOR);
-    request.setOwner(owner);
-    request.setCreatedBy(principal.getName());
-    ...
+@Component
+@RequestScope
+public class ActingContext {
+    private String actualOwner; // set only when acting on a delegated profile; null otherwise
+
+    public String getEffectiveOwner() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    public String getActualOwner() {
+        return actualOwner != null ? actualOwner : getEffectiveOwner();
+    }
+
+    void setActualOwner(String actualOwner) {
+        this.actualOwner = actualOwner;
+    }
 }
 ```
 
-Endpoints touched: `TransactionController` (all), `PlannedPaymentController` (all), `BalanceTrendController`, `ExpenseDistributionController`, `UserController#getCurrentUser` (dashboard needs the grantor's `User` record — name/accounts list — when viewing their profile). Read-only endpoints (`GET`) require `AccessRole.READ`; mutating endpoints (`POST`/`PUT`/`DELETE`) require `AccessRole.COLLABORATOR`.
+`ActingOwnerFilter` depends on both `AccountAccessService` and `ActingContext` (injecting a request-scoped bean into a singleton filter works transparently — `@RequestScope` defaults to a CGLIB scoped proxy, so the filter's reference always resolves to the current request's instance):
+
+```java
+@Override
+protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+        throws ServletException, IOException {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String actingOwner = request.getHeader("X-Acting-Owner");
+
+    if (auth != null && actingOwner != null && !actingOwner.equals(auth.getName())) {
+        AccessRole required = HttpMethod.GET.matches(request.getMethod()) ? AccessRole.READ : AccessRole.COLLABORATOR;
+        accountAccessService.assertAccess(actingOwner, auth.getName(), required); // throws AccessDeniedException if not ACCEPTED / insufficient role
+        actingContext.setActualOwner(auth.getName());
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(actingOwner, null, Collections.emptyList()));
+    }
+
+    chain.doFilter(request, response);
+}
+```
+
+`assertAccess` throws `org.springframework.security.access.AccessDeniedException`, which Spring Security's own `ExceptionTranslationFilter` (already part of the chain) turns into a 403 — no custom `@ControllerAdvice` needed.
+
+This check happens **live on every request** (not cached in the JWT), so a revoke takes effect on the manager's very next call — the JWT itself stays valid for 24h regardless of grant state, so this is the only thing making revocation actually immediate.
+
+**Why this is a bigger win than it first looks**: `TransactionController`, `PlannedPaymentController`, `BalanceTrendController`, `ExpenseDistributionController`, `UserController#getCurrentUser` need **no signature changes at all** — they already call `principal.getName()` for owner scoping today, and can switch that one call to `actingContext.getEffectiveOwner()` (equivalent value once the filter has run, but now framework-independent of whichever parameter happens to be in scope) or, in most of them, drop the `Principal`/`Authentication` parameter entirely once every owner-lookup goes through `ActingContext`. Create/update endpoints that need attribution just inject `ActingContext` once via the constructor like every other collaborator and call both accessors — no per-method parameter at all:
+
+```java
+@RequiredArgsConstructor
+public class TransactionController {
+    private final TransactionService transactionService;
+    private final ActingContext actingContext;
+
+    @PostMapping
+    public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody TransactionRequest request) {
+        request.setOwner(actingContext.getEffectiveOwner());
+        request.setCreatedBy(actingContext.getActualOwner());
+        ...
+    }
+}
+```
+
+The client still sends `X-Acting-Owner` (it has to say *which* profile it wants — there's no server-side session to remember that in a stateless JWT API), but the header is meaningless without a validated `ACCEPTED` grant behind it; the filter is the only thing that can turn it into a trusted identity, and `ActingContext` is the only place that identity is read back out.
 
 ---
 
@@ -103,16 +153,16 @@ New `AccountAccessController` under `/api/account-access`:
 
 | Method | Path | Who | Effect |
 |---|---|---|---|
-| `POST` | `/api/account-access` | grantor | body `{ email, role }`; looks up `User` by email (404 if none — no invites to non-users); rejects self-invite; rejects if a non-`REJECTED`/`REVOKED` grant already exists for that pair; creates `PENDING` |
+| `POST` | `/api/account-access` | grantor | body `{ email, role }`; looks up `User` by email (404 if none — no invites to non-users); rejects self-invite; rejects if an active (`PENDING`/`ACCEPTED`) grant already exists for that pair; always inserts a **new** row (history is kept, never mutates a past `REJECTED`/`REVOKED` row) |
 | `GET` | `/api/account-access/pending` | grantee | invites awaiting *my* response — feeds the bell icon |
-| `GET` | `/api/account-access/granted-to-me` | grantee | `ACCEPTED` grants where I'm the grantee — feeds the profile switcher |
-| `GET` | `/api/account-access/granted-by-me` | grantor | all grants I've created, any status — feeds the "manage access" screen |
+| `GET` | `/api/account-access/granted-to-me` | grantee | `ACCEPTED` grants where I'm the grantee — feeds the profile switcher (response includes the grantor's `name`/`pictureUrl`, denormalized from `UserRepository.findByOwner`, so the UI never has to resolve an owner string to a display name itself) |
+| `GET` | `/api/account-access/granted-by-me` | grantor | all grants I've created, every status, oldest-first — feeds the "manage access" screen including history |
 | `POST` | `/api/account-access/{id}/accept` | grantee | `PENDING` → `ACCEPTED` |
 | `POST` | `/api/account-access/{id}/reject` | grantee | `PENDING` → `REJECTED` |
-| `DELETE` | `/api/account-access/{id}` | grantor | any status → `REVOKED` |
+| `DELETE` | `/api/account-access/{id}` | grantor | `PENDING`/`ACCEPTED` → `REVOKED` |
 | `DELETE` | `/api/account-access/{id}/leave` | grantee | `ACCEPTED` → `REVOKED` (self-service opt-out) |
 
-All of these authorize by checking the caller's own `principal.getName()` matches `grantorOwner`/`granteeOwner` on the target row — no acting-owner header involved, since managing grants themselves is always done as yourself.
+All of these authorize by checking the caller's own identity matches `grantorOwner`/`granteeOwner` on the target row. **`/api/account-access/**` is excluded from `ActingOwnerFilter`'s header resolution** (skipped by path, same as the existing `/api/auth/**` public-path carve-out in `SecurityConfig`) — managing your own grants always uses your real signed-in identity, never a delegated one. Otherwise a manager currently switched into a delegated profile could end up creating/revoking grants under the grantor's identity instead of their own, just because the frontend happened to still have `X-Acting-Owner` attached to that request.
 
 ---
 
@@ -123,6 +173,8 @@ All of these authorize by checking the caller's own `principal.getName()` matche
 **Axios interceptor** in `config/api.ts`: attach `X-Acting-Owner: <actingOwner>` on every request, reading from a small module-level store kept in sync with `AccessContext` (interceptors can't reach React context directly).
 
 **Profile switcher**: a dropdown (`react-native-paper` `Menu`) anchored to an avatar/icon in the drawer header — the "dropdown bar" you described — listing "My Account" plus each accepted delegated profile (grantor's name). Selecting one calls `setActingOwner()` and clears/invalidates all owner-scoped React Query caches (`queryClient.clear()` is simplest and safe here — the dataset genuinely changes wholesale) so every screen refetches under the new acting owner. All existing query-key factories (`TRANSACTION_QUERY_KEYS`, etc.) should fold `actingOwner` into the key so a stale cache from one profile can't leak into another if `clear()` is ever swapped for something narrower later.
+
+**"Viewing as" label**: whenever `actingOwner !== self`, a persistent banner/chip (e.g. under the drawer header, always visible, not just on first switch) reads "Viewing: `<grantor's name>`'s account". This is the same avatar/menu used for switching, so it doubles as both indicator and the way back to "My Account" — the goal is a manager can never lose track of whose data they're looking at, especially before creating/editing a transaction.
 
 **Bell/notification icon** in the header: badge count = `pending` invites count (`GET /api/account-access/pending`, `refetchInterval` — e.g. 60s — no push infra, so this is polling, not real-time). Tapping navigates to a **Manage Access** screen.
 
@@ -144,7 +196,8 @@ All of these authorize by checking the caller's own `principal.getName()` matche
 - Any change to how `BalanceTrendService`/`ExpenseDistributionService` aggregate — they keep querying by `owner` exactly as today.
 - Audit log/history UI for `createdBy`/`modifiedBy` (fields are captured now so this can be built later without a migration).
 
-## Open questions before implementation
-1. **Invite lookup by email is not currently exposed anywhere** (`GET /api/users` returns *all* users unscoped — likely a pre-existing gap, not something to reuse for this). Should the invite endpoint do the email→User lookup server-side only (no separate public "search users" endpoint, avoiding any email-enumeration surface), returning a generic 404 if no match? That's the assumption baked into the table above — flag if you want a different tradeoff.
-2. **Re-inviting after a REJECTED/REVOKED grant** — should this transition the existing row back to `PENDING`, or always insert a new row (keeping REJECTED/REVOKED ones as history)? Table above assumes reuse-if-terminal, fresh insert otherwise; history-keeping favors a new row each time instead.
-3. **Dashboard identity while acting on a delegated account** — should the header/dashboard clearly label whose account you're viewing (e.g. "Viewing: Alice's account") at all times to avoid a manager mistakenly thinking they're on their own profile? Recommend yes, but flagging since it's a UX call, not yet designed in detail here.
+## Resolved decisions
+1. **Invite lookup** — done server-side only, inside `POST /api/account-access`. No separate "search users" endpoint is exposed (the existing unscoped `GET /api/users` is a pre-existing gap, not reused here); an email with no matching `User` returns a plain 404.
+2. **Re-invite history** — always insert a new `AccountAccess` row; `REJECTED`/`REVOKED` rows are retained as history and shown in "People I've shared with." Duplicate-invite guard checks only *active* (`PENDING`/`ACCEPTED`) rows for the pair.
+3. **"Viewing as" label** — persistent, always visible while acting on a delegated profile (see Frontend section above), not just a one-time toast on switch.
+4. **Authorization enforcement point** — a single `ActingOwnerFilter` (not a per-endpoint header check) resolves and validates `X-Acting-Owner` once, before any controller runs; see Authorization layer above. `/api/account-access/**` itself is excluded from this resolution so managing your own grants is never accidentally done under a delegated identity.
