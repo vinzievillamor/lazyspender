@@ -39,6 +39,8 @@ jobs:
       - name: Prebuild native Android project
         run: npx expo prebuild --platform android
 
+      - uses: gradle/actions/setup-gradle@v4
+
       - name: Decode release keystore
         working-directory: frontend
         run: echo "${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
@@ -46,7 +48,8 @@ jobs:
       - name: Build release APK
         working-directory: frontend/android
         run: |
-          ./gradlew assembleRelease --no-daemon \
+          ./gradlew assembleRelease --no-daemon --build-cache \
+            -PreactNativeArchitectures=arm64-v8a,armeabi-v7a \
             -PRELEASE_STORE_FILE=release.keystore \
             -PRELEASE_STORE_PASSWORD="${{ secrets.ANDROID_RELEASE_STORE_PASSWORD }}" \
             -PRELEASE_KEY_ALIAS="${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}" \
