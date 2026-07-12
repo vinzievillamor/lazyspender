@@ -32,7 +32,12 @@ class JwtServiceTest {
     @Test
     void parseTokenRejectsTamperedToken() {
         String token = jwtService.generateToken("villamorvinzie@gmail.com", "user-123");
-        String tampered = token.substring(0, token.length() - 1) + (token.endsWith("a") ? "b" : "a");
+        // Tamper the second-to-last character rather than the last: the final base64url
+        // character of an HS256 signature only encodes 4 real bits (the rest is zero-padding),
+        // so some replacements there decode to the same bytes and leave the signature valid.
+        int tamperIndex = token.length() - 2;
+        char replacement = token.charAt(tamperIndex) == 'a' ? 'b' : 'a';
+        String tampered = token.substring(0, tamperIndex) + replacement + token.substring(tamperIndex + 1);
 
         assertThatThrownBy(() -> jwtService.parseToken(tampered)).isInstanceOf(JwtException.class);
     }
