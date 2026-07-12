@@ -21,5 +21,6 @@ public interface TransactionMapper {
     TransactionRequest toRequest(Transaction transaction);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
     void updateEntityFromRequest(TransactionRequest request, @MappingTarget Transaction transaction);
 }

@@ -21,5 +21,6 @@ public interface PlannedPaymentMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "nextDueDate", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
     void updateEntityFromRequest(PlannedPaymentRequest request, @MappingTarget PlannedPayment plannedPayment);
 }

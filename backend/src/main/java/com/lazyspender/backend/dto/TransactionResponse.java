@@ -26,4 +26,6 @@ public class TransactionResponse {
     private String plannedPaymentId;
     private TransactionType type;
     private boolean confirm;
+    private String createdBy;
+    private String modifiedBy;
 }

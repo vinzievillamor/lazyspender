@@ -1,6 +1,5 @@
 package com.lazyspender.backend.controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lazyspender.backend.dto.PageResponse;
 import com.lazyspender.backend.dto.TransactionRequest;
 import com.lazyspender.backend.dto.TransactionResponse;
+import com.lazyspender.backend.security.AuthContext;
 import com.lazyspender.backend.service.TransactionService;
 
 import jakarta.validation.Valid;
@@ -31,9 +31,10 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping
-    public ResponseEntity<TransactionResponse> createTransaction(
-            @Valid @RequestBody TransactionRequest request, Principal principal) {
-        request.setOwner(principal.getName());
+    public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody TransactionRequest request) {
+        request.setOwner(AuthContext.getOwner());
+        request.setCreatedBy(AuthContext.getRequestingUser());
+        request.setModifiedBy(AuthContext.getRequestingUser());
         TransactionResponse response = transactionService.createTransaction(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -54,20 +55,19 @@ public class TransactionController {
 
     @GetMapping("/mine")
     public ResponseEntity<PageResponse<TransactionResponse>> getMyTransactions(
-            Principal principal,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size) {
         PageResponse<TransactionResponse> response =
-                transactionService.getTransactionsByOwner(principal.getName(), page, size);
+                transactionService.getTransactionsByOwner(AuthContext.getOwner(), page, size);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TransactionResponse> updateTransaction(
             @PathVariable(name = "id") String id,
-            @Valid @RequestBody TransactionRequest request,
-            Principal principal) {
-        request.setOwner(principal.getName());
+            @Valid @RequestBody TransactionRequest request) {
+        request.setOwner(AuthContext.getOwner());
+        request.setModifiedBy(AuthContext.getRequestingUser());
         TransactionResponse response = transactionService.updateTransaction(id, request);
         return ResponseEntity.ok(response);
     }
@@ -79,8 +79,8 @@ public class TransactionController {
     }
 
     @GetMapping("/distinct-notes")
-    public ResponseEntity<List<String>> getDistinctNotes(Principal principal) {
-        List<String> distinctNotes = transactionService.getDistinctNotesByOwner(principal.getName());
+    public ResponseEntity<List<String>> getDistinctNotes() {
+        List<String> distinctNotes = transactionService.getDistinctNotesByOwner(AuthContext.getOwner());
         return ResponseEntity.ok(distinctNotes);
     }
 }

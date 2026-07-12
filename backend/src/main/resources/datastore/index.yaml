@@ -41,3 +41,11 @@ indexes:
     properties:
       - name: category
       - name: date
+  - kind: accountAccess
+    properties:
+      - name: delegate
+      - name: status
+  - kind: accountAccess
+    properties:
+      - name: owner
+      - name: status

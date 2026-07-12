@@ -36,4 +36,7 @@ public class PlannedPaymentResponse {
 
     private PaymentStatus status;
     private Instant nextDueDate;
+
+    private String createdBy;
+    private String modifiedBy;
 }

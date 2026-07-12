@@ -43,4 +43,8 @@ public class Transaction {
 
     @Builder.Default
     private boolean confirm = true;
+
+    private String createdBy;
+
+    private String modifiedBy;
 }

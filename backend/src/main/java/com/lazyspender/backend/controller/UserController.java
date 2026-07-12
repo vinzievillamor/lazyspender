@@ -2,6 +2,7 @@ package com.lazyspender.backend.controller;
 
 import com.lazyspender.backend.dto.UserRequest;
 import com.lazyspender.backend.dto.UserResponse;
+import com.lazyspender.backend.security.AuthContext;
 import com.lazyspender.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,8 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> getCurrentUser(Principal principal) {
-        UserResponse response = userService.getByOwner(principal.getName());
+    public ResponseEntity<UserResponse> getCurrentUser() {
+        UserResponse response = userService.getByOwner(AuthContext.getOwner());
         return ResponseEntity.ok(response);
     }
 
