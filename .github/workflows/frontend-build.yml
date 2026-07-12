@@ -39,9 +39,18 @@ jobs:
       - name: Prebuild native Android project
         run: npx expo prebuild --platform android
 
+      - name: Decode release keystore
+        working-directory: frontend
+        run: echo "${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
+
       - name: Build release APK
         working-directory: frontend/android
-        run: ./gradlew assembleRelease --no-daemon
+        run: |
+          ./gradlew assembleRelease --no-daemon \
+            -PRELEASE_STORE_FILE=release.keystore \
+            -PRELEASE_STORE_PASSWORD="${{ secrets.ANDROID_RELEASE_STORE_PASSWORD }}" \
+            -PRELEASE_KEY_ALIAS="${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}" \
+            -PRELEASE_KEY_PASSWORD="${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}"
 
       - name: Create GitHub Release with APK
         uses: softprops/action-gh-release@v2
