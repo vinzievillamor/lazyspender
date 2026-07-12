@@ -2,6 +2,7 @@ package com.lazyspender.backend.service;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -44,6 +45,7 @@ public class AuthService {
                     User newUser = new User();
                     newUser.setId(UUID.randomUUID().toString());
                     newUser.setOwner(email);
+                    newUser.setAccounts(Arrays.asList("Savings", "Crypto"));
                     return newUser;
                 });
 
