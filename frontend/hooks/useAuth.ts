@@ -1,49 +1,55 @@
-import * as Google from 'expo-auth-session/providers/google';
+import { GoogleSignin, isErrorWithCode, isSuccessResponse, statusCodes } from '@react-native-google-signin/google-signin';
 import Constants from 'expo-constants';
-import * as WebBrowser from 'expo-web-browser';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuthContext } from '../contexts/AuthContext';
 import { authenticateWithGoogle } from '../services/auth.service';
 
-WebBrowser.maybeCompleteAuthSession();
+GoogleSignin.configure({
+  webClientId: Constants.expoConfig?.extra?.googleWebClientId,
+  iosClientId: Constants.expoConfig?.extra?.googleIosClientId,
+});
 
 export const useAuth = () => {
-  const { isAuthenticated, isLoading, signIn, signOut } = useAuthContext();
+  const { isAuthenticated, isLoading, signIn, signOut: signOutSession } = useAuthContext();
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    webClientId: Constants.expoConfig?.extra?.googleWebClientId,
-    iosClientId: Constants.expoConfig?.extra?.googleIosClientId,
-    androidClientId: Constants.expoConfig?.extra?.googleAndroidClientId,
-  });
-
-  useEffect(() => {
-    if (response?.type !== 'success') {
-      if (response?.type === 'error') {
-        setError(new Error(response.error?.message ?? 'Google sign-in failed'));
-        setIsSigningIn(false);
-      }
-      return;
-    }
-
-    const idToken = response.params.id_token;
+  const promptGoogleSignIn = async () => {
     setIsSigningIn(true);
     setError(null);
 
-    authenticateWithGoogle(idToken)
-      .then((auth) => signIn(auth.token))
-      .catch((err) => setError(err instanceof Error ? err : new Error('Sign-in failed')))
-      .finally(() => setIsSigningIn(false));
-  }, [response, signIn]);
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+
+      if (!isSuccessResponse(response) || !response.data.idToken) {
+        return;
+      }
+
+      const auth = await authenticateWithGoogle(response.data.idToken);
+      await signIn(auth.token);
+    } catch (err) {
+      if (isErrorWithCode(err) && err.code === statusCodes.SIGN_IN_CANCELLED) {
+        return;
+      }
+      setError(err instanceof Error ? err : new Error('Sign-in failed'));
+    } finally {
+      setIsSigningIn(false);
+    }
+  };
+
+  const signOut = async () => {
+    await GoogleSignin.signOut();
+    await signOutSession();
+  };
 
   return {
     isAuthenticated,
     isLoading,
     isSigningIn,
     error,
-    canSignIn: !!request,
-    promptGoogleSignIn: promptAsync,
+    canSignIn: true,
+    promptGoogleSignIn,
     signOut,
   };
 };

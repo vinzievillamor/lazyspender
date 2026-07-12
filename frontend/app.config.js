@@ -30,6 +30,8 @@ module.exports = {
     plugins: [
       "expo-router",
       "expo-secure-store",
+      "./plugins/withAndroidReleaseSigning",
+      "@react-native-google-signin/google-signin",
       [
         "expo-splash-screen",
         {
