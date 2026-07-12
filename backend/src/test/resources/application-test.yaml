@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: backend
+
+app:
+  jwt:
+    secret: "test-only-secret-do-not-use-in-prod-32chars-minimum"
+  google:
+    client-id: "test-client-id.apps.googleusercontent.com"
