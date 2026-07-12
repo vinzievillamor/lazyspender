@@ -10,8 +10,12 @@ history, then summarize it briefly for the user. This is not a report to
 produce for its own sake — it's working context to load before doing anything
 else. Keep the summary short; the goal is efficient orientation, not an audit.
 
-Skip this entirely if the conversation already has enough context (e.g. this
-is a continuation, not a fresh session) — don't re-run it mid-conversation.
+Every time this skill is triggered (SessionStart hook, or an explicit ask to
+catch up / get oriented), it must end with output to the user — never run
+silently. If the conversation already has enough context (e.g. this is a
+continuation, not a fresh session), skip the full gather in Steps 1-3 and
+say so in one line instead (e.g. "Already oriented from earlier in this
+session, skipping re-gather") rather than producing no output at all.
 
 ## Step 1 — Gather signals (run in parallel)
 
