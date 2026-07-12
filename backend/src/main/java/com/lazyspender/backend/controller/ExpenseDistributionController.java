@@ -28,7 +28,7 @@ public class ExpenseDistributionController {
     @GetMapping
     public ResponseEntity<ExpenseDistributionResponse> getExpenseDistribution(
             Principal principal,
-            @RequestParam(name = "accounts") List<String> accounts,
+            @RequestParam(name = "accounts", required = false) List<String> accounts,
             @RequestParam(name = "period") TrendPeriod period) {
 
         ExpenseDistributionResponse response =

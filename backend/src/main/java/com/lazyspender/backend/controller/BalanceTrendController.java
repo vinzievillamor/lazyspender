@@ -25,7 +25,7 @@ public class BalanceTrendController {
     @GetMapping
     public ResponseEntity<BalanceTrendResponse> getBalanceTrend(
             Principal principal,
-            @RequestParam(name = "accounts") List<String> accounts,
+            @RequestParam(name = "accounts", required = false) List<String> accounts,
             @RequestParam(name = "period") TrendPeriod period) {
 
         BalanceTrendResponse response = balanceTrendService.getBalanceTrend(principal.getName(), accounts, period);
