@@ -34,11 +34,12 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
 
   const isPending = isCreating || isUpdating;
   const isEditMode = !!initialData?.id;
+  const hasAccounts = !!user?.accounts?.length;
 
   const getInitialFormData = (): Partial<CreateTransactionRequest> => {
     return initialData ?? ({
       type: TransactionType.EXPENSE,
-      account: user?.accounts[0],
+      account: user?.accounts?.[0],
       date: new Date().toISOString(),
     });
   };
@@ -103,6 +104,11 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
   const handleSubmit = () => {
     if (!user) {
       Alert.alert('Error', 'User data not available');
+      return;
+    }
+
+    if (!hasAccounts) {
+      Alert.alert('No Accounts', 'Add an account to your profile before creating a transaction');
       return;
     }
 
@@ -214,8 +220,13 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                   <Divider />
 
                   <View style={{ ...styles.inputGroup, marginTop: spacing.lg }}>
+                    {!hasAccounts && (
+                      <Text variant="bodyMedium" style={{ color: theme.colors.error, marginBottom: spacing.sm }}>
+                        Add an account to your profile before creating a transaction
+                      </Text>
+                    )}
                     <View style={styles.chipContainer}>
-                      {user?.accounts.map((account) => (
+                      {(user?.accounts ?? []).map((account) => (
                         <Chip
                           key={account}
                           selected={formData.account === account}
@@ -343,7 +354,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
                   <Button
                     mode="contained"
                     onPress={handleSubmit}
-                    disabled={isPending}
+                    disabled={isPending || !hasAccounts}
                     loading={isPending}
                     style={styles.button}
                   >

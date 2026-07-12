@@ -33,6 +33,7 @@ const PlannedPaymentFormModal: React.FC<PlannedPaymentFormModalProps> = ({ visib
 
   const isPending = isCreating || isUpdating;
   const isEditMode = !!initialData;
+  const hasAccounts = !!user?.accounts?.length;
 
   const getInitialFormData = (): Partial<CreatePlannedPaymentRequest> => {
     if (initialData) {
@@ -50,7 +51,7 @@ const PlannedPaymentFormModal: React.FC<PlannedPaymentFormModalProps> = ({ visib
       };
     }
     return {
-      account: user?.accounts[0],
+      account: user?.accounts?.[0],
       startDate: new Date().toISOString(),
       recurrenceType: RecurrenceType.MONTHLY,
       recurrenceValue: new Date().getDate().toString(),
@@ -95,6 +96,11 @@ const PlannedPaymentFormModal: React.FC<PlannedPaymentFormModalProps> = ({ visib
   const handleSubmit = () => {
     if (!user) {
       Alert.alert('Error', 'User data not available');
+      return;
+    }
+
+    if (!hasAccounts) {
+      Alert.alert('No Accounts', 'Add an account to your profile before creating a planned payment');
       return;
     }
 
@@ -209,8 +215,13 @@ const PlannedPaymentFormModal: React.FC<PlannedPaymentFormModalProps> = ({ visib
                   <Divider />
 
                   <View style={{ ...styles.inputGroup, marginTop: spacing.lg }}>
+                    {!hasAccounts && (
+                      <Text variant="bodyMedium" style={{ color: theme.colors.error, marginBottom: spacing.sm }}>
+                        Add an account to your profile before creating a planned payment
+                      </Text>
+                    )}
                     <View style={styles.chipContainer}>
-                      {user?.accounts.map((account) => (
+                      {(user?.accounts ?? []).map((account) => (
                         <Chip
                           key={account}
                           selected={formData.account === account}
@@ -394,7 +405,7 @@ const PlannedPaymentFormModal: React.FC<PlannedPaymentFormModalProps> = ({ visib
                   <Button
                     mode="contained"
                     onPress={handleSubmit}
-                    disabled={isPending}
+                    disabled={isPending || !hasAccounts}
                     loading={isPending}
                     style={styles.button}
                   >
