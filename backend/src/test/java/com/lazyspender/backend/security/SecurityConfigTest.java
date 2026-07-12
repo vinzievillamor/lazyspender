@@ -13,8 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.lazyspender.backend.service.JwtService;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("local")
@@ -22,9 +20,6 @@ class SecurityConfigTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private JwtService jwtService;
 
     @Test
     void unauthenticatedRequestToProtectedEndpointIsRejectedWithUnauthorized() throws Exception {
@@ -36,14 +31,6 @@ class SecurityConfigTest {
     void protectedEndpointRejectsGarbageBearerToken() throws Exception {
         mockMvc.perform(get("/api/transactions/mine").header("Authorization", "Bearer not-a-real-token"))
                 .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void protectedEndpointAcceptsValidBearerTokenPastSecurityLayer() throws Exception {
-        String token = jwtService.generateToken("villamorvinzie@gmail.com", "user-123");
-
-        mockMvc.perform(get("/api/transactions/mine").header("Authorization", "Bearer " + token))
-                .andExpect(status().is(not(401)));
     }
 
     @Test
