@@ -221,7 +221,9 @@ export const ExpenseDistributionWidget: React.FC = () => {
         ) : (
           <View style={styles.noDataContainer}>
             <Text variant="bodyMedium" style={styles.noDataText}>
-              No expense data available for the selected period.
+              {selectedAccounts.length === 0
+                ? 'No accounts configured. Add an account to see your expense distribution.'
+                : 'No expense data available for the selected period.'}
             </Text>
           </View>
         )}

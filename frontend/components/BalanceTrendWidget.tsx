@@ -203,7 +203,9 @@ export const BalanceTrendWidget: React.FC = () => {
         ) : (
           <View style={styles.noDataContainer}>
             <Text variant="bodyMedium" style={styles.noDataText}>
-              No transaction data available for the selected period and accounts.
+              {selectedAccounts.length === 0
+                ? 'No accounts configured. Add an account to see your balance trend.'
+                : 'No transaction data available for the selected period and accounts.'}
             </Text>
           </View>
         )}
