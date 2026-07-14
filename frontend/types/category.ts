@@ -1,16 +1,22 @@
 export enum Category {
   ALLOWANCE = 'Allowance',
+  CAR_LOAN = 'Car Loan',
+  CAR_MAINTENANCE = 'Car Maintenance',
   FOOD_DRINKS = 'Food & Drinks',
+  FUEL = 'Fuel',
   GROCERIES = 'Groceries',
   HEALTH_MEDICAL = 'Health & Medical',
   HOLIDAYS_EVENTS = 'Holidays & Events',
   HOUSING = 'Housing',
+  INCIDENT_EMERGENCIES = 'Incident/Emergencies',
   INCOME = 'Income',
   LIFE_ENTERTAINMENT = 'Life & Entertainment',
   OTHERS = 'Others',
+  PARKING = 'Parking',
   PETS_ANIMALS = 'Pets, animals',
+  RIDE_HAILING = 'Ride-Hailing',
   SHOPPING = 'Shopping',
   SPORTS_FITNESS = 'Sports & Fitness',
   TECHNOLOGY_COMMUNICATION = 'Technology & Communication',
-  TRANSPORTATION = 'Transportation'
+  TOLL = 'Toll'
 }
