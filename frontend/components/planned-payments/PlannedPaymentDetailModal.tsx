@@ -16,8 +16,8 @@ interface PlannedPaymentDetailModalProps {
   visible: boolean;
   plannedPayment: PlannedPayment | null;
   onClose: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 const PlannedPaymentDetailModal: React.FC<PlannedPaymentDetailModalProps> = ({
@@ -170,28 +170,34 @@ const PlannedPaymentDetailModal: React.FC<PlannedPaymentDetailModalProps> = ({
             )}
           </View>
 
-          <View style={styles.footer}>
-            <Button
-              mode="outlined"
-              onPress={onDelete}
-              style={[styles.button, styles.deleteButton]}
-              textColor={theme.colors.error}
-              theme={{
-                colors: {
-                  outline: theme.colors.error,
-                }
-              }}
-            >
-              Delete
-            </Button>
-            <Button
-              mode="contained"
-              onPress={onEdit}
-              style={styles.button}
-            >
-              Edit
-            </Button>
-          </View>
+          {(onDelete || onEdit) && (
+            <View style={styles.footer}>
+              {onDelete && (
+                <Button
+                  mode="outlined"
+                  onPress={onDelete}
+                  style={[styles.button, styles.deleteButton]}
+                  textColor={theme.colors.error}
+                  theme={{
+                    colors: {
+                      outline: theme.colors.error,
+                    }
+                  }}
+                >
+                  Delete
+                </Button>
+              )}
+              {onEdit && (
+                <Button
+                  mode="contained"
+                  onPress={onEdit}
+                  style={styles.button}
+                >
+                  Edit
+                </Button>
+              )}
+            </View>
+          )}
         </Surface>
       </View>
     </Modal>

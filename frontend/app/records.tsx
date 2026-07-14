@@ -7,7 +7,9 @@ import SwipeableTransactionItem from "../components/SwipeableTransactionItem";
 import TransactionFormModal from "../components/TransactionFormModal";
 import TransactionItemHeader from "../components/TransactionItemHeader";
 import { spacing } from "../config/theme";
+import { useAccessContext } from "../contexts/AccessContext";
 import { useDeleteTransaction, useTransactions } from "../hooks/useTransactions";
+import { AccessRole } from "../types/accountAccess";
 import { Transaction } from "../types/transaction";
 const PAGE_SIZE = 20;
 
@@ -54,6 +56,8 @@ export default function Records() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [clickedTransaction, setClickedTransaction] = useState<CreateTransactionRequest>();
   const isFocused = useIsFocused();
+  const { activeRole } = useAccessContext();
+  const isReadOnly = activeRole === AccessRole.READ;
 
   const {
     data,
@@ -119,7 +123,7 @@ export default function Records() {
         key={item.item!.id}
         transaction={item.item!}
         onPress={() => showFilledModal(item.item!)}
-        onDelete={handleDeleteTransaction}
+        onDelete={isReadOnly ? () => {} : handleDeleteTransaction}
       />
     );
   };
@@ -189,11 +193,13 @@ export default function Records() {
         contentContainerStyle={flatData.length === 0 ? styles.emptyList : undefined}
       />
 
-      <FAB
-        icon="plus"
-        style={styles.fab}
-        onPress={() => setIsModalVisible(true)}
-      />
+      {!isReadOnly && (
+        <FAB
+          icon="plus"
+          style={styles.fab}
+          onPress={() => setIsModalVisible(true)}
+        />
+      )}
 
       <TransactionFormModal
         key={clickedTransaction?.id || 'new'}

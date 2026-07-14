@@ -22,12 +22,30 @@ export const setUnauthorizedHandler = (handler: (() => void) | null) => {
   onUnauthorized = handler;
 };
 
-// Request interceptor: attach the stored session JWT, if any
+// Set by AccessContext (same reasoning as onUnauthorized - interceptors can't
+// reach React context directly), read on every request and used to detect a
+// 403 caused by a grant being revoked mid-session.
+let delegatedOwner: string | null = null;
+
+export const setDelegatedOwnerHeader = (owner: string | null) => {
+  delegatedOwner = owner;
+};
+
+let onAccessRevoked: (() => void) | null = null;
+
+export const setAccessRevokedHandler = (handler: (() => void) | null) => {
+  onAccessRevoked = handler;
+};
+
+// Request interceptor: attach the stored session JWT and delegated-owner header, if any
 apiClient.interceptors.request.use(
   async (config) => {
     const token = await getStoredToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    if (delegatedOwner) {
+      config.headers['X-Delegated-Owner'] = delegatedOwner;
     }
     return config;
   },
@@ -48,6 +66,9 @@ apiClient.interceptors.response.use(
       if (error.response.status === 401) {
         await clearStoredToken();
         onUnauthorized?.();
+      }
+      if (error.response.status === 403 && delegatedOwner) {
+        onAccessRevoked?.();
       }
     } else if (error.request) {
       // Request made but no response received
