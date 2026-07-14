@@ -56,19 +56,20 @@ export default function Records() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [clickedTransaction, setClickedTransaction] = useState<CreateTransactionRequest>();
   const isFocused = useIsFocused();
-  const { activeRole } = useAccessContext();
+  const { activeRole, delegatedOwner } = useAccessContext();
   const isReadOnly = activeRole === AccessRole.READ;
 
   const {
     data,
     isLoading,
+    isFetching,
     isError,
     error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     refetch,
-  } = useTransactions({ pageSize: PAGE_SIZE, enabled: isFocused });
+  } = useTransactions({ pageSize: PAGE_SIZE, enabled: isFocused, owner: delegatedOwner });
 
   const deleteTransactionMutation = useDeleteTransaction();
 
@@ -180,6 +181,11 @@ export default function Records() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {isFetching && !isFetchingNextPage && (
+        <View style={styles.refreshBar}>
+          <ActivityIndicator size="small" />
+        </View>
+      )}
       <FlatList
         data={flatData}
         renderItem={renderItem}
@@ -258,5 +264,9 @@ const styles = StyleSheet.create({
   },
   emptyList: {
     flex: 1,
+  },
+  refreshBar: {
+    alignItems: "center",
+    paddingVertical: spacing.sm,
   },
 });

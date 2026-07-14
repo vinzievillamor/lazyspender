@@ -3,8 +3,9 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { ActivityIndicator, Card, Divider, IconButton, Menu, Text, useTheme } from 'react-native-paper';
 import { customTheme, spacing } from '../config/theme';
-import { useUser } from '../contexts/UserContext';
+import { useAccessContext } from '../contexts/AccessContext';
 import { useBalanceTrend } from '../hooks/useBalanceTrend';
+import { useActiveUser } from '../hooks/useUsers';
 import { TrendPeriod } from '../types/balanceTrend';
 
 const PERIOD_OPTIONS = [
@@ -20,27 +21,33 @@ const getPeriodLabel = (period: TrendPeriod): string => {
 
 export const BalanceTrendWidget: React.FC = () => {
   const theme = useTheme();
-  const { user, isLoading: isUserLoading } = useUser();
+  const { delegatedOwner } = useAccessContext();
+  const { data: user, isLoading: isUserLoading } = useActiveUser(delegatedOwner);
 
   const [selectedPeriod, setSelectedPeriod] = useState<TrendPeriod>(TrendPeriod.FROM_START);
-  const [selectedAccounts, setSelectedAccounts] = useState<string[]>(user?.accounts || []);
+  const [selectedAccounts, setSelectedAccounts] = useState<string[]>([]);
   const [menuVisible, setMenuVisible] = useState(false);
 
-  // Update selected accounts when user data loads
+  // Reset the account filter whenever the active profile changes, then
+  // repopulate it from that profile's own accounts once they load.
+  React.useEffect(() => {
+    setSelectedAccounts([]);
+  }, [delegatedOwner]);
+
   React.useEffect(() => {
     if (user?.accounts && selectedAccounts.length === 0) {
       setSelectedAccounts(user.accounts);
     }
   }, [user?.accounts]);
 
-  const { data, isLoading, isError, error } = useBalanceTrend(
+  const { data, isLoading, isFetching, isError, error } = useBalanceTrend(
     {
-      owner: user?.owner || '',
+      owner: delegatedOwner,
       accounts: selectedAccounts,
       period: selectedPeriod,
     },
     {
-      enabled: !!user?.owner && selectedAccounts.length > 0,
+      enabled: !!delegatedOwner && selectedAccounts.length > 0,
     }
   );
 
@@ -119,9 +126,12 @@ export const BalanceTrendWidget: React.FC = () => {
       <Card.Content>
         {/* Header with Period Menu */}
         <View style={styles.header}>
-          <Text variant="titleLarge" style={styles.title}>
-            Balance Trend
-          </Text>
+          <View style={styles.titleRow}>
+            <Text variant="titleLarge" style={styles.title}>
+              Balance Trend
+            </Text>
+            {isFetching && <ActivityIndicator size="small" style={styles.titleSpinner} />}
+          </View>
           <Menu
             visible={menuVisible}
             onDismiss={() => setMenuVisible(false)}
@@ -244,6 +254,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: '600',
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  titleSpinner: {
+    marginLeft: spacing.sm,
   },
   menuButton: {
     margin: 0,

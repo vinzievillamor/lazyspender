@@ -10,8 +10,9 @@ import {
 import { Button, Chip, Divider, IconButton, SegmentedButtons, Surface, Text, TextInput, useTheme } from 'react-native-paper';
 import { TimePickerModal } from 'react-native-paper-dates';
 import { shadows, spacing } from '../config/theme';
-import { useUser } from '../contexts/UserContext';
+import { useAccessContext } from '../contexts/AccessContext';
 import { useCreateTransaction, useDistinctNotes, useUpdateTransaction } from '../hooks/useTransactions';
+import { useActiveUser } from '../hooks/useUsers';
 import { CreateTransactionRequest } from '../services/transaction.service';
 import { Category } from '../types/category';
 import { TransactionType } from '../types/transaction';
@@ -26,11 +27,12 @@ interface TransactionFormModalProps {
 }
 
 const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, onClose, initialData }) => {
-  const { user } = useUser();
+  const { delegatedOwner } = useAccessContext();
+  const { data: user } = useActiveUser(delegatedOwner);
   const theme = useTheme();
   const { mutate: createTransaction, isPending: isCreating } = useCreateTransaction();
   const { mutate: updateTransaction, isPending: isUpdating } = useUpdateTransaction();
-  const { data: distinctNotes } = useDistinctNotes(user!.owner);
+  const { data: distinctNotes } = useDistinctNotes(delegatedOwner);
 
   const isPending = isCreating || isUpdating;
   const isEditMode = !!initialData?.id;

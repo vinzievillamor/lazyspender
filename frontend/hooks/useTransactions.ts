@@ -7,23 +7,24 @@ import { BALANCE_TREND_QUERY_KEYS } from './useBalanceTrend';
 export const TRANSACTION_QUERY_KEYS = {
   all: ['transactions'] as const,
   lists: () => [...TRANSACTION_QUERY_KEYS.all, 'list'] as const,
-  list: (params?: GetTransactionsParams) => [...TRANSACTION_QUERY_KEYS.lists(), params] as const,
+  list: (owner: string, params?: GetTransactionsParams) => [...TRANSACTION_QUERY_KEYS.lists(), owner, params] as const,
 };
 
 interface UseTransactionsOptions {
   pageSize?: number;
   enabled?: boolean;
+  owner: string;
 }
 
-export const useTransactions = (options: UseTransactionsOptions = {}) => {
-  const { pageSize, enabled = true } = options;
+export const useTransactions = (options: UseTransactionsOptions) => {
+  const { pageSize, enabled = true, owner } = options;
 
   return useInfiniteQuery({
-    queryKey: TRANSACTION_QUERY_KEYS.list({ size: pageSize }),
+    queryKey: TRANSACTION_QUERY_KEYS.list(owner, { size: pageSize }),
     queryFn: ({ pageParam }) => getAllTransactions({ page: pageParam as number, size: pageSize }),
     initialPageParam: 0,
     getNextPageParam: (lastPage: PageResponse<Transaction>) => lastPage.hasNext ? lastPage.pageNumber + 1 : null,
-    enabled
+    enabled: enabled && !!owner,
   });
 };
 
@@ -89,8 +90,9 @@ export const useUpdateTransaction = () => {
 
 export const useDistinctNotes = (owner: string) => {
   return useQuery({
-    queryKey: ["notes"],
-    queryFn: () => getDistinctNotes(owner)
+    queryKey: ["notes", owner],
+    queryFn: () => getDistinctNotes(owner),
+    enabled: !!owner,
   })
 }
 

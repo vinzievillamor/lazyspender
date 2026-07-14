@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Pressable } from 'react-native';
-import { Avatar, Divider, Menu, useTheme } from 'react-native-paper';
+import { Pressable, View } from 'react-native';
+import { ActivityIndicator, Avatar, Divider, Menu, useTheme } from 'react-native-paper';
 import { useAccessContext } from '../contexts/AccessContext';
 
 const initialsFor = (label: string) => label.trim().charAt(0).toUpperCase() || '?';
@@ -10,7 +10,7 @@ export default function ProfileSwitcherMenu() {
   const router = useRouter();
   const theme = useTheme();
   const [visible, setVisible] = useState(false);
-  const { delegatedOwner, isDelegated, myProfiles, setDelegatedOwner } = useAccessContext();
+  const { delegatedOwner, isDelegated, isSwitchingAccount, myProfiles, setDelegatedOwner } = useAccessContext();
 
   const activeLabel = myProfiles.find((profile) => profile.owner === delegatedOwner)?.label ?? 'My Account';
 
@@ -20,14 +20,32 @@ export default function ProfileSwitcherMenu() {
       onDismiss={() => setVisible(false)}
       anchor={
         <Pressable onPress={() => setVisible(true)} style={{ marginRight: 12 }}>
-          <Avatar.Text
-            size={32}
-            label={initialsFor(activeLabel)}
-            style={{
-              backgroundColor: isDelegated ? theme.colors.tertiaryContainer : theme.colors.primaryContainer,
-            }}
-            color={isDelegated ? theme.colors.onTertiaryContainer : theme.colors.onPrimaryContainer}
-          />
+          {isSwitchingAccount ? (
+            <View
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: isDelegated ? theme.colors.tertiaryContainer : theme.colors.primaryContainer,
+              }}
+            >
+              <ActivityIndicator
+                size="small"
+                color={isDelegated ? theme.colors.onTertiaryContainer : theme.colors.onPrimaryContainer}
+              />
+            </View>
+          ) : (
+            <Avatar.Text
+              size={32}
+              label={initialsFor(activeLabel)}
+              style={{
+                backgroundColor: isDelegated ? theme.colors.tertiaryContainer : theme.colors.primaryContainer,
+              }}
+              color={isDelegated ? theme.colors.onTertiaryContainer : theme.colors.onPrimaryContainer}
+            />
+          )}
         </Pressable>
       }
     >
@@ -35,6 +53,7 @@ export default function ProfileSwitcherMenu() {
         <Menu.Item
           key={profile.owner}
           title={profile.owner === delegatedOwner ? `✓ ${profile.label}` : profile.label}
+          disabled={isSwitchingAccount}
           onPress={() => {
             setDelegatedOwner(profile.owner);
             setVisible(false);

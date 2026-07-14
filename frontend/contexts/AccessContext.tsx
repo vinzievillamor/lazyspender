@@ -6,7 +6,6 @@ import {
   getStoredDelegatedOwner,
   setStoredDelegatedOwner
 } from '../config/delegatedOwnerStorage';
-import { queryClient } from '../config/queryClient';
 import { AccessRole, AccessStatus } from '../types/accountAccess';
 import { useGrantedToMe } from '../hooks/useAccountAccess';
 import { useUser } from './UserContext';
@@ -21,6 +20,7 @@ export interface DelegatedProfile {
 interface AccessContextType {
   delegatedOwner: string;
   isDelegated: boolean;
+  isSwitchingAccount: boolean;
   activeRole: AccessRole | null;
   myProfiles: DelegatedProfile[];
   setDelegatedOwner: (owner: string) => void;
@@ -36,6 +36,7 @@ export const AccessProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [delegatedOwner, setDelegatedOwnerState] = useState('');
   const [hasLoadedPersisted, setHasLoadedPersisted] = useState(false);
   const [revokedMessage, setRevokedMessage] = useState<string | null>(null);
+  const [isSwitchingAccount, setIsSwitchingAccount] = useState(false);
 
   const myProfiles: DelegatedProfile[] = useMemo(() => {
     if (!selfOwner) return [];
@@ -79,20 +80,21 @@ export const AccessProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setAccessRevokedHandler(() => {
       applyDelegatedOwner(selfOwner);
       clearStoredDelegatedOwner();
-      queryClient.clear();
       setRevokedMessage('Access to this account was removed');
     });
     return () => setAccessRevokedHandler(null);
   }, [selfOwner]);
 
+  // Every owner-scoped query is keyed by the active owner (see useActiveUser,
+  // useTransactions, useBalanceTrend, etc.), so switching profiles naturally
+  // triggers a refetch under the new key - no manual cache invalidation
+  // needed. isSwitchingAccount just gives the switcher UI something to show
+  // for the brief window before that refetch kicks in.
   const setDelegatedOwner = (owner: string) => {
+    setIsSwitchingAccount(true);
     applyDelegatedOwner(owner);
-    if (owner === selfOwner) {
-      clearStoredDelegatedOwner();
-    } else {
-      setStoredDelegatedOwner(owner);
-    }
-    queryClient.clear();
+    const persisted = owner === selfOwner ? clearStoredDelegatedOwner() : setStoredDelegatedOwner(owner);
+    persisted.finally(() => setIsSwitchingAccount(false));
   };
 
   const activeRole = myProfiles.find((profile) => profile.owner === delegatedOwner)?.role ?? null;
@@ -100,6 +102,7 @@ export const AccessProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const value: AccessContextType = {
     delegatedOwner: delegatedOwner || selfOwner,
     isDelegated: !!delegatedOwner && delegatedOwner !== selfOwner,
+    isSwitchingAccount,
     activeRole,
     myProfiles,
     setDelegatedOwner,

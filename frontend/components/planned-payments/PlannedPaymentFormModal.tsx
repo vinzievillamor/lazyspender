@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 import { Button, Checkbox, Chip, Divider, IconButton, SegmentedButtons, Surface, Text, TextInput, useTheme } from 'react-native-paper';
 import { shadows, spacing } from '../../config/theme';
-import { useUser } from '../../contexts/UserContext';
+import { useAccessContext } from '../../contexts/AccessContext';
 import { useCreatePlannedPayment, useUpdatePlannedPayment } from '../../hooks/usePlannedPayments';
 import { useDistinctNotes } from '../../hooks/useTransactions';
+import { useActiveUser } from '../../hooks/useUsers';
 import { Category } from '../../types/category';
 import { ConfirmationType, CreatePlannedPaymentRequest, EndType, PlannedPayment, RecurrenceType } from '../../types/plannedPayment';
 import { getCategoryIcon } from '../../utils/categoryIcons';
@@ -25,11 +26,12 @@ interface PlannedPaymentFormModalProps {
 }
 
 const PlannedPaymentFormModal: React.FC<PlannedPaymentFormModalProps> = ({ visible, onClose, initialData }) => {
-  const { user } = useUser();
+  const { delegatedOwner } = useAccessContext();
+  const { data: user } = useActiveUser(delegatedOwner);
   const theme = useTheme();
   const { mutate: createPlannedPayment, isPending: isCreating } = useCreatePlannedPayment();
   const { mutate: updatePlannedPayment, isPending: isUpdating } = useUpdatePlannedPayment();
-  const { data: distinctNotes } = useDistinctNotes(user!.owner);
+  const { data: distinctNotes } = useDistinctNotes(delegatedOwner);
 
   const isPending = isCreating || isUpdating;
   const isEditMode = !!initialData;
