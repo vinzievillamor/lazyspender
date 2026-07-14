@@ -1,15 +1,20 @@
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { Pressable, View } from 'react-native';
 import { ActivityIndicator, Avatar, Divider, Menu, useTheme } from 'react-native-paper';
 import { useAccessContext } from '../contexts/AccessContext';
 
 const initialsFor = (label: string) => label.trim().charAt(0).toUpperCase() || '?';
 
-export default function ProfileSwitcherMenu() {
+interface ProfileSwitcherMenuProps {
+  visible: boolean;
+  onOpen: () => void;
+  onDismiss: () => void;
+}
+
+export default function ProfileSwitcherMenu({ visible, onOpen, onDismiss }: ProfileSwitcherMenuProps) {
   const router = useRouter();
   const theme = useTheme();
-  const [visible, setVisible] = useState(false);
   const { delegatedOwner, isDelegated, isSwitchingAccount, myProfiles, setDelegatedOwner } = useAccessContext();
 
   const activeLabel = myProfiles.find((profile) => profile.owner === delegatedOwner)?.label ?? 'My Account';
@@ -17,9 +22,9 @@ export default function ProfileSwitcherMenu() {
   return (
     <Menu
       visible={visible}
-      onDismiss={() => setVisible(false)}
+      onDismiss={onDismiss}
       anchor={
-        <Pressable onPress={() => setVisible(true)} style={{ marginRight: 12 }}>
+        <Pressable onPress={onOpen} style={{ marginRight: 12 }}>
           {isSwitchingAccount ? (
             <View
               style={{
@@ -56,7 +61,7 @@ export default function ProfileSwitcherMenu() {
           disabled={isSwitchingAccount}
           onPress={() => {
             setDelegatedOwner(profile.owner);
-            setVisible(false);
+            onDismiss();
           }}
         />
       ))}
@@ -64,7 +69,7 @@ export default function ProfileSwitcherMenu() {
       <Menu.Item
         title="Manage Access"
         onPress={() => {
-          setVisible(false);
+          onDismiss();
           router.push('/account-access');
         }}
       />
