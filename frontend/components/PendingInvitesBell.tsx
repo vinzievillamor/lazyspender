@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { Badge, Button, Divider, IconButton, Menu, Text, useTheme } from 'react-native-paper';
 import { spacing } from '../config/theme';
 import { useAcceptInvite, usePendingInvites, useRejectInvite } from '../hooks/useAccountAccess';
 
-export default function PendingInvitesBell() {
+interface PendingInvitesBellProps {
+  visible: boolean;
+  onOpen: () => void;
+  onDismiss: () => void;
+}
+
+export default function PendingInvitesBell({ visible, onOpen, onDismiss }: PendingInvitesBellProps) {
   const theme = useTheme();
-  const [visible, setVisible] = useState(false);
   const { data: pending } = usePendingInvites();
   const acceptMutation = useAcceptInvite();
   const rejectMutation = useRejectInvite();
@@ -17,10 +22,10 @@ export default function PendingInvitesBell() {
   return (
     <Menu
       visible={visible}
-      onDismiss={() => setVisible(false)}
+      onDismiss={onDismiss}
       anchor={
         <View>
-          <IconButton icon="bell-outline" onPress={() => setVisible(true)} />
+          <IconButton icon="bell-outline" onPress={onOpen} />
           {count > 0 && (
             <Badge size={16} style={{ position: 'absolute', top: 4, right: 4 }}>
               {count}

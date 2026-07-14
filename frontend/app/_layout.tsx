@@ -2,6 +2,7 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { usePathname, useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ActivityIndicator, Drawer as PaperDrawer, PaperProvider, Text, useTheme } from "react-native-paper";
@@ -13,11 +14,23 @@ import { AccessProvider } from "../contexts/AccessContext";
 import { AuthProvider, useAuthContext } from "../contexts/AuthContext";
 import { UserProvider } from "../contexts/UserContext";
 
+type ActiveMenu = "invites" | "profile" | null;
+
 function HeaderRight() {
+  const [activeMenu, setActiveMenu] = useState<ActiveMenu>(null);
+
   return (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
-      <PendingInvitesBell />
-      <ProfileSwitcherMenu />
+      <PendingInvitesBell
+        visible={activeMenu === "invites"}
+        onOpen={() => setActiveMenu("invites")}
+        onDismiss={() => setActiveMenu((current) => (current === "invites" ? null : current))}
+      />
+      <ProfileSwitcherMenu
+        visible={activeMenu === "profile"}
+        onOpen={() => setActiveMenu("profile")}
+        onDismiss={() => setActiveMenu((current) => (current === "profile" ? null : current))}
+      />
     </View>
   );
 }
