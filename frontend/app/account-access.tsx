@@ -12,13 +12,10 @@ import {
 } from "react-native-paper";
 import { spacing } from "../config/theme";
 import {
-  useAcceptInvite,
   useCreateInvite,
   useGrantedByMe,
   useGrantedToMe,
   useLeaveAccess,
-  usePendingInvites,
-  useRejectInvite,
   useRevokeAccess
 } from "../hooks/useAccountAccess";
 import { AccessRole, AccessStatus, AccountAccess } from "../types/accountAccess";
@@ -34,12 +31,9 @@ function SectionTitle({ children }: { children: string }) {
 export default function AccountAccessScreen() {
   const theme = useTheme();
 
-  const { data: pending, isLoading: isPendingLoading } = usePendingInvites();
   const { data: grantedToMe, isLoading: isGrantedToMeLoading } = useGrantedToMe();
   const { data: grantedByMe, isLoading: isGrantedByMeLoading } = useGrantedByMe();
 
-  const acceptMutation = useAcceptInvite();
-  const rejectMutation = useRejectInvite();
   const leaveMutation = useLeaveAccess();
   const revokeMutation = useRevokeAccess();
   const createInviteMutation = useCreateInvite();
@@ -67,39 +61,6 @@ export default function AccountAccessScreen() {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <SectionTitle>Pending requests</SectionTitle>
-      {isPendingLoading ? (
-        <ActivityIndicator style={styles.loader} />
-      ) : (pending ?? []).length === 0 ? (
-        <Text style={styles.emptyText}>No pending invites</Text>
-      ) : (
-        (pending ?? []).map((grant) => (
-          <View key={grant.id} style={styles.row}>
-            <View style={styles.rowInfo}>
-              <Text variant="bodyLarge">{grant.ownerName ?? grant.owner}</Text>
-              <Text variant="bodySmall" style={styles.rowSubtext}>{grant.role}</Text>
-            </View>
-            <Button
-              mode="text"
-              onPress={() => acceptMutation.mutate(grant.id)}
-              loading={acceptMutation.isPending}
-            >
-              Accept
-            </Button>
-            <Button
-              mode="text"
-              textColor={theme.colors.error}
-              onPress={() => rejectMutation.mutate(grant.id)}
-              loading={rejectMutation.isPending}
-            >
-              Reject
-            </Button>
-          </View>
-        ))
-      )}
-
-      <Divider style={styles.divider} />
-
       <SectionTitle>Shared with me</SectionTitle>
       {isGrantedToMeLoading ? (
         <ActivityIndicator style={styles.loader} />
