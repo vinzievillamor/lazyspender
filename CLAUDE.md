@@ -18,6 +18,8 @@ There is no root-level build; each project is built and run independently from i
 - **Branch naming**: `<type>/<issue-number>-<short-slug>`, e.g. `feature/32-account-delegation-frontend-implementation`. Common `<type>` values: `feature`, `fix`, `hotfix`, `docs`, `chore`.
 - **All development happens in a branch** — never commit directly to `main`.
 - **Merges to `main` must be squash merges** (`gh pr merge --squash` or the GitHub UI's "Squash and merge"), so `main` keeps one commit per issue/PR.
+- **Never add a `Co-Authored-By: Claude` (or similar) trailer to commits pushed to this repository.** Omit the co-author line entirely, regardless of Claude Code's default commit message template.
+- **Use a separate `git worktree` per feature/task**, especially when spawning subagents to work on it. Each worktree gets its own checkout of the feature branch so parallel agents don't clobber each other's working-tree state (uncommitted changes, build artifacts, etc.). Clean up the worktree once the branch is merged/abandoned.
 
 ## Backend (`backend/`)
 
