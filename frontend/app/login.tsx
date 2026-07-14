@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, Text, useTheme } from 'react-native-paper';
+import { Button, Text, useTheme } from 'react-native-paper';
 import { useAuth } from '../hooks/useAuth';
 import { spacing } from '../config/theme';
 
@@ -26,8 +26,6 @@ export default function LoginScreen() {
       >
         Sign in with Google
       </Button>
-
-      {isSigningIn && <ActivityIndicator style={styles.spinner} />}
 
       {error && (
         <Text variant="bodySmall" style={[styles.error, { color: theme.colors.error }]}>
@@ -56,9 +54,6 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-  },
-  spinner: {
-    marginTop: spacing.lg,
   },
   error: {
     marginTop: spacing.lg,
