@@ -54,15 +54,22 @@ in full unless it's clearly relevant to what the user asks next.
 
 ## Step 4 — Summarize
 
-Give the user a short orientation summary (aim for well under 200 words):
+Give the user a short orientation summary (aim for well under 200 words).
+Open with a one-line recap of what this run actually did — which steps ran
+vs. were skipped — so the summary reads as a report of actions taken, not
+just a content dump. For example: "Orientation: checked git log/status,
+scanned the memory index, looked for in-flight docs." If Step 2 or 3 found
+nothing (empty memory, no recent docs), say so explicitly rather than
+omitting them silently — "no memory recorded yet" / "no in-flight docs" is
+itself useful signal that those steps ran. Then give the findings:
 
 - Branch + working tree state (clean, or what's in progress and where)
 - What's landed recently (1-3 lines pulled from the commit log, grouped by
   theme if there are several — not a raw log dump)
 - Anything from memory that's still load-bearing (an open initiative, a
-  standing preference relevant to likely next work) — omit this line entirely
-  if nothing relevant surfaced, don't force it
-- Any in-flight planning doc worth flagging
+  standing preference relevant to likely next work) — if nothing relevant
+  surfaced, say so in one clause rather than dropping the line
+- Any in-flight planning doc worth flagging, or "none" if none found
 
 Do not pad this with a "how can I help" closer or restate CLAUDE.md content
 (architecture, commands, etc.) — that's already in context. This step is
