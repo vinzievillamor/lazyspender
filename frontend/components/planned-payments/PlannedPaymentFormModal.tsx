@@ -182,7 +182,7 @@ const PlannedPaymentFormModal: React.FC<PlannedPaymentFormModalProps> = ({ visib
                   <IconButton icon="close" onPress={handleClose} disabled={isPending} />
                 </View>
 
-                <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
+                <ScrollView style={styles.form} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
                   <View style={styles.inputGroup}>
                     <SegmentedButtons
                       value={isExpense ? 'expense' : 'income'}
