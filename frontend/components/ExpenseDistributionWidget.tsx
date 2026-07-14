@@ -3,8 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import { PieChart } from 'react-native-gifted-charts';
 import { ActivityIndicator, Card, Divider, IconButton, Menu, Text, useTheme } from 'react-native-paper';
 import { customColors, customTheme, spacing } from '../config/theme';
-import { useUser } from '../contexts/UserContext';
+import { useAccessContext } from '../contexts/AccessContext';
 import { useExpenseDistribution, useTopContributors } from '../hooks/useExpenseDistribution';
+import { useActiveUser } from '../hooks/useUsers';
 import { TrendPeriod } from '../types/balanceTrend';
 import { Category } from '../types/category';
 import { TopContributorsList } from './TopContributorsList';
@@ -43,43 +44,51 @@ const getCategoryColor = (category: string): string => {
 
 export const ExpenseDistributionWidget: React.FC = () => {
   const theme = useTheme();
-  const { user, isLoading: isUserLoading } = useUser();
+  const { delegatedOwner } = useAccessContext();
+  const { data: user, isLoading: isUserLoading } = useActiveUser(delegatedOwner);
 
   const [selectedPeriod, setSelectedPeriod] = useState<TrendPeriod>(TrendPeriod.LAST_12_WEEKS);
-  const [selectedAccounts, setSelectedAccounts] = useState<string[]>(user?.accounts || []);
+  const [selectedAccounts, setSelectedAccounts] = useState<string[]>([]);
   const [menuVisible, setMenuVisible] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
   // Initialize with first category expanded (will be set when data loads)
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
-  // Update selected accounts when user data loads
+  // Reset the account filter and expanded category whenever the active
+  // profile changes, then repopulate accounts from that profile's own list.
+  React.useEffect(() => {
+    setSelectedAccounts([]);
+    setExpandedCategory(null);
+    setInitialLoadDone(false);
+  }, [delegatedOwner]);
+
   React.useEffect(() => {
     if (user?.accounts && selectedAccounts.length === 0) {
       setSelectedAccounts(user.accounts);
     }
   }, [user?.accounts]);
 
-  const { data, isLoading, isError, error } = useExpenseDistribution(
+  const { data, isLoading, isFetching, isError, error } = useExpenseDistribution(
     {
-      owner: user?.owner || '',
+      owner: delegatedOwner,
       accounts: selectedAccounts,
       period: selectedPeriod,
     },
     {
-      enabled: !!user?.owner && selectedAccounts.length > 0,
+      enabled: !!delegatedOwner && selectedAccounts.length > 0,
     }
   );
 
   // Fetch contributors when a category is expanded
   const { data: contributorsData, isLoading: isContributorsLoading } = useTopContributors(
     {
-      owner: user?.owner || '',
+      owner: delegatedOwner,
       category: expandedCategory || '',
       period: selectedPeriod,
     },
     {
-      enabled: !!user?.owner && !!expandedCategory,
+      enabled: !!delegatedOwner && !!expandedCategory,
     }
   );
 
@@ -144,9 +153,12 @@ export const ExpenseDistributionWidget: React.FC = () => {
       <Card.Content>
         {/* Header with Period Menu */}
         <View style={styles.header}>
-          <Text variant="titleLarge" style={styles.title}>
-            Expense Distribution
-          </Text>
+          <View style={styles.titleRow}>
+            <Text variant="titleLarge" style={styles.title}>
+              Expense Distribution
+            </Text>
+            {isFetching && <ActivityIndicator size="small" style={styles.titleSpinner} />}
+          </View>
           <Menu
             visible={menuVisible}
             onDismiss={() => setMenuVisible(false)}
@@ -287,6 +299,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: '600',
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  titleSpinner: {
+    marginLeft: spacing.sm,
   },
   menuButton: {
     margin: 0,

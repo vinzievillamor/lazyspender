@@ -7,7 +7,6 @@ import PlannedPaymentFormModal from "../components/planned-payments/PlannedPayme
 import PlannedPaymentItem from "../components/planned-payments/PlannedPaymentItem";
 import { spacing } from "../config/theme";
 import { useAccessContext } from "../contexts/AccessContext";
-import { useUser } from "../contexts/UserContext";
 import {
   useConfirmPlannedPayment,
   useDeletePlannedPayment,
@@ -19,9 +18,8 @@ import { PlannedPayment } from "../types/plannedPayment";
 
 export default function PlannedPayments() {
   const theme = useTheme();
-  const { user } = useUser();
   const isFocused = useIsFocused();
-  const { activeRole } = useAccessContext();
+  const { activeRole, delegatedOwner } = useAccessContext();
   const isReadOnly = activeRole === AccessRole.READ;
 
   const [isFormModalVisible, setFormModalVisible] = useState(false);
@@ -31,10 +29,11 @@ export default function PlannedPayments() {
   const {
     data: plannedPayments,
     isLoading,
+    isFetching,
     isError,
     error,
     refetch,
-  } = usePlannedPayments(user?.owner || '');
+  } = usePlannedPayments(delegatedOwner);
 
   const deleteMutation = useDeletePlannedPayment();
   const confirmMutation = useConfirmPlannedPayment();
@@ -130,6 +129,11 @@ export default function PlannedPayments() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {isFetching && (
+        <View style={styles.refreshBar}>
+          <ActivityIndicator size="small" />
+        </View>
+      )}
       <FlatList
         data={plannedPayments}
         renderItem={renderItem}
@@ -233,5 +237,9 @@ const styles = StyleSheet.create({
   },
   emptyList: {
     flex: 1,
+  },
+  refreshBar: {
+    alignItems: "center",
+    paddingVertical: spacing.sm,
   },
 });
