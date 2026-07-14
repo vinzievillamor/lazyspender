@@ -12,6 +12,13 @@ This is a monorepo with two independent projects that talk to each other over HT
 
 There is no root-level build; each project is built and run independently from its own directory.
 
+## Development workflow
+
+- **Every feature, hotfix, or bugfix starts with a GitHub issue.** Create the issue first, then create the branch from it and link the two (e.g. `gh issue create ...` followed by a branch named after the issue).
+- **Branch naming**: `<type>/<issue-number>-<short-slug>`, e.g. `feature/32-account-delegation-frontend-implementation`. Common `<type>` values: `feature`, `fix`, `hotfix`, `docs`, `chore`.
+- **All development happens in a branch** — never commit directly to `main`.
+- **Merges to `main` must be squash merges** (`gh pr merge --squash` or the GitHub UI's "Squash and merge"), so `main` keeps one commit per issue/PR.
+
 ## Backend (`backend/`)
 
 ### Commands
