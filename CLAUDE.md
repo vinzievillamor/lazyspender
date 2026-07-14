@@ -14,6 +14,14 @@ There is no root-level build; each project is built and run independently from i
 
 ## Development workflow
 
+**Before starting any new task, complete these steps in order — don't skip ahead to implementation:**
+
+1. **Startup** — run the `startup` skill (or otherwise orient on recent commits, working tree state, and relevant memory) if not already done this session.
+2. **Create a GitHub issue** for the task (`gh issue create ...`).
+3. **Create the branch** from that issue, named per the convention below, and link the two.
+4. **Create a dedicated git worktree** for the branch (see below) so this session's work can't overlap or conflict with any other in-progress session.
+5. Only then start the actual task.
+
 - **Every feature, hotfix, or bugfix starts with a GitHub issue.** Create the issue first, then create the branch from it and link the two (e.g. `gh issue create ...` followed by a branch named after the issue).
 - **Branch naming**: `<type>/<issue-number>-<short-slug>`, e.g. `feature/32-account-delegation-frontend-implementation`. Common `<type>` values: `feature`, `fix`, `hotfix`, `docs`, `chore`.
 - **All development happens in a branch** — never commit directly to `main`.
