@@ -6,6 +6,7 @@ import PlannedPaymentDetailModal from "../components/planned-payments/PlannedPay
 import PlannedPaymentFormModal from "../components/planned-payments/PlannedPaymentFormModal";
 import PlannedPaymentItem from "../components/planned-payments/PlannedPaymentItem";
 import { spacing } from "../config/theme";
+import { useAccessContext } from "../contexts/AccessContext";
 import { useUser } from "../contexts/UserContext";
 import {
   useConfirmPlannedPayment,
@@ -13,12 +14,15 @@ import {
   usePlannedPayments,
   usePlannedPaymentTransactions
 } from "../hooks/usePlannedPayments";
+import { AccessRole } from "../types/accountAccess";
 import { PlannedPayment } from "../types/plannedPayment";
 
 export default function PlannedPayments() {
   const theme = useTheme();
   const { user } = useUser();
   const isFocused = useIsFocused();
+  const { activeRole } = useAccessContext();
+  const isReadOnly = activeRole === AccessRole.READ;
 
   const [isFormModalVisible, setFormModalVisible] = useState(false);
   const [isDetailModalVisible, setDetailModalVisible] = useState(false);
@@ -134,14 +138,16 @@ export default function PlannedPayments() {
         contentContainerStyle={plannedPayments?.length === 0 ? styles.emptyList : undefined}
       />
 
-      <FAB
-        icon="plus"
-        style={styles.fab}
-        onPress={() => {
-          setSelectedPayment(null);
-          setFormModalVisible(true);
-        }}
-      />
+      {!isReadOnly && (
+        <FAB
+          icon="plus"
+          style={styles.fab}
+          onPress={() => {
+            setSelectedPayment(null);
+            setFormModalVisible(true);
+          }}
+        />
+      )}
 
       <PlannedPaymentFormModal
         key={selectedPayment?.id || 'new'}
@@ -154,8 +160,8 @@ export default function PlannedPayments() {
         visible={isDetailModalVisible}
         plannedPayment={selectedPayment}
         onClose={handleDetailClose}
-        onEdit={handleEditFromDetail}
-        onDelete={handleDeleteFromDetail}
+        onEdit={isReadOnly ? undefined : handleEditFromDetail}
+        onDelete={isReadOnly ? undefined : handleDeleteFromDetail}
       />
     </View>
   );

@@ -5,10 +5,22 @@ import { Drawer } from "expo-router/drawer";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ActivityIndicator, Drawer as PaperDrawer, PaperProvider, Text, useTheme } from "react-native-paper";
+import PendingInvitesBell from "../components/PendingInvitesBell";
+import ProfileSwitcherMenu from "../components/ProfileSwitcherMenu";
 import { queryClient } from "../config/queryClient";
 import customTheme, { spacing } from "../config/theme";
+import { AccessProvider } from "../contexts/AccessContext";
 import { AuthProvider, useAuthContext } from "../contexts/AuthContext";
 import { UserProvider } from "../contexts/UserContext";
+
+function HeaderRight() {
+  return (
+    <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <PendingInvitesBell />
+      <ProfileSwitcherMenu />
+    </View>
+  );
+}
 
 function CustomDrawerContent(props: any) {
   const router = useRouter();
@@ -118,6 +130,7 @@ function AppNavigator() {
             letterSpacing: 0.15
           },
           headerTintColor: customTheme.colors.onSurface,
+          headerRight: () => <HeaderRight />,
         }}
       >
         <Drawer.Protected guard={isAuthenticated}>
@@ -143,6 +156,13 @@ function AppNavigator() {
             }}
           />
           <Drawer.Screen
+            name="account-access"
+            options={{
+              title: "Manage Access",
+              drawerItemStyle: { display: "none" },
+            }}
+          />
+          <Drawer.Screen
             name="index"
             options={{
               drawerItemStyle: { display: "none" },
@@ -163,7 +183,13 @@ function AppNavigator() {
     </GestureHandlerRootView>
   );
 
-  return isAuthenticated ? <UserProvider>{drawer}</UserProvider> : drawer;
+  return isAuthenticated ? (
+    <UserProvider>
+      <AccessProvider>{drawer}</AccessProvider>
+    </UserProvider>
+  ) : (
+    drawer
+  );
 }
 
 export default function RootLayout() {
