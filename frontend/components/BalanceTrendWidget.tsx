@@ -166,14 +166,16 @@ export const BalanceTrendWidget: React.FC = () => {
         </Text>
 
         {/* Total Balance */}
-        <View style={styles.balanceContainer}>
-          <Text variant="headlineLarge" style={styles.balanceAmount}>
-            {data?.currency || 'PHP'} {data?.totalBalance.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </Text>
-          <Text variant="bodySmall" style={styles.balanceLabel}>
-            Total Balance
-          </Text>
-        </View>
+        {chartData.length > 0 && (
+          <View style={styles.balanceContainer}>
+            <Text variant="headlineLarge" style={styles.balanceAmount}>
+              {data?.currency || 'PHP'} {data?.totalBalance.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </Text>
+            <Text variant="bodySmall" style={styles.balanceLabel}>
+              Total Balance
+            </Text>
+          </View>
+        )}
 
         {/* Line Chart */}
         {chartData.length > 0 ? (

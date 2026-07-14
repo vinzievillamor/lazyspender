@@ -194,14 +194,16 @@ export const ExpenseDistributionWidget: React.FC = () => {
         </Text>
 
         {/* Total Expense */}
-        <View style={styles.totalContainer}>
-          <Text variant="headlineLarge" style={styles.totalAmount}>
-            {data?.currency || 'PHP'} {data?.totalExpense.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </Text>
-          <Text variant="bodySmall" style={styles.totalLabel}>
-            Total Expenses
-          </Text>
-        </View>
+        {pieData.length > 0 && (
+          <View style={styles.totalContainer}>
+            <Text variant="headlineLarge" style={styles.totalAmount}>
+              {data?.currency || 'PHP'} {data?.totalExpense.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </Text>
+            <Text variant="bodySmall" style={styles.totalLabel}>
+              Total Expenses
+            </Text>
+          </View>
+        )}
 
         {/* Pie Chart */}
         {pieData.length > 0 ? (
