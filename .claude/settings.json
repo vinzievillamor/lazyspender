@@ -9,6 +9,17 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "common=$(git rev-parse --git-common-dir 2>/dev/null); gitdir=$(git rev-parse --git-dir 2>/dev/null); if [ -n \"$common\" ] && [ \"$common\" = \"$gitdir\" ]; then branch=$(git branch --show-current 2>/dev/null); printf '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"Editing directly in the main checkout (branch: %s), not a dedicated worktree. CLAUDE.md workflow: create a GitHub issue, branch, and git worktree before implementation. Proceed anyway, or stop and create a worktree first?\"}}' \"$branch\"; fi"
+          }
+        ]
+      }
     ]
   }
 }
