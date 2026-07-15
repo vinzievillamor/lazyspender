@@ -7,13 +7,6 @@
   "java.compile.nullAnalysis.mode": "automatic",
   "java.autobuild.enabled": true,
   "java.configuration.updateBuildConfiguration": "automatic",
-  "java.configuration.runtimes": [
-    {
-      "name": "JavaSE-21",
-      "path": "/Users/personal/.sdkman/candidates/java/current",
-      "default": true
-    }
-  ],
   "files.exclude": {
     "**/.gradle": true,
     "**/build": false
