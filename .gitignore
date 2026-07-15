@@ -1,0 +1,13 @@
+# Per-task git worktrees (see CLAUDE.md dev workflow) — these are separate
+# checkouts of this same repo and must never be tracked from the parent.
+.claude/worktrees/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors/IDEs (repo-wide; .vscode/ itself is intentionally tracked)
+.idea/
+*.swp
+*.swo
