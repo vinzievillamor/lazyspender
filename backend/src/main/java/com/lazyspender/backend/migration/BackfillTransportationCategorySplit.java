@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 import com.lazyspender.backend.model.PlannedPayment;
 import com.lazyspender.backend.model.Transaction;
@@ -17,12 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * One-off backfill retiring the "Transportation" category in favor of
  * Parking/Ride-Hailing/Fuel/Toll/Car Maintenance/Car Loan/Incident-Emergencies.
- * See https://github.com/vinzievillamor/lazyspender/issues/51.
+ * Runs once on boot when enabled; see https://github.com/vinzievillamor/lazyspender/issues/51.
  */
-@Service
+@Component
+@ConditionalOnProperty(name = "migration.backfill-transportation-category-split.enabled", havingValue = "true")
 @RequiredArgsConstructor
 @Slf4j
-public class BackfillTransportationCategorySplit {
+public class BackfillTransportationCategorySplit implements ApplicationRunner {
 
     private static final String TRANSPORTATION_CATEGORY = "Transportation";
 
@@ -55,7 +59,13 @@ public class BackfillTransportationCategorySplit {
     private final TransactionRepository transactionRepository;
     private final PlannedPaymentRepository plannedPaymentRepository;
 
-    public void backfillTransactions() {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        backfillTransactions();
+        backfillPlannedPayments();
+    }
+
+    private void backfillTransactions() {
         log.info("=== Starting Transportation Category Split (Transactions) ===");
 
         List<Transaction> allTransactions = new ArrayList<>();
@@ -87,7 +97,7 @@ public class BackfillTransportationCategorySplit {
                 updated, skippedNoMatch, allTransactions.size());
     }
 
-    public void backfillPlannedPayments() {
+    private void backfillPlannedPayments() {
         log.info("=== Starting Transportation Category Split (Planned Payments) ===");
 
         List<PlannedPayment> allPlannedPayments = new ArrayList<>();
