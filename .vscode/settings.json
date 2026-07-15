@@ -11,17 +11,6 @@
     "**/.gradle": true,
     "**/build": false
   },
-  "terminal.integrated.profiles.windows": {
-    "PowerShell": {
-      "source": "PowerShell",
-      "overrideName": true,
-      "icon": "terminal-powershell",
-      "args": [
-        "-ExecutionPolicy",
-        "Bypass"
-      ]
-    }
-  },
-  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
   "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable",
 }
