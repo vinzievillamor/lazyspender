@@ -12,15 +12,21 @@ app:
     client-id: ${GOOGLE_CLIENT_ID}
   expense-categories:
     - Allowance
+    - Car Loan
+    - Car Maintenance
     - Food & Drinks
+    - Fuel
     - Groceries
     - Health & Medical
     - Holidays & Events
     - Housing
+    - Incident/Emergencies
     - Life & Entertainment
     - Others
+    - Parking
     - Pets, animals
+    - Ride-Hailing
     - Shopping
     - Sports & Fitness
     - Technology & Communication
-    - Transportation
+    - Toll
