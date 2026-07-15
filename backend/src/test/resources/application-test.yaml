@@ -7,3 +7,9 @@ app:
     secret: "test-only-secret-do-not-use-in-prod-32chars-minimum"
   google:
     client-id: "test-client-id.apps.googleusercontent.com"
+
+# Boot-gated one-off migrations must never run against real Datastore during
+# automated tests, regardless of what the default profile enables.
+migration:
+  backfill-transportation-category-split:
+    enabled: false
