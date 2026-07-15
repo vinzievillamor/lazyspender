@@ -26,6 +26,13 @@ interface TransactionFormModalProps {
   initialData: CreateTransactionRequest | undefined
 }
 
+const AUTO_FILL_NOTE_BY_CATEGORY: Partial<Record<Category, string>> = {
+  [Category.TOLL]: 'toll',
+  [Category.PARKING]: 'parking',
+  [Category.FUEL]: 'fuel',
+  [Category.INCOME]: 'salary',
+};
+
 const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, onClose, initialData }) => {
   const { delegatedOwner } = useAccessContext();
   const { data: user } = useActiveUser(delegatedOwner);
@@ -173,7 +180,15 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ visible, on
             {categorySelectorVisible ? (
               <CategorySelectorModal
                 selectedCategory={formData.category as Category}
-                onSelect={(category) => setFormData({ ...formData, category })}
+                onSelect={(category) => setFormData((prev) => {
+                  const autoFillNote = AUTO_FILL_NOTE_BY_CATEGORY[category];
+                  const shouldAutoFillNote = !isEditMode && autoFillNote && !prev.note;
+                  return {
+                    ...prev,
+                    category,
+                    note: shouldAutoFillNote ? autoFillNote : prev.note,
+                  };
+                })}
                 onClose={() => setCategorySelectorVisible(false)}
               />
             ) : (
