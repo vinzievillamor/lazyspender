@@ -30,3 +30,7 @@ app:
     - Sports & Fitness
     - Technology & Communication
     - Toll
+
+migration:
+  backfill-transportation-category-split:
+    enabled: true
