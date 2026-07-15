@@ -3,10 +3,10 @@
 ## Overview
 The Expo app already has web output configured (`app.config.js` → `web: { output: "static" }`, `react-native-web` installed, `npm run web` works for local dev), but nothing is deployed to a production web URL. Meanwhile, Google Sign-In is fully built for native (`@react-native-google-signin/google-signin` in `frontend/hooks/useAuth.ts` + `frontend/app/login.tsx`, backed by the `POST /api/auth/google` flow documented in `docs/google-sso-onboarding-design.md`), but that library is native-only — it has no functional web implementation. The app is fully auth-gated (`Drawer.Protected guard={isAuthenticated}` in `app/_layout.tsx`), so a web build can't be usefully deployed until web-capable sign-in exists first.
 
-This design covers both pieces: adding Google Sign-In for web via Google Identity Services (GIS), then deploying the static web build to **Firebase Hosting** (same GCP project as the backend, `mindful-rhythm-426908-a5`).
+This design covers both pieces: adding Google Sign-In for web via Google Identity Services (GIS), then deploying the static web build to **Azure Static Web Apps**. Hosting lives in a separate Azure subscription, independent of the backend's GCP project (`mindful-rhythm-426908-a5`) — CORS is the only integration point between the two.
 
 ## Requirements (confirmed)
-- Hosting: Firebase Hosting.
+- Hosting: Azure Static Web Apps (Free tier).
 - Web session storage: `localStorage` — this v1 tradeoff (JS-readable, XSS-exposed) is accepted for now in exchange for zero backend changes; `frontend/config/authStorage.ts` already has a `Platform.OS === 'web'` branch that uses it instead of `expo-secure-store`, no work needed.
 - No backend auth-logic changes: `POST /api/auth/google` just needs *a* valid Google ID token whose `aud` matches the configured web client ID — already true today, since the same `GOOGLE_WEB_CLIENT_ID` is used natively as `webClientId` in `GoogleSignin.configure()`.
 
@@ -15,7 +15,7 @@ This design covers both pieces: adding Google Sign-In for web via Google Identit
 ## Sequencing: two follow-up issues, in order
 
 1. **Web Google Sign-In (GIS)** — fully verifiable locally via `npm run web` against `localhost`, needs no hosting infra, only the existing dev CORS allowlist (`http://localhost:*`, already in `WebConfig.java`) and one manual GCP Console change.
-2. **Firebase Hosting deploy** — branched from `main` only after (1) merges. Deploying hosting before web SSO works would put a broken login in front of real users.
+2. **Azure Static Web Apps deploy** — branched from `main` only after (1) merges. Deploying hosting before web SSO works would put a broken login in front of real users.
 
 This doc (tracked under issue #47) is design-only; each of the two pieces above gets its own issue/branch/worktree per the usual workflow when implementation starts.
 
@@ -49,55 +49,55 @@ This doc (tracked under issue #47) is design-only; each of the two pieces above 
 
 ---
 
-## Firebase Hosting deploy
+## Azure Static Web Apps deploy
 
 Config lives in `frontend/` (not repo root), matching the "no root build, each project self-contained" convention.
 
-- `frontend/.firebaserc` (new): `{ "projects": { "default": "mindful-rhythm-426908-a5" } }`
-- `frontend/firebase.json` (new):
+- `frontend/staticwebapp.config.json` (new) — the one real behavioral difference from Firebase: Firebase's `cleanUrls: true` auto-maps `/dashboard` → `dashboard.html` with no extra config, but Azure Static Web Apps has no equivalent auto-behavior — each clean route needs an explicit `routes` rewrite rule, or the path falls through to SWA's default 404. `expo export -p web` with `web.output: "static"` still emits one real HTML file per route (`index.html`, `dashboard.html`, `login.html`, `records.html`, `planned-payments.html`, `account-access.html`), so each needs its own rule:
   ```json
   {
-    "hosting": {
-      "public": "dist",
-      "cleanUrls": true,
-      "trailingSlash": false,
-      "ignore": ["firebase.json", "**/.*"]
-    }
+    "routes": [
+      { "route": "/dashboard", "rewrite": "/dashboard.html" },
+      { "route": "/login", "rewrite": "/login.html" },
+      { "route": "/records", "rewrite": "/records.html" },
+      { "route": "/planned-payments", "rewrite": "/planned-payments.html" },
+      { "route": "/account-access", "rewrite": "/account-access.html" }
+    ]
   }
   ```
-  No SPA catch-all rewrite: `expo export -p web` with `web.output: "static"` already emits one real HTML file per route (`index.html`, `dashboard.html`, `login.html`, `records.html`, `planned-payments.html`, `account-access.html`); `cleanUrls: true` maps `/dashboard` → `dashboard.html`. A catch-all would just mask genuine 404s.
+  No `navigationFallback` — same reasoning as before: each route already resolves to a real file, and a catch-all would mask genuine 404s.
 
 - `frontend/package.json` — add scripts:
   ```json
   "web:build": "expo export -p web",
-  "web:deploy": "npm run web:build && firebase deploy --only hosting",
-  "web:preview": "npm run web:build && firebase hosting:channel:deploy preview"
+  "web:deploy": "npm run web:build && swa deploy ./dist --deployment-token $AZURE_SWA_DEPLOYMENT_TOKEN --env production",
+  "web:preview": "npm run web:build && swa deploy ./dist --deployment-token $AZURE_SWA_DEPLOYMENT_TOKEN --env preview"
   ```
 
-- One-time local setup: `npm install -g firebase-tools`, `firebase login` (interactive).
+- One-time local/Azure setup: `npm install -g @azure/static-web-apps-cli` and `az login` (interactive). Create the Static Web App **without linking a GitHub repo** (`az staticwebapp create --name lazyspender-web --resource-group <rg> --sku Free --location <region>`), so nothing auto-provisions a GitHub Actions workflow — keeps this in line with "no CI-automated deploy for v1" below. Fetch the deployment token (`az staticwebapp secrets list --name lazyspender-web --query "properties.apiKey" -o tsv`) and store it locally only (gitignored, e.g. `frontend/.env.local`, never committed) as `AZURE_SWA_DEPLOYMENT_TOKEN`.
 
 **Backend CORS** — `backend/src/main/java/com/lazyspender/backend/config/WebConfig.java`, add to `allowedOriginPatterns(...)`:
 ```java
-"https://mindful-rhythm-426908-a5.web.app",
-"https://mindful-rhythm-426908-a5.firebaseapp.com"
+"https://lazyspender-web.azurestaticapps.net"
 ```
-(Firebase Hosting's default domains, assuming the Firebase project is added to the existing GCP project rather than created fresh — the standard path.) Leave a comment placeholder for a future custom domain rather than guessing one now. Redeploy the backend to Cloud Run after this change.
+(Azure Static Web Apps' default domain — placeholder name, replace once the resource is actually created.) Leave a comment placeholder for a future custom domain rather than guessing one now. Redeploy the backend to Cloud Run after this change.
 
-**Manual GCP Console step (owner: user, outside repo)**: add the same two production origins to Authorized JavaScript origins on the Web OAuth client. Also confirm/enable Firebase on the GCP project if not already (first `firebase init`/`firebase deploy` will prompt if needed).
+**Manual GCP Console step (owner: user, outside repo)**: add the same production origin to Authorized JavaScript origins on the Web OAuth client.
 
 **Verification**:
-1. `npm run web:preview` → test login end-to-end on the generated preview-channel URL first (may need temporarily adding that `*.web.app` preview subdomain to Authorized JavaScript origins, or defer full login verification to the live channel).
-2. Add prod origins to backend CORS + OAuth console, redeploy backend.
-3. `npm run web:deploy` to the live channel; repeat the login + page smoke test from the SSO section against the real production URL.
+1. `npm run web:preview` → test login end-to-end on the generated preview-environment URL first (may need temporarily adding that preview hostname to Authorized JavaScript origins, or defer full login verification to production).
+2. Add prod origin to backend CORS + OAuth console, redeploy backend.
+3. `npm run web:deploy` to production; repeat the login + page smoke test from the SSO section against the real production URL.
 
 ---
 
 ## Explicitly Out of Scope for v1
-- Custom domain for Firebase Hosting.
+- Custom domain for Azure Static Web Apps.
 - CI-automated deploys (deploy commands above are run manually for now).
-- `404.html` / `+not-found.tsx` handling — unmatched routes fall through to Firebase's generic 404 page.
+- `404.html` / `+not-found.tsx` handling — unmatched routes fall through to Azure Static Web Apps' generic 404 page.
 - httpOnly-cookie session storage for web (see Requirements above — `localStorage` accepted for v1).
 
 ## Open Decisions
 - **RNW `View` ref → DOM node forwarding**: expected to work (RNW 0.21), but unverified — fallback is a raw `<div ref>` in `login.web.tsx` if not.
-- **Preview-channel OAuth origin**: whether to register the Firebase preview-channel subdomain with GCP for full pre-promotion verification, or accept that first full login verification happens on the live channel.
+- **Preview-environment OAuth origin**: whether to register the `swa deploy --env preview` hostname with GCP for full pre-promotion verification, or accept that first full login verification happens against production.
+- **Azure resource group / region / subscription**: not yet decided — a manual setup decision for whoever implements the hosting piece.
