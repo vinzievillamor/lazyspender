@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "react-native-paper";
 import { spacing } from "../config/theme";
 import { BalanceTrendWidget } from "../components/BalanceTrendWidget";
+import { DebtTrendWidget } from "../components/DebtTrendWidget";
 import { ExpenseDistributionWidget } from "../components/ExpenseDistributionWidget";
 
 export default function Dashboard() {
@@ -12,6 +13,7 @@ export default function Dashboard() {
       <View style={styles.content}>
         <BalanceTrendWidget />
         <ExpenseDistributionWidget />
+        <DebtTrendWidget />
       </View>
     </ScrollView>
   );
