@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ActivityIndicator, Drawer as PaperDrawer, PaperProvider, Text, useTheme } from "react-native-paper";
 import PendingInvitesBell from "../components/PendingInvitesBell";
 import ProfileSwitcherMenu from "../components/ProfileSwitcherMenu";
+import ServerWarmupGate from "../components/ServerWarmupGate";
 import { queryClient } from "../config/queryClient";
 import customTheme, { spacing } from "../config/theme";
 import { AccessProvider } from "../contexts/AccessContext";
@@ -209,9 +210,11 @@ export default function RootLayout() {
   return (
     <PaperProvider theme={customTheme}>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <AppNavigator />
-        </AuthProvider>
+        <ServerWarmupGate>
+          <AuthProvider>
+            <AppNavigator />
+          </AuthProvider>
+        </ServerWarmupGate>
       </QueryClientProvider>
     </PaperProvider>
   );
