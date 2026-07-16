@@ -8,7 +8,7 @@ import { apiClient } from '../config/api';
  */
 export const pingHealth = async (): Promise<boolean> => {
   try {
-    await apiClient.get('/actuator/health', { timeout: 8000 });
+    await apiClient.get('/actuator/health', { timeout: 3000 });
     return true;
   } catch {
     return false;

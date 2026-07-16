@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { pingHealth } from '../services/health.service';
 
-const INITIAL_DELAY_MS = 1000;
-const MAX_DELAY_MS = 5000;
-const BACKOFF_FACTOR = 1.5;
+const INITIAL_DELAY_MS = 500;
+const MAX_DELAY_MS = 2000;
+const BACKOFF_FACTOR = 1.3;
 const SLOW_THRESHOLD_MS = 8000;
 
 interface ServerWarmupState {
