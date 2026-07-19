@@ -8,8 +8,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class WebConfig {
+
+    private final CorsConfigProperties corsConfigProperties;
 
     // Registered with Spring Security (see SecurityConfig#securityFilterChain) rather than via
     // WebMvcConfigurer#addCorsMappings, because that WebMvcConfigurer hook only covers
@@ -21,12 +26,7 @@ public class WebConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of(
-                "http://localhost:*",              // Local development (any port)
-                "exp://*",                         // Expo Go (any host/port)
-                "http://192.168.*.*:*",            // Local network IPs (any port)
-                "http://10.*.*.*:*"                // Private network range (any port)
-        ));
+        configuration.setAllowedOriginPatterns(List.copyOf(corsConfigProperties.getAllowedOriginPatterns()));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

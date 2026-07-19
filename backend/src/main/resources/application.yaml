@@ -10,6 +10,13 @@ app:
     secret: ${JWT_SECRET}
   google:
     client-id: ${GOOGLE_CLIENT_ID}
+  cors:
+    allowed-origin-patterns:
+      - "http://localhost:*"              # Local development (any port)
+      - "exp://*"                         # Expo Go (any host/port)
+      - "http://192.168.*.*:*"            # Local network IPs (any port)
+      - "http://10.*.*.*:*"               # Private network range (any port)
+      - "https://jolly-mushroom-06ba64b00.7.azurestaticapps.net" # Azure Static Web Apps prod (add a custom domain origin here too, once one exists)
   expense-categories:
     - Allowance
     - Car Loan
