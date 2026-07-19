@@ -70,34 +70,40 @@ Config lives in `frontend/` (not repo root), matching the "no root build, each p
 - `frontend/package.json` — add scripts:
   ```json
   "web:build": "expo export -p web",
-  "web:deploy": "npm run web:build && swa deploy ./dist --deployment-token $AZURE_SWA_DEPLOYMENT_TOKEN --env production",
-  "web:preview": "npm run web:build && swa deploy ./dist --deployment-token $AZURE_SWA_DEPLOYMENT_TOKEN --env preview"
+  "web:deploy": "npm run web:build && swa deploy ./dist --deployment-token $AZURE_SWA_DEPLOYMENT_TOKEN --env production"
   ```
+  (No `web:preview` script — preview environments were considered but dropped to keep v1 scope minimal; see Open Decisions.)
 
-- One-time local/Azure setup: `npm install -g @azure/static-web-apps-cli` and `az login` (interactive). Create the Static Web App **without linking a GitHub repo** (`az staticwebapp create --name lazyspender-web --resource-group <rg> --sku Free --location <region>`), so nothing auto-provisions a GitHub Actions workflow — keeps this in line with "no CI-automated deploy for v1" below. Fetch the deployment token (`az staticwebapp secrets list --name lazyspender-web --query "properties.apiKey" -o tsv`) and store it locally only (gitignored, e.g. `frontend/.env.local`, never committed) as `AZURE_SWA_DEPLOYMENT_TOKEN`.
+- One-time local/Azure setup: `npm install -g @azure/static-web-apps-cli` and `az login` (interactive). Create the Static Web App **without linking a GitHub repo** (`az staticwebapp create --name lazyspender-web --resource-group <rg> --sku Free --location <region>`) — see "CI/CD automation" below for why. Fetch the deployment token (`az staticwebapp secrets list --name lazyspender-web --query "properties.apiKey" -o tsv`).
 
-**Backend CORS** — `backend/src/main/java/com/lazyspender/backend/config/WebConfig.java`, add to `allowedOriginPatterns(...)`:
-```java
-"https://lazyspender-web.azurestaticapps.net"
+  **Correction**: an earlier version of this doc suggested storing that token in `frontend/.env.local` as "gitignored, never committed" — that's wrong, `frontend/.env.local` is actually tracked in git (same as `frontend/.env`), so writing a secret there would leak it into the repo. Instead, export it as an ephemeral shell variable (e.g. `$env:AZURE_SWA_DEPLOYMENT_TOKEN` in the current PowerShell session only) for manual deploys, and store it as a GitHub Actions repo secret (`AZURE_STATIC_WEB_APPS_API_TOKEN`) for CI.
+
+**Backend CORS** — allowed origins are externalized to `app.cors.allowed-origin-patterns` in `backend/src/main/resources/application.yaml` (bound via `CorsConfigProperties`, consumed by `WebConfig`) rather than hardcoded in Java, so the list can be changed via a Cloud Run env var override (`APP_CORS_ALLOWEDORIGINPATTERNS`, comma-separated — Spring Boot relaxed binding, verified end-to-end) without a rebuild. The production origin is already in the default list:
+```yaml
+"https://jolly-mushroom-06ba64b00.7.azurestaticapps.net" # Azure Static Web Apps prod (add a custom domain origin here too, once one exists)
 ```
-(Azure Static Web Apps' default domain — placeholder name, replace once the resource is actually created.) Leave a comment placeholder for a future custom domain rather than guessing one now. Redeploy the backend to Cloud Run after this change.
+(This is the real generated hostname for the `lazyspender-web` resource — Azure assigns a random default hostname per-resource, it isn't derived from the resource name.) Redeploy the backend to Cloud Run after this change (or, going forward, just update the `APP_CORS_ALLOWEDORIGINPATTERNS` env var on the Cloud Run service directly).
 
 **Manual GCP Console step (owner: user, outside repo)**: add the same production origin to Authorized JavaScript origins on the Web OAuth client.
 
 **Verification**:
-1. `npm run web:preview` → test login end-to-end on the generated preview-environment URL first (may need temporarily adding that preview hostname to Authorized JavaScript origins, or defer full login verification to production).
-2. Add prod origin to backend CORS + OAuth console, redeploy backend.
-3. `npm run web:deploy` to production; repeat the login + page smoke test from the SSO section against the real production URL.
+1. Add prod origin to backend CORS + OAuth console, redeploy backend.
+2. `npm run web:deploy` to production; repeat the login + page smoke test from the SSO section against the real production URL.
+
+---
+
+## CI/CD automation (added, no longer out of scope for v1)
+
+Once the manual deploy above is verified once, automate it: store the deployment token as a GitHub Actions repo secret (`gh secret set AZURE_STATIC_WEB_APPS_API_TOKEN`) and add `.github/workflows/frontend-web-deploy.yml`, mirroring the existing `backend-deploy.yml`/`frontend-build.yml` shape — build with `npm run web:build`, then deploy with Microsoft's official `Azure/static-web-apps-deploy@v1` action (`skip_app_build: true`, `app_location: frontend/dist`), triggered on push to `main` for `frontend/**` changes. This is why the Static Web App is created **without** linking a GitHub repo at `az staticwebapp create` time — linking it would have Azure auto-generate its own workflow file, which would conflict with this hand-written one.
 
 ---
 
 ## Explicitly Out of Scope for v1
 - Custom domain for Azure Static Web Apps.
-- CI-automated deploys (deploy commands above are run manually for now).
+- Preview/staging deploy environments (`swa deploy --env preview`) — dropped to keep v1 scope minimal; first full verification happens against production.
 - `404.html` / `+not-found.tsx` handling — unmatched routes fall through to Azure Static Web Apps' generic 404 page.
 - httpOnly-cookie session storage for web (see Requirements above — `localStorage` accepted for v1).
 
 ## Open Decisions
 - **RNW `View` ref → DOM node forwarding**: expected to work (RNW 0.21), but unverified — fallback is a raw `<div ref>` in `login.web.tsx` if not.
-- **Preview-environment OAuth origin**: whether to register the `swa deploy --env preview` hostname with GCP for full pre-promotion verification, or accept that first full login verification happens against production.
-- **Azure resource group / region / subscription**: not yet decided — a manual setup decision for whoever implements the hosting piece.
+- **Azure resource group / region / subscription**: resolved during implementation (issue #72). The original free-trial subscription had already been auto-deleted (exhausted credit, past the reactivation grace period) by the time hosting was set up, so a new Pay-As-You-Go subscription (`lazyspender`) was created instead. Resource group `lazyspender-rg`, Static Web App `lazyspender-web`, both in `eastasia` (closer to the primary user than the originally-planned `eastus2`; one of the small set of regions Static Web Apps supports).

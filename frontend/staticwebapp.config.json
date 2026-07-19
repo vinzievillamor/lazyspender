@@ -1,0 +1,9 @@
+{
+  "routes": [
+    { "route": "/dashboard", "rewrite": "/dashboard.html" },
+    { "route": "/login", "rewrite": "/login.html" },
+    { "route": "/records", "rewrite": "/records.html" },
+    { "route": "/planned-payments", "rewrite": "/planned-payments.html" },
+    { "route": "/account-access", "rewrite": "/account-access.html" }
+  ]
+}

@@ -8,7 +8,9 @@
     "android": "expo start --android --port 3000",
     "ios": "expo start --ios --port 3000",
     "web": "expo start --web --port 3000",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "web:build": "expo export -p web",
+    "web:deploy": "npm run web:build && swa deploy ./dist --deployment-token $AZURE_SWA_DEPLOYMENT_TOKEN --env production"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
