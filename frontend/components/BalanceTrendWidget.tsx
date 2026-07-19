@@ -29,16 +29,23 @@ export const BalanceTrendWidget: React.FC = () => {
   const [menuVisible, setMenuVisible] = useState(false);
 
   // Reset the account filter whenever the active profile changes, then
-  // repopulate it from that profile's own accounts once they load.
+  // repopulate it from that profile's own accounts once they load. Tracked
+  // via a ref (not selectedAccounts.length === 0) because delegatedOwner and
+  // user?.accounts can change together in the same render (e.g. cached user
+  // data resolving instantly on profile switch) - splitting this into two
+  // separate effects raced on a stale selectedAccounts closure and could
+  // leave the filter stuck empty, showing "no accounts configured" for an
+  // account that actually has data.
+  const populatedOwnerRef = React.useRef<string | null>(null);
   React.useEffect(() => {
-    setSelectedAccounts([]);
-  }, [delegatedOwner]);
-
-  React.useEffect(() => {
-    if (user?.accounts && selectedAccounts.length === 0) {
-      setSelectedAccounts(user.accounts);
+    if (populatedOwnerRef.current === delegatedOwner) return;
+    if (!user?.accounts) {
+      setSelectedAccounts([]);
+      return;
     }
-  }, [user?.accounts]);
+    setSelectedAccounts(user.accounts);
+    populatedOwnerRef.current = delegatedOwner;
+  }, [delegatedOwner, user?.accounts]);
 
   const { data, isLoading, isFetching, isError, error } = useBalanceTrend(
     {
