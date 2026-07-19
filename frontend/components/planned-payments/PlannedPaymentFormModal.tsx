@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 import {
   Alert,
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
 import { Button, Checkbox, Chip, Divider, IconButton, SegmentedButtons, Surface, Text, TextInput, useTheme } from 'react-native-paper';
+import { DatePickerModal } from 'react-native-paper-dates';
 import { shadows, spacing } from '../../config/theme';
 import { useAccessContext } from '../../contexts/AccessContext';
 import { useCreatePlannedPayment, useUpdatePlannedPayment } from '../../hooks/usePlannedPayments';
@@ -85,6 +87,17 @@ const PlannedPaymentFormModal: React.FC<PlannedPaymentFormModalProps> = ({ visib
       return;
     }
 
+    if (!selectedDate) return;
+
+    setFormData({
+      ...formData,
+      startDate: selectedDate.toISOString(),
+      recurrenceValue: selectedDate.getDate().toString()
+    });
+    setDatePickerVisible(false);
+  };
+
+  const handleDateConfirm = ({ date: selectedDate }: { date?: Date }) => {
     if (!selectedDate) return;
 
     setFormData({
@@ -420,15 +433,27 @@ const PlannedPaymentFormModal: React.FC<PlannedPaymentFormModalProps> = ({ visib
         </View>
       </Modal>
 
-      {datePickerVisible && (
-        <DateTimePicker
-          value={getSelectedDate()}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-          themeVariant="light"
-          accentColor={theme.colors.primary}
+      {Platform.OS === 'web' ? (
+        <DatePickerModal
+          locale="en"
+          mode="single"
+          visible={datePickerVisible}
+          onDismiss={() => setDatePickerVisible(false)}
+          date={getSelectedDate()}
+          onConfirm={handleDateConfirm}
+          presentationStyle="pageSheet"
         />
+      ) : (
+        datePickerVisible && (
+          <DateTimePicker
+            value={getSelectedDate()}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+            themeVariant="light"
+            accentColor={theme.colors.primary}
+          />
+        )
       )}
     </>
   );
