@@ -54,23 +54,18 @@ in full unless it's clearly relevant to what the user asks next.
 
 ## Step 4 — Summarize
 
-Give the user a short orientation summary (aim for well under 200 words).
-Open with a one-line recap of what this run actually did — which steps ran
-vs. were skipped — so the summary reads as a report of actions taken, not
-just a content dump. For example: "Orientation: checked git log/status,
-scanned the memory index, looked for in-flight docs." If Step 2 or 3 found
-nothing (empty memory, no recent docs), say so explicitly rather than
-omitting them silently — "no memory recorded yet" / "no in-flight docs" is
-itself useful signal that those steps ran. Then give the findings:
+Output bullets, not prose paragraphs. One line per bullet, no sub-clauses
+piling on with em-dashes. Lead with a single one-line recap of which steps
+ran vs. were skipped (e.g. "Orientation: git log/status, memory index,
+in-flight docs checked."), then a flat bullet list:
 
-- Branch + working tree state (clean, or what's in progress and where)
-- What's landed recently (1-3 lines pulled from the commit log, grouped by
-  theme if there are several — not a raw log dump)
-- Anything from memory that's still load-bearing (an open initiative, a
-  standing preference relevant to likely next work) — if nothing relevant
-  surfaced, say so in one clause rather than dropping the line
-- Any in-flight planning doc worth flagging, or "none" if none found
+- **Branch/tree**: clean, or what's in progress and where
+- **Recent**: 1-3 bullets pulled from the commit log, grouped by theme if
+  there are several — not a raw log dump
+- **Memory**: load-bearing items only (open initiative, standing preference
+  relevant to likely next work), or "none relevant" if nothing surfaced
+- **Docs**: in-flight planning doc worth flagging, or "none"
 
-Do not pad this with a "how can I help" closer or restate CLAUDE.md content
-(architecture, commands, etc.) — that's already in context. This step is
-purely about *recent, changing* state that CLAUDE.md doesn't capture.
+Skip anything with nothing to report by writing "none" for that bullet, not
+by omitting the bullet. No closing "how can I help" line, no restating
+CLAUDE.md content (architecture, commands) — already in context.
