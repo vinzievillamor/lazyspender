@@ -29,7 +29,8 @@ See the per-project sections below for what each command actually does.
 2. **Create a GitHub issue** for the task (`gh issue create ...`).
 3. **Create the branch** from that issue, named per the convention below, and link the two.
 4. **Create a dedicated git worktree** for the branch (see below) so this session's work can't overlap or conflict with any other in-progress session.
-5. Only then start the actual task.
+5. **Open a dedicated VS Code window on that worktree**: `code -n <worktree-path>` (`-n` forces a new window rather than reusing/reopening an existing one). With multiple worktrees active across parallel sessions, a shared editor window makes it hard to tell which folder/files belong to which session — one VS Code window per worktree keeps them visually and spatially separate.
+6. Only then start the actual task.
 
 - **Every feature, hotfix, or bugfix starts with a GitHub issue.** Create the issue first, then create the branch from it and link the two (e.g. `gh issue create ...` followed by a branch named after the issue).
 - **Branch naming**: `<type>/<issue-number>-<short-slug>`, e.g. `feature/32-account-delegation-frontend-implementation`. Common `<type>` values: `feature`, `fix`, `hotfix`, `docs`, `chore`.
@@ -37,6 +38,7 @@ See the per-project sections below for what each command actually does.
 - **Merges to `main` must be squash merges** (`gh pr merge --squash` or the GitHub UI's "Squash and merge"), so `main` keeps one commit per issue/PR.
 - **Never add a `Co-Authored-By: Claude` (or similar) trailer to commits pushed to this repository.** Omit the co-author line entirely, regardless of Claude Code's default commit message template.
 - **Use a separate `git worktree` per feature/task**, especially when spawning subagents to work on it. Each worktree gets its own checkout of the feature branch so parallel agents don't clobber each other's working-tree state (uncommitted changes, build artifacts, etc.). Clean up the worktree once the branch is merged/abandoned.
+- **Open each worktree in its own VS Code window** (`code -n <worktree-path>`), so parallel sessions stay visually distinguishable by window instead of all sharing one editor pointed at whichever worktree was opened last. Close that window when the worktree is removed.
 
 ## Backend (`backend/`)
 
