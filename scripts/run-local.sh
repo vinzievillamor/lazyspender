@@ -19,6 +19,9 @@ if [ ! -f "$GIT_BASH" ]; then
 fi
 
 "$GIT_BASH" -c "cd '$REPO_ROOT/backend' && ./gradlew bootRunLocal; exec bash" &
-"$GIT_BASH" -c "cd '$REPO_ROOT/frontend' && npm run web; exec bash" &
+# -c clears the Metro bundler cache on every launch - a stale cache can keep serving a bundle
+# built against a previous API_BASE_URL (e.g. the deployed Cloud Run URL) even after
+# frontend/.env.local is added/changed, which surfaces as a CORS error against the wrong host.
+"$GIT_BASH" -c "cd '$REPO_ROOT/frontend' && npm run web -- -c; exec bash" &
 
-echo "Spawned backend (bootRunLocal) and frontend (npm run web) in separate Git Bash windows."
+echo "Spawned backend (bootRunLocal) and frontend (npm run web, cache cleared) in separate Git Bash windows."
