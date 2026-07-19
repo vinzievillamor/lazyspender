@@ -78,11 +78,11 @@ Config lives in `frontend/` (not repo root), matching the "no root build, each p
 
   **Correction**: an earlier version of this doc suggested storing that token in `frontend/.env.local` as "gitignored, never committed" — that's wrong, `frontend/.env.local` is actually tracked in git (same as `frontend/.env`), so writing a secret there would leak it into the repo. Instead, export it as an ephemeral shell variable (e.g. `$env:AZURE_SWA_DEPLOYMENT_TOKEN` in the current PowerShell session only) for manual deploys, and store it as a GitHub Actions repo secret (`AZURE_STATIC_WEB_APPS_API_TOKEN`) for CI.
 
-**Backend CORS** — `backend/src/main/java/com/lazyspender/backend/config/WebConfig.java`, add to `allowedOriginPatterns(...)`:
-```java
-"https://lazyspender-web.azurestaticapps.net"
+**Backend CORS** — allowed origins are externalized to `app.cors.allowed-origin-patterns` in `backend/src/main/resources/application.yaml` (bound via `CorsConfigProperties`, consumed by `WebConfig`) rather than hardcoded in Java, so the list can be changed via a Cloud Run env var override (`APP_CORS_ALLOWEDORIGINPATTERNS`, comma-separated — Spring Boot relaxed binding, verified end-to-end) without a rebuild. The production origin is already in the default list:
+```yaml
+"https://jolly-mushroom-06ba64b00.7.azurestaticapps.net" # Azure Static Web Apps prod (add a custom domain origin here too, once one exists)
 ```
-(Azure Static Web Apps' default domain — placeholder name, replace once the resource is actually created.) Leave a comment placeholder for a future custom domain rather than guessing one now. Redeploy the backend to Cloud Run after this change.
+(This is the real generated hostname for the `lazyspender-web` resource — Azure assigns a random default hostname per-resource, it isn't derived from the resource name.) Redeploy the backend to Cloud Run after this change (or, going forward, just update the `APP_CORS_ALLOWEDORIGINPATTERNS` env var on the Cloud Run service directly).
 
 **Manual GCP Console step (owner: user, outside repo)**: add the same production origin to Authorized JavaScript origins on the Web OAuth client.
 
@@ -106,4 +106,4 @@ Once the manual deploy above is verified once, automate it: store the deployment
 
 ## Open Decisions
 - **RNW `View` ref → DOM node forwarding**: expected to work (RNW 0.21), but unverified — fallback is a raw `<div ref>` in `login.web.tsx` if not.
-- **Azure resource group / region / subscription**: resolved during implementation (issue #72) — free-trial subscription, `eastus2` region (one of the small set of regions Static Web Apps supports).
+- **Azure resource group / region / subscription**: resolved during implementation (issue #72). The original free-trial subscription had already been auto-deleted (exhausted credit, past the reactivation grace period) by the time hosting was set up, so a new Pay-As-You-Go subscription (`lazyspender`) was created instead. Resource group `lazyspender-rg`, Static Web App `lazyspender-web`, both in `eastasia` (closer to the primary user than the originally-planned `eastus2`; one of the small set of regions Static Web Apps supports).
