@@ -56,3 +56,14 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// Runs the app locally against the same real GCP project as prod, with only
+// app-level settings swapped (dev JWT secret, Google client ID) - see
+// application-local.yaml. No emulator; be careful, this reads/writes real data.
+tasks.register('bootRunLocal', org.springframework.boot.gradle.tasks.run.BootRun) {
+	group = 'application'
+	description = 'Runs the Spring Boot app locally with the "local" profile active'
+	mainClass = 'com.lazyspender.backend.BackendApplication'
+	classpath = sourceSets.main.runtimeClasspath
+	args = ['--spring.profiles.active=local']
+}
