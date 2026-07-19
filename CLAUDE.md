@@ -12,6 +12,15 @@ This is a monorepo with two independent projects that talk to each other over HT
 
 There is no root-level build; each project is built and run independently from its own directory.
 
+## Running the full stack locally
+
+`./scripts/run-local.sh` (run it from a real Git Bash terminal, not a sandboxed/automated one) spawns the backend and frontend each in their own Git Bash window, so their logs stay visible:
+
+- Backend: `./gradlew bootRunLocal` in `backend/` — local profile, real port 8080.
+- Frontend: `npm run web` in `frontend/` — reads `frontend/.env.local`, which points `API_BASE_URL` at `http://localhost:8080` instead of the deployed Cloud Run API.
+
+See the per-project sections below for what each command actually does.
+
 ## Development workflow
 
 **Before starting any new task, complete these steps in order — don't skip ahead to implementation:**
@@ -34,11 +43,13 @@ There is no root-level build; each project is built and run independently from i
 ### Commands
 
 ```bash
-./gradlew bootRun --args='--spring.profiles.active=local'   # run locally against the real (prod) Firestore instance
+./gradlew bootRunLocal                                      # run locally with spring.profiles.active=local (real, prod Firestore instance)
 ./gradlew build                                             # compile + run tests
 ./gradlew test                                               # run tests only
 ./gradlew test --tests "com.lazyspender.backend.BackendApplicationTests"  # single test class
 ```
+
+`bootRunLocal` is just `bootRun --args='--spring.profiles.active=local'` wired up as its own Gradle task so it can be run with no args (see `build.gradle`).
 
 There is currently only a placeholder Spring context test (`BackendApplicationTests`) — no meaningful test coverage exists yet.
 
@@ -75,6 +86,8 @@ npm run web          # expo start --web --port 3000
 npm run lint         # expo lint
 ```
 
+`frontend/.env.local` (tracked in git, overrides `frontend/.env`) points `API_BASE_URL` at `http://localhost:8080` so these commands hit a locally-run backend (`./gradlew bootRunLocal`) instead of the deployed Cloud Run API. Delete/comment it out to fall back to the deployed API.
+
 No frontend test runner is configured.
 
 ### Architecture
@@ -82,7 +95,7 @@ No frontend test runner is configured.
 - **Routing**: `expo-router` with a drawer navigator defined in `app/_layout.tsx`. Screens are files under `app/` (`dashboard.tsx`, `records.tsx`, `planned-payments.tsx`); `index.tsx` is hidden from the drawer.
 - **Data layer pattern**, repeated per domain (transactions, planned payments, users, balance trend, expense distribution): `services/*.service.ts` (axios calls via the shared client in `config/api.ts`) → `hooks/use*.ts` (TanStack Query wrapping the service, with query-key factories like `TRANSACTION_QUERY_KEYS`) → components/screens consume the hooks. Follow this same three-layer shape when adding a new API-backed feature rather than calling axios/the service directly from a component.
 - Mutations manage the React Query cache by hand (`setQueriesData` for optimistic add/update, optimistic delete with rollback via `onMutate`/`onError`, and cross-invalidating related queries — e.g. any transaction mutation invalidates `BALANCE_TREND_QUERY_KEYS` too since balances derive from transactions).
-- **API base URL** comes from `app.config.js` `extra.apiBaseUrl`, sourced from `frontend/.env` (`API_BASE_URL`), read at runtime via `expo-constants` in `config/api.ts`. Defaults to the production Cloud Run URL if unset.
+- **API base URL** comes from `app.config.js` `extra.apiBaseUrl`, sourced from `frontend/.env` (`API_BASE_URL`), read at runtime via `expo-constants` in `config/api.ts`. Defaults to the production Cloud Run URL if unset. `frontend/.env.local` overrides it to `http://localhost:8080` for local dev (Expo loads `.env.local` with higher priority than `.env`) — see "Running the full stack locally" above.
 - **Current user**: there's no login flow — `UserProvider` in `app/_layout.tsx` is hardcoded to a single owner (`"villamorvinzie"`), and `contexts/UserContext.tsx` fetches that user's record and exposes it app-wide via `useUser()`.
 - **Theming**: `react-native-paper` with a custom theme in `config/theme.ts`; components should pull colors/spacing from there rather than hardcoding values.
 - Charts use `react-native-gifted-charts` (see `BalanceTrendWidget`, `ExpenseDistributionWidget`).
