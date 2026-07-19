@@ -6,6 +6,7 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ActivityIndicator, Drawer as PaperDrawer, PaperProvider, Text, useTheme } from "react-native-paper";
+import InstallPwaPrompt from "../components/InstallPwaPrompt";
 import PendingInvitesBell from "../components/PendingInvitesBell";
 import ProfileSwitcherMenu from "../components/ProfileSwitcherMenu";
 import ServerWarmupGate from "../components/ServerWarmupGate";
@@ -215,6 +216,7 @@ export default function RootLayout() {
             <AppNavigator />
           </AuthProvider>
         </ServerWarmupGate>
+        <InstallPwaPrompt />
       </QueryClientProvider>
     </PaperProvider>
   );
