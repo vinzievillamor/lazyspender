@@ -78,7 +78,8 @@ module.exports = {
       apiBaseUrl: process.env.API_BASE_URL || "https://lazyspender-api-272563214847.us-east1.run.app",
       googleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
       googleIosClientId: process.env.GOOGLE_IOS_CLIENT_ID,
-      googleAndroidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID
+      googleAndroidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID,
+      featureDebtTrendWidget: process.env.FEATURE_DEBT_TREND_WIDGET === "true"
     }
   }
 };
