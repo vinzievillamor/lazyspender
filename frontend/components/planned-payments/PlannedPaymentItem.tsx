@@ -119,7 +119,7 @@ export default function PlannedPaymentItem({
         onSwipeableOpen={() => handleOnDelete(plannedPayment.id)}>
         <Surface style={styles.surface} elevation={1}>
           <View style={styles.container}>
-            <GestureDetector gesture={singleTapGesture()}>
+            <GestureDetector gesture={singleTapGesture()} touchAction="pan-y">
               <View style={styles.mainContent}>
                 <List.Item
                   title={plannedPayment.category}
