@@ -1,6 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import { useMemo, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import { ActivityIndicator, Button, FAB, Text, useTheme } from "react-native-paper";
 import PlannedPaymentDetailModal from "../components/planned-payments/PlannedPaymentDetailModal";
 import PlannedPaymentFormModal from "../components/planned-payments/PlannedPaymentFormModal";

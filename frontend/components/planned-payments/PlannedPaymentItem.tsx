@@ -114,6 +114,8 @@ export default function PlannedPaymentItem({
       <ReanimatedSwipeable
         ref={swipeableRef}
         renderRightActions={RightAction}
+        dragOffsetFromRightEdge={20}
+        dragOffsetFromLeftEdge={10000}
         onSwipeableOpen={() => handleOnDelete(plannedPayment.id)}>
         <Surface style={styles.surface} elevation={1}>
           <View style={styles.container}>
