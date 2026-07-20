@@ -72,7 +72,7 @@ export default function SwipeableTransactionItem({ transaction, onPress, onDelet
         dragOffsetFromRightEdge={20}
         dragOffsetFromLeftEdge={10000}
         onSwipeableOpen={() => handleOnDelete(transaction.id)}>
-        <GestureDetector gesture={singleTapGesture()}>
+        <GestureDetector gesture={singleTapGesture()} touchAction="pan-y">
           <Surface style={styles.surface} elevation={1}>
             <List.Item
               title={transaction.category}
