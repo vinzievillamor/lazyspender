@@ -69,6 +69,16 @@ export const BalanceTrendWidget: React.FC = () => {
     });
   };
 
+  // The backend returns zero-valued data points even when the owner has no
+  // transactions at all, so an all-zero series means "no data" - showing a
+  // flat line at PHP 0.00 would be misleading.
+  const hasBalanceData = useMemo(
+    () =>
+      (data?.dataPoints || []).some((point) => point.balance !== 0) ||
+      (data?.totalBalance ?? 0) !== 0,
+    [data?.dataPoints, data?.totalBalance]
+  );
+
   // Prepare chart data with proper spacing to prevent label cutoff
   const { chartData, chartSpacing, shouldScroll, availableWidth } = useMemo(() => {
     if (!data?.dataPoints || data.dataPoints.length === 0) {
@@ -173,7 +183,7 @@ export const BalanceTrendWidget: React.FC = () => {
         </Text>
 
         {/* Total Balance */}
-        {chartData.length > 0 && (
+        {hasBalanceData && (
           <View style={styles.balanceContainer}>
             <Text variant="headlineLarge" style={styles.balanceAmount}>
               {data?.currency || 'PHP'} {data?.totalBalance.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -185,7 +195,7 @@ export const BalanceTrendWidget: React.FC = () => {
         )}
 
         {/* Line Chart */}
-        {chartData.length > 0 ? (
+        {hasBalanceData && chartData.length > 0 ? (
           <View style={styles.chartContainer}>
             <LineChart
               data={chartData}
