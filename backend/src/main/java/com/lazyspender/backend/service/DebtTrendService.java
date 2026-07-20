@@ -97,16 +97,23 @@ public class DebtTrendService {
             ZonedDateTime nextBucketStart = getNextBucketStart(bucketStart, aggregate);
             Instant bucketEndExclusive = nextBucketStart.toInstant();
 
-            Map<String, Double> amountByCategory = new HashMap<>();
+            Map<String, Double> amountByLabel = new HashMap<>();
+            // First category seen for a label wins; in practice a note uniquely
+            // identifies one debt, so this only matters if two payments happen to
+            // share identical note text.
+            Map<String, String> categoryByLabel = new HashMap<>();
             for (PlannedPayment payment : plannedPayments) {
                 double amount = calculateOutstandingAmount(payment, confirmedDatesByPlannedPaymentId, bucketEndExclusive);
                 if (amount > 0) {
-                    amountByCategory.merge(payment.getCategory(), amount, Double::sum);
+                    String label = debtLabel(payment);
+                    amountByLabel.merge(label, amount, Double::sum);
+                    categoryByLabel.putIfAbsent(label, payment.getCategory());
                 }
             }
 
-            List<DebtCategoryAmount> categories = amountByCategory.entrySet().stream()
-                    .map(entry -> new DebtCategoryAmount(entry.getKey(), entry.getValue()))
+            List<DebtCategoryAmount> categories = amountByLabel.entrySet().stream()
+                    .map(entry -> new DebtCategoryAmount(entry.getKey(), entry.getValue(),
+                            categoryByLabel.get(entry.getKey())))
                     .toList();
 
             double totalDebt = categories.stream().mapToDouble(DebtCategoryAmount::amount).sum();
@@ -118,6 +125,17 @@ public class DebtTrendService {
         }
 
         return dataPoints;
+    }
+
+    /**
+     * Debts are broken down per payment note (e.g. "Car loan"), since the note
+     * identifies the individual debt; category is only a fallback for payments
+     * saved without a note. The DebtCategoryAmount.category field carries this
+     * label on the wire.
+     */
+    private String debtLabel(PlannedPayment payment) {
+        String note = payment.getNote();
+        return (note != null && !note.isBlank()) ? note : payment.getCategory();
     }
 
     /**
