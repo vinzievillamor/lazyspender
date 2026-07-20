@@ -102,7 +102,7 @@ class DebtTrendServiceTest {
                 .containsExactly("Jan 2026", "Feb 2026", "Mar 2026");
         assertThat(response.dataPoints()).extracting(DebtTrendDataPoint::totalDebt)
                 .containsExactly(1000.0, 1000.0, 1000.0);
-        assertThat(response.dataPoints().get(0).categories()).containsExactly(new DebtCategoryAmount("Rent", 1000));
+        assertThat(response.dataPoints().get(0).categories()).containsExactly(new DebtCategoryAmount("Rent", 1000, "Rent"));
         assertThat(response.totalDebt()).isEqualTo(1000.0);
         assertThat(response.currency()).isEqualTo("PHP");
     }
@@ -149,7 +149,7 @@ class DebtTrendServiceTest {
                 LocalDate.of(2026, 1, 31), DebtAggregation.MONTHLY);
 
         assertThat(response.dataPoints()).hasSize(1);
-        assertThat(response.dataPoints().get(0).categories()).containsExactly(new DebtCategoryAmount("Utilities", 200));
+        assertThat(response.dataPoints().get(0).categories()).containsExactly(new DebtCategoryAmount("Utilities", 200, "Utilities"));
         assertThat(response.totalDebt()).isEqualTo(200.0);
     }
 
@@ -175,8 +175,37 @@ class DebtTrendServiceTest {
         DebtTrendResponse response = debtTrendService.getDebtTrend(OWNER, LocalDate.of(2026, 1, 1),
                 LocalDate.of(2026, 1, 31), DebtAggregation.MONTHLY);
 
-        assertThat(response.dataPoints().get(0).categories()).containsExactly(new DebtCategoryAmount("Utilities", 500));
+        assertThat(response.dataPoints().get(0).categories()).containsExactly(new DebtCategoryAmount("Utilities", 500, "Utilities"));
         assertThat(response.totalDebt()).isEqualTo(500.0);
+    }
+
+    @Test
+    void paymentsAreGroupedByNoteWhenPresent() {
+        PlannedPayment carLoan = neverEndingPayment("p1", "Loan", 200, LocalDate.of(2025, 12, 1));
+        carLoan.setNote("Car loan");
+        PlannedPayment houseLoan = neverEndingPayment("p2", "Loan", 300, LocalDate.of(2025, 12, 1));
+        houseLoan.setNote("House loan");
+        stubRepositories(List.of(carLoan, houseLoan), List.of());
+
+        DebtTrendResponse response = debtTrendService.getDebtTrend(OWNER, LocalDate.of(2026, 1, 1),
+                LocalDate.of(2026, 1, 31), DebtAggregation.MONTHLY);
+
+        assertThat(response.dataPoints().get(0).categories()).containsExactlyInAnyOrder(
+                new DebtCategoryAmount("Car loan", 200, "Loan"),
+                new DebtCategoryAmount("House loan", 300, "Loan"));
+        assertThat(response.totalDebt()).isEqualTo(500.0);
+    }
+
+    @Test
+    void paymentWithBlankNoteFallsBackToCategoryLabel() {
+        PlannedPayment payment = neverEndingPayment("p1", "Utilities", 200, LocalDate.of(2025, 12, 1));
+        payment.setNote("   ");
+        stubRepositories(List.of(payment), List.of());
+
+        DebtTrendResponse response = debtTrendService.getDebtTrend(OWNER, LocalDate.of(2026, 1, 1),
+                LocalDate.of(2026, 1, 31), DebtAggregation.MONTHLY);
+
+        assertThat(response.dataPoints().get(0).categories()).containsExactly(new DebtCategoryAmount("Utilities", 200, "Utilities"));
     }
 
     @Test

@@ -47,6 +47,16 @@ apiClient.interceptors.request.use(
     if (delegatedOwner) {
       config.headers['X-Delegated-Owner'] = delegatedOwner;
     }
+    // Every response here is scoped by the Authorization/X-Delegated-Owner
+    // headers, not by the URL - most endpoints happen to also encode owner
+    // into their query params, but some (e.g. /api/debt-trend) don't, which
+    // makes them cacheable by URL alone. Since headers aren't part of the
+    // cache key without a matching Vary response header, a browser (or the
+    // PWA's passthrough service worker) can serve one account's cached GET
+    // response back to a different signed-in/delegated account after a
+    // profile switch. Forcing no-store on every request closes that off
+    // app-wide rather than per-endpoint.
+    config.headers['Cache-Control'] = 'no-store';
     return config;
   },
   (error) => {
