@@ -69,12 +69,9 @@ export default function SwipeableTransactionItem({ transaction, onPress, onDelet
       <ReanimatedSwipeable
         ref={swipeableRef}
         renderRightActions={RightAction}
-        onEnded={() => console.log('onEnded')}
-        onFailed={() => console.log('onFailed')}
-        onActivated={() => console.log('onActivated')}
-        onSwipeableClose={() => console.log('onSwipeableClose')}
-        onSwipeableOpen={() => handleOnDelete(transaction.id)}
-        onBegan={() => console.log('onBegan')}>
+        dragOffsetFromRightEdge={20}
+        dragOffsetFromLeftEdge={10000}
+        onSwipeableOpen={() => handleOnDelete(transaction.id)}>
         <GestureDetector gesture={singleTapGesture()}>
           <Surface style={styles.surface} elevation={1}>
             <List.Item
