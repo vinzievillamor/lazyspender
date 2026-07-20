@@ -129,11 +129,11 @@ export default function PlannedPaymentItem({
                         </Text>
                       ) : null}
                       <View style={styles.metaRow}>
-                        <Text variant="labelSmall" style={{ color: theme.colors.outline }}>
+                        <Text variant="labelSmall" style={{ color: theme.colors.onSurfaceVariant }}>
                           {formatDueDate(plannedPayment.nextDueDate)}
                         </Text>
                         <Text variant="labelSmall" style={styles.separator}>•</Text>
-                        <Text variant="labelSmall" style={{ color: theme.colors.outline }}>
+                        <Text variant="labelSmall" style={{ color: theme.colors.onSurfaceVariant }}>
                           {getProgressText()}
                         </Text>
                       </View>
