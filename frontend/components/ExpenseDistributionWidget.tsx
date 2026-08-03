@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { PieChart } from 'react-native-gifted-charts';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { BarChart } from 'react-native-gifted-charts';
 import { ActivityIndicator, Card, Divider, IconButton, Menu, Text, useTheme } from 'react-native-paper';
 import { customColors, customTheme, spacing } from '../config/theme';
 import { useAccessContext } from '../contexts/AccessContext';
@@ -21,6 +21,13 @@ const getPeriodLabel = (period: TrendPeriod): string => {
   return option?.label || 'From Start';
 };
 
+const BAR_WIDTH = 20;
+const BAR_SPACING = 18;
+const Y_AXIS_LABEL_WIDTH = 130;
+
+const formatAmount = (amount: number): string =>
+  amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
 export const ExpenseDistributionWidget: React.FC = () => {
   const theme = useTheme();
   const { delegatedOwner } = useAccessContext();
@@ -29,7 +36,6 @@ export const ExpenseDistributionWidget: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<TrendPeriod>(TrendPeriod.LAST_12_WEEKS);
   const [selectedAccounts, setSelectedAccounts] = useState<string[]>([]);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [focusedIndex, setFocusedIndex] = useState<number>(0);
   // Initialize with first category expanded (will be set when data loads)
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
@@ -90,31 +96,48 @@ export const ExpenseDistributionWidget: React.FC = () => {
     }
   }, [data?.distribution, initialLoadDone]);
 
-  // Transform distribution data for PieChart
-  const pieData = useMemo(() => {
+  // Chart width available inside the card, mirroring DebtTrendWidget's
+  // responsive sizing (screen width minus card padding).
+  const availableWidth = Dimensions.get('window').width - 64 - 40;
+
+  // Transform distribution data for the horizontal BarChart - one bar per
+  // category, sorted descending (already sorted that way by the backend).
+  const barData = useMemo(() => {
     if (!data?.distribution || data.distribution.length === 0) {
       return [];
     }
 
-    return data.distribution.map((item, index) => ({
-      value: item.amount,
-      color: getCategoryColor(item.category),
-      focused: focusedIndex === index,
-      onPress: () => {
-        setFocusedIndex(index);
-        // Toggle expansion for this category
-        setExpandedCategory(prev =>
-          prev === item.category ? null : item.category
-        );
-      },
-    }));
-  }, [data?.distribution, focusedIndex]);
+    return data.distribution.map(item => {
+      const color = getCategoryColor(item.category);
+      const isExpanded = expandedCategory === item.category;
 
-  // Get focused item data for center label display
-  const focusedItem = useMemo(() => {
-    if (!data?.distribution || data.distribution.length === 0) return null;
-    return data.distribution[focusedIndex] || data.distribution[0];
-  }, [focusedIndex, data?.distribution]);
+      return {
+        value: item.amount,
+        label: item.category,
+        frontColor: color,
+        labelTextStyle: {
+          color: isExpanded ? theme.colors.onSurface : theme.colors.onSurfaceVariant,
+          fontWeight: isExpanded ? ('700' as const) : ('400' as const),
+          fontSize: 10,
+        },
+        topLabelComponent: () => (
+          <Text variant="labelSmall" style={styles.barValueLabel}>
+            {formatAmount(item.amount)} ({item.percentage.toFixed(1)}%)
+          </Text>
+        ),
+        onPress: () => {
+          setExpandedCategory(prev => (prev === item.category ? null : item.category));
+        },
+      };
+    });
+  }, [data?.distribution, expandedCategory, theme.colors.onSurface, theme.colors.onSurfaceVariant]);
+
+  const barChartMaxValue = useMemo(() => {
+    if (!data?.distribution || data.distribution.length === 0) return undefined;
+    return Math.ceil((data.distribution[0].amount * 1.15) / 100) * 100;
+  }, [data?.distribution]);
+
+  const chartHeight = barData.length * (BAR_WIDTH + BAR_SPACING) + BAR_SPACING;
 
   if (isUserLoading || isLoading) {
     return (
@@ -167,7 +190,6 @@ export const ExpenseDistributionWidget: React.FC = () => {
                 key={option.value}
                 onPress={() => {
                   setSelectedPeriod(option.value);
-                  setFocusedIndex(0);
                   setTimeout(() => setMenuVisible(false), 1);
                 }}
                 title={option.label}
@@ -184,7 +206,7 @@ export const ExpenseDistributionWidget: React.FC = () => {
         </Text>
 
         {/* Total Expense */}
-        {pieData.length > 0 && (
+        {barData.length > 0 && (
           <View style={styles.totalContainer}>
             <Text variant="headlineLarge" style={styles.totalAmount}>
               {data?.currency || 'PHP'} {data?.totalExpense.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -195,31 +217,31 @@ export const ExpenseDistributionWidget: React.FC = () => {
           </View>
         )}
 
-        {/* Pie Chart */}
-        {pieData.length > 0 ? (
+        {/* Horizontal Bar Chart */}
+        {barData.length > 0 ? (
           <View style={styles.chartContainer}>
-            <PieChart
-              data={pieData}
-              donut
-              radius={100}
-              innerRadius={60}
-              innerCircleColor={customTheme.colors.surface}
-              centerLabelComponent={() => (
-                focusedItem && (
-                  <View style={styles.centerLabel}>
-                    <Text variant="labelMedium" style={styles.centerCategory} numberOfLines={2}>
-                      {focusedItem.category}
-                    </Text>
-                    <Text variant="bodySmall" style={styles.centerAmount}>
-                      {data?.currency} {focusedItem.amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </Text>
-                    <Text variant="labelLarge" style={styles.centerPercentage}>
-                      {focusedItem.percentage.toFixed(1)}%
-                    </Text>
-                  </View>
-                )
-              )}
-              focusOnPress
+            <BarChart
+              key={`${selectedPeriod}-${delegatedOwner}-${barData.length}`}
+              data={barData}
+              horizontal
+              intactTopLabel
+              width={availableWidth - Y_AXIS_LABEL_WIDTH}
+              height={chartHeight}
+              barWidth={BAR_WIDTH}
+              spacing={BAR_SPACING}
+              initialSpacing={BAR_SPACING}
+              endSpacing={BAR_SPACING}
+              yAxisLabelWidth={Y_AXIS_LABEL_WIDTH}
+              rotateYAxisTexts={0}
+              yAxisTextStyle={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}
+              xAxisLabelTextStyle={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}
+              yAxisThickness={0}
+              xAxisThickness={0}
+              xAxisColor={theme.colors.outline}
+              maxValue={barChartMaxValue}
+              barBorderRadius={4}
+              disableScroll
+              isAnimated
             />
           </View>
         ) : (
@@ -233,7 +255,7 @@ export const ExpenseDistributionWidget: React.FC = () => {
         )}
 
         {/* Top 10 Contributors Section (Expandable) */}
-        {expandedCategory && focusedItem && (
+        {expandedCategory && (
           <View style={styles.contributorsSection}>
             <View style={styles.contributorsHeader}>
               <View style={[styles.expandIndicator, { backgroundColor: getCategoryColor(expandedCategory) }]} />
@@ -323,27 +345,12 @@ const styles = StyleSheet.create({
     color: customTheme.colors.onSurfaceVariant,
   },
   chartContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingVertical: spacing.md,
   },
-  centerLabel: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 100,
-  },
-  centerCategory: {
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  centerAmount: {
+  barValueLabel: {
     color: customTheme.colors.onSurfaceVariant,
-    textAlign: 'center',
-    marginTop: spacing.xs,
-  },
-  centerPercentage: {
-    color: customTheme.colors.primary,
-    fontWeight: '600',
-    marginTop: spacing.xs,
+    marginLeft: spacing.xs,
   },
   noDataContainer: {
     alignItems: 'center',
@@ -354,35 +361,6 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginVertical: spacing.lg,
-  },
-  legendContainer: {
-    gap: spacing.sm,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: spacing.xs,
-  },
-  legendColor: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginRight: spacing.sm,
-  },
-  legendTextContainer: {
-    flex: 1,
-  },
-  legendCategory: {
-    fontWeight: '500',
-  },
-  legendAmount: {
-    color: customTheme.colors.onSurfaceVariant,
-    fontSize: 11,
-  },
-  legendPercentage: {
-    fontWeight: '600',
-    minWidth: 50,
-    textAlign: 'right',
   },
   contributorsSection: {
     marginTop: spacing.md,
