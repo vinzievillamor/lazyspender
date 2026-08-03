@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import { BarChart } from 'react-native-gifted-charts';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Card, Divider, IconButton, Menu, Text, useTheme } from 'react-native-paper';
 import { customColors, customTheme, spacing } from '../config/theme';
 import { useAccessContext } from '../contexts/AccessContext';
@@ -21,9 +20,9 @@ const getPeriodLabel = (period: TrendPeriod): string => {
   return option?.label || 'From Start';
 };
 
-const BAR_WIDTH = 20;
-const BAR_SPACING = 18;
-const Y_AXIS_LABEL_WIDTH = 130;
+// Minimum visible sliver for the fill bar so a small-but-nonzero category
+// doesn't render as an invisible 0-width bar.
+const MIN_FILL_PERCENT = 3;
 
 const formatAmount = (amount: number): string =>
   amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -96,48 +95,27 @@ export const ExpenseDistributionWidget: React.FC = () => {
     }
   }, [data?.distribution, initialLoadDone]);
 
-  // Chart width available inside the card, mirroring DebtTrendWidget's
-  // responsive sizing (screen width minus card padding).
-  const availableWidth = Dimensions.get('window').width - 64 - 40;
-
-  // Transform distribution data for the horizontal BarChart - one bar per
-  // category, sorted descending (already sorted that way by the backend).
-  const barData = useMemo(() => {
+  // Transform distribution data into rows - one per category, sorted
+  // descending (already sorted that way by the backend). Each row's fill bar
+  // width is a plain CSS percentage relative to the largest category, so the
+  // layout scales with the card's own width instead of a captured window
+  // width snapshot.
+  const rows = useMemo(() => {
     if (!data?.distribution || data.distribution.length === 0) {
       return [];
     }
 
-    return data.distribution.map(item => {
-      const color = getCategoryColor(item.category);
-      const isExpanded = expandedCategory === item.category;
+    const maxAmount = data.distribution[0].amount;
 
-      return {
-        value: item.amount,
-        label: item.category,
-        frontColor: color,
-        labelTextStyle: {
-          color: isExpanded ? theme.colors.onSurface : theme.colors.onSurfaceVariant,
-          fontWeight: isExpanded ? ('700' as const) : ('400' as const),
-          fontSize: 10,
-        },
-        topLabelComponent: () => (
-          <Text variant="labelSmall" style={styles.barValueLabel}>
-            {formatAmount(item.amount)} ({item.percentage.toFixed(1)}%)
-          </Text>
-        ),
-        onPress: () => {
-          setExpandedCategory(prev => (prev === item.category ? null : item.category));
-        },
-      };
-    });
-  }, [data?.distribution, expandedCategory, theme.colors.onSurface, theme.colors.onSurfaceVariant]);
-
-  const barChartMaxValue = useMemo(() => {
-    if (!data?.distribution || data.distribution.length === 0) return undefined;
-    return Math.ceil((data.distribution[0].amount * 1.15) / 100) * 100;
-  }, [data?.distribution]);
-
-  const chartHeight = barData.length * (BAR_WIDTH + BAR_SPACING) + BAR_SPACING;
+    return data.distribution.map(item => ({
+      category: item.category,
+      amount: item.amount,
+      percentage: item.percentage,
+      color: getCategoryColor(item.category),
+      fillPercent: maxAmount > 0 ? Math.max((item.amount / maxAmount) * 100, MIN_FILL_PERCENT) : 0,
+      isExpanded: expandedCategory === item.category,
+    }));
+  }, [data?.distribution, expandedCategory]);
 
   if (isUserLoading || isLoading) {
     return (
@@ -206,7 +184,7 @@ export const ExpenseDistributionWidget: React.FC = () => {
         </Text>
 
         {/* Total Expense */}
-        {barData.length > 0 && (
+        {rows.length > 0 && (
           <View style={styles.totalContainer}>
             <Text variant="headlineLarge" style={styles.totalAmount}>
               {data?.currency || 'PHP'} {data?.totalExpense.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -217,32 +195,35 @@ export const ExpenseDistributionWidget: React.FC = () => {
           </View>
         )}
 
-        {/* Horizontal Bar Chart */}
-        {barData.length > 0 ? (
+        {/* Category breakdown - proportional bars, one row per category */}
+        {rows.length > 0 ? (
           <View style={styles.chartContainer}>
-            <BarChart
-              key={`${selectedPeriod}-${delegatedOwner}-${barData.length}`}
-              data={barData}
-              horizontal
-              intactTopLabel
-              width={availableWidth - Y_AXIS_LABEL_WIDTH}
-              height={chartHeight}
-              barWidth={BAR_WIDTH}
-              spacing={BAR_SPACING}
-              initialSpacing={BAR_SPACING}
-              endSpacing={BAR_SPACING}
-              yAxisLabelWidth={Y_AXIS_LABEL_WIDTH}
-              rotateYAxisTexts={0}
-              yAxisTextStyle={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}
-              xAxisLabelTextStyle={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}
-              yAxisThickness={0}
-              xAxisThickness={0}
-              xAxisColor={theme.colors.outline}
-              maxValue={barChartMaxValue}
-              barBorderRadius={4}
-              disableScroll
-              isAnimated
-            />
+            {rows.map(row => (
+              <Pressable
+                key={row.category}
+                onPress={() => setExpandedCategory(prev => (prev === row.category ? null : row.category))}
+                style={styles.barRow}
+              >
+                <View style={styles.barRowHeader}>
+                  <View style={styles.barRowLabel}>
+                    <View style={[styles.categoryDot, { backgroundColor: row.color }]} />
+                    <Text
+                      variant="bodyMedium"
+                      style={[styles.categoryName, row.isExpanded && styles.categoryNameExpanded]}
+                      numberOfLines={1}
+                    >
+                      {row.category}
+                    </Text>
+                  </View>
+                  <Text variant="labelSmall" style={styles.barValueLabel}>
+                    {formatAmount(row.amount)} ({row.percentage.toFixed(1)}%)
+                  </Text>
+                </View>
+                <View style={styles.track}>
+                  <View style={[styles.trackFill, { width: `${row.fillPercent}%`, backgroundColor: row.color }]} />
+                </View>
+              </Pressable>
+            ))}
           </View>
         ) : (
           <View style={styles.noDataContainer}>
@@ -345,12 +326,51 @@ const styles = StyleSheet.create({
     color: customTheme.colors.onSurfaceVariant,
   },
   chartContainer: {
-    alignItems: 'flex-start',
     paddingVertical: spacing.md,
+  },
+  barRow: {
+    marginBottom: spacing.md,
+    paddingVertical: spacing.xs,
+  },
+  barRowHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.xs,
+  },
+  barRowLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexShrink: 1,
+    marginRight: spacing.sm,
+  },
+  categoryDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: spacing.xs,
+  },
+  categoryName: {
+    color: customTheme.colors.onSurfaceVariant,
+    flexShrink: 1,
+  },
+  categoryNameExpanded: {
+    color: customTheme.colors.onSurface,
+    fontWeight: '700',
   },
   barValueLabel: {
     color: customTheme.colors.onSurfaceVariant,
-    marginLeft: spacing.xs,
+    flexShrink: 0,
+  },
+  track: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: customTheme.colors.surfaceVariant,
+    overflow: 'hidden',
+  },
+  trackFill: {
+    height: '100%',
+    borderRadius: 4,
   },
   noDataContainer: {
     alignItems: 'center',
