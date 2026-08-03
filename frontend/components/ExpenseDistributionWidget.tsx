@@ -195,34 +195,53 @@ export const ExpenseDistributionWidget: React.FC = () => {
           </View>
         )}
 
-        {/* Category breakdown - proportional bars, one row per category */}
+        {/* Category breakdown - proportional bars, one row per category, each
+            expandable in place to show its top contributors underneath it. */}
         {rows.length > 0 ? (
           <View style={styles.chartContainer}>
             {rows.map(row => (
-              <Pressable
-                key={row.category}
-                onPress={() => setExpandedCategory(prev => (prev === row.category ? null : row.category))}
-                style={styles.barRow}
-              >
-                <View style={styles.barRowHeader}>
-                  <View style={styles.barRowLabel}>
-                    <View style={[styles.categoryDot, { backgroundColor: row.color }]} />
-                    <Text
-                      variant="bodyMedium"
-                      style={[styles.categoryName, row.isExpanded && styles.categoryNameExpanded]}
-                      numberOfLines={1}
-                    >
-                      {row.category}
+              <View key={row.category} style={styles.categoryGroup}>
+                <Pressable
+                  onPress={() => setExpandedCategory(prev => (prev === row.category ? null : row.category))}
+                  style={styles.barRow}
+                >
+                  <View style={styles.barRowHeader}>
+                    <View style={styles.barRowLabel}>
+                      <View style={[styles.categoryDot, { backgroundColor: row.color }]} />
+                      <Text
+                        variant="bodyMedium"
+                        style={[styles.categoryName, row.isExpanded && styles.categoryNameExpanded]}
+                        numberOfLines={1}
+                      >
+                        {row.category}
+                      </Text>
+                      <IconButton
+                        icon={row.isExpanded ? 'chevron-up' : 'chevron-down'}
+                        size={16}
+                        style={styles.expandChevron}
+                        onPress={() => setExpandedCategory(prev => (prev === row.category ? null : row.category))}
+                      />
+                    </View>
+                    <Text variant="labelSmall" style={styles.barValueLabel}>
+                      {formatAmount(row.amount)} ({row.percentage.toFixed(1)}%)
                     </Text>
                   </View>
-                  <Text variant="labelSmall" style={styles.barValueLabel}>
-                    {formatAmount(row.amount)} ({row.percentage.toFixed(1)}%)
-                  </Text>
-                </View>
-                <View style={styles.track}>
-                  <View style={[styles.trackFill, { width: `${row.fillPercent}%`, backgroundColor: row.color }]} />
-                </View>
-              </Pressable>
+                  <View style={styles.track}>
+                    <View style={[styles.trackFill, { width: `${row.fillPercent}%`, backgroundColor: row.color }]} />
+                  </View>
+                </Pressable>
+
+                {row.isExpanded && (
+                  <View style={styles.contributorsSection}>
+                    <TopContributorsList
+                      contributors={contributorsData?.contributors || []}
+                      currency={data?.currency || 'PHP'}
+                      isLoading={isContributorsLoading}
+                      categoryColor={row.color}
+                    />
+                  </View>
+                )}
+              </View>
             ))}
           </View>
         ) : (
@@ -232,30 +251,6 @@ export const ExpenseDistributionWidget: React.FC = () => {
                 ? 'No accounts configured. Add an account to see your expense distribution.'
                 : 'No expense data available for the selected period.'}
             </Text>
-          </View>
-        )}
-
-        {/* Top 10 Contributors Section (Expandable) */}
-        {expandedCategory && (
-          <View style={styles.contributorsSection}>
-            <View style={styles.contributorsHeader}>
-              <View style={[styles.expandIndicator, { backgroundColor: getCategoryColor(expandedCategory) }]} />
-              <Text variant="titleSmall" style={styles.contributorsTitle}>
-                {expandedCategory}
-              </Text>
-              <IconButton
-                icon="close"
-                size={20}
-                onPress={() => setExpandedCategory(null)}
-                style={styles.closeButton}
-              />
-            </View>
-            <TopContributorsList
-              contributors={contributorsData?.contributors || []}
-              currency={data?.currency || 'PHP'}
-              isLoading={isContributorsLoading}
-              categoryColor={getCategoryColor(expandedCategory)}
-            />
           </View>
         )}
 
@@ -328,8 +323,10 @@ const styles = StyleSheet.create({
   chartContainer: {
     paddingVertical: spacing.md,
   },
-  barRow: {
+  categoryGroup: {
     marginBottom: spacing.md,
+  },
+  barRow: {
     paddingVertical: spacing.xs,
   },
   barRowHeader: {
@@ -358,6 +355,10 @@ const styles = StyleSheet.create({
     color: customTheme.colors.onSurface,
     fontWeight: '700',
   },
+  expandChevron: {
+    margin: 0,
+    marginLeft: -spacing.xs,
+  },
   barValueLabel: {
     color: customTheme.colors.onSurfaceVariant,
     flexShrink: 0,
@@ -383,26 +384,9 @@ const styles = StyleSheet.create({
     marginVertical: spacing.lg,
   },
   contributorsSection: {
-    marginTop: spacing.md,
+    marginTop: spacing.sm,
     backgroundColor: customTheme.colors.surfaceVariant,
     borderRadius: customTheme.roundness,
     padding: spacing.md,
-  },
-  contributorsHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  expandIndicator: {
-    width: 4,
-    height: 20,
-    borderRadius: 2,
-    marginRight: spacing.sm,
-  },
-  contributorsTitle: {
-    flex: 1,
-    fontWeight: '600',
-  },
-  closeButton: {
-    margin: 0,
   },
 });
