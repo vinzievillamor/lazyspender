@@ -2,7 +2,7 @@
 
 Full migration has three independent-but-complementary pieces, each documented in full detail elsewhere:
 
-- **Compute**: Cloud Run (GCP) → AWS Lambda (Java 21, SnapStart) + API Gateway (HTTP API) — [details](./aws-lambda-migration-plan.md)
+- **Compute**: Cloud Run (GCP) → AWS Lambda (Java 21, SnapStart) + API Gateway (HTTP API) — [details](./aws-ecs-migration-plan.md)
 - **Database**: Firestore in Datastore mode (GCP) → AWS Aurora Serverless v2 (Postgres) — [details](./aws-sql-migration-plan.md)
 - **Frontend static hosting**: Azure Static Web Apps → AWS S3 + CloudFront — [details](./aws-static-hosting-migration-plan.md)
 
