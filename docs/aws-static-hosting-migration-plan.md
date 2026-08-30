@@ -26,7 +26,7 @@ Two Azure-specific pieces matter for the AWS equivalent:
 ## Rejected alternatives
 
 - **Plain S3 static website hosting (no CloudFront)**: the `bucket.s3-website-<region>.amazonaws.com` endpoint is HTTP-only, with no way to attach a TLS certificate. That's not a cost tradeoff, it's a functional regression — service workers require a secure context (HTTPS or `localhost`), so the PWA install would silently break. Rejected outright.
-- **AWS Amplify Hosting**: a managed, git-connected CI/CD host — the closest feature-for-feature match to what Azure SWA already provides, and equally `$0/mo` at this app's traffic via its Always Free tier. Cost is a tie against S3+CloudFront, so this was rejected on philosophy, not price: it's a managed layer, and this migration has otherwise consistently chosen self-managed primitives for control (ECS EC2 over Fargate/managed options, no ALB — see the ECS plan) over managed convenience.
+- **AWS Amplify Hosting**: a managed, git-connected CI/CD host — the closest feature-for-feature match to what Azure SWA already provides, and equally `$0/mo` at this app's traffic via its Always Free tier. Cost is a tie against S3+CloudFront, so there's no savings to justify the extra managed layer — this migration otherwise consistently picks whichever option is cheapest at this app's traffic (e.g. Lambda over an always-on ECS instance for compute — see the Lambda plan), and a tie on cost isn't a reason to add one.
 - **Route 53 hosted zone / custom domain**: out of scope. No custom domain exists today (see above), so there's nothing to migrate onto one. Adding a custom domain later is an independent decision, not part of this plan.
 
 ## Target AWS setup
@@ -51,7 +51,7 @@ Two Azure-specific pieces matter for the AWS equivalent:
 - **ACM certificate**: not needed for now — no custom domain (see Rejected alternatives). Revisit only if a custom domain is added later; a CloudFront-attached ACM cert is free regardless.
 
 ### 3. IAM / CI
-A dedicated IAM role scoped to `s3:PutObject`/`s3:DeleteObject`/`s3:ListBucket` on just this bucket plus `cloudfront:CreateInvalidation` on just this distribution, assumed via GitHub OIDC — mirrors the WIF-style, no-static-keys pattern the ECS plan already uses for backend CI.
+A dedicated IAM role scoped to `s3:PutObject`/`s3:DeleteObject`/`s3:ListBucket` on just this bucket plus `cloudfront:CreateInvalidation` on just this distribution, assumed via GitHub OIDC — mirrors the WIF-style, no-static-keys pattern the Lambda plan already uses for backend CI.
 
 ### 4. CI/CD (`.github/workflows/frontend-web-deploy.yml`)
 Replace the deploy step:
@@ -71,7 +71,7 @@ with:
 - run: aws s3 sync frontend/dist s3://<bucket-name> --delete
 - run: aws cloudfront create-invalidation --distribution-id <distribution-id> --paths "/*"
 ```
-Everything before that (`npm ci`, `npm run web:build`) is unchanged — this is purely a deploy-target swap, same shape as the ECS plan's CI/CD section for the backend. Update `frontend/package.json`'s `web:deploy` script the same way, for manual/local deploys.
+Everything before that (`npm ci`, `npm run web:build`) is unchanged — this is purely a deploy-target swap, same shape as the Lambda plan's CI/CD section for the backend. Update `frontend/package.json`'s `web:deploy` script the same way, for manual/local deploys.
 
 ## Cutover
 - Stand up the CloudFront distribution and verify independently first: hit its default `*.cloudfront.net` domain, confirm every route (not just `/`) loads via the CloudFront Function rewrites, confirm the PWA install prompt still fires.
