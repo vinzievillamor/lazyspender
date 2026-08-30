@@ -24,6 +24,14 @@ This covers only the web export's *hosting* — where the built static site live
 - **CloudFront**: origin is the S3 bucket via Origin Access Control (bucket stays fully private, unlike plain S3 hosting); default root object `index.html`; a viewer-request CloudFront Function reimplements `staticwebapp.config.json`'s route-to-HTML rewrites 1:1. Cache behavior is split by path: hashed `_expo/static/*` assets get long/immutable caching, while `*.html`/`manifest.json`/`sw.js` get short/no-cache TTLs (`sw.js` must never be stale). No ACM cert needed — no custom domain.
 - **IAM/CI**: a dedicated IAM role scoped to just this bucket/distribution, assumed via GitHub OIDC — mirrors the WIF-style, no-static-keys pattern the Lambda plan uses for backend CI. The deploy step becomes an `aws s3 sync` + `aws cloudfront create-invalidation`, replacing the Azure SWA deploy action; `frontend/package.json`'s `web:deploy` script gets the same swap for manual/local deploys.
 
+## Infrastructure maintenance: Terraform
+
+All AWS resources above (bucket, OAC, distribution, CloudFront Function, IAM role/OIDC) are provisioned and maintained via **Terraform** — nothing is created by hand in the console. Today's GCP/Azure resources are click-ops with no IaC; the AWS stack gets IaC from day one so the interlocking wiring stays reproducible and rollback-safe. CloudFormation/CDK/SAM were passed over as more verbose or Lambda-centric for no benefit at this scale.
+
+- **Layout**: a root-level `infra/` directory — one Terraform root module for all of the app's AWS infrastructure (this piece and the compute/DB migrations alike), organized generically by concern, not per migration plan. The CloudFront Function's JS source is committed there and deployed via `aws_cloudfront_function`.
+- **State**: S3 backend with native S3 locking (Terraform ≥ 1.10, no DynamoDB table); the state bucket is the one hand-created bootstrap resource.
+- **Infra vs. content**: Terraform manages resources only — the built site still ships via `aws s3 sync` + invalidation in CI. `terraform plan`/`apply` run locally by the maintainer; no CI-driven applies for a single-maintainer project.
+
 ## Cutover
 
 Stand up the CloudFront distribution and verify independently first (every route loads via the rewrite function, PWA install prompt still fires). Add the new CloudFront domain to `application.yaml`'s CORS config alongside the existing Azure entry during the rollback window. Once confidence is established: delete the Azure Static Web App, remove its CI secret, and drop the `swa` CLI reference.
