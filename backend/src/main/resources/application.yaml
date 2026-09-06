@@ -16,7 +16,8 @@ app:
       - "exp://*"                         # Expo Go (any host/port)
       - "http://192.168.*.*:*"            # Local network IPs (any port)
       - "http://10.*.*.*:*"               # Private network range (any port)
-      - "https://jolly-mushroom-06ba64b00.7.azurestaticapps.net" # Azure Static Web Apps prod (add a custom domain origin here too, once one exists)
+      - "https://jolly-mushroom-06ba64b00.7.azurestaticapps.net" # Azure Static Web Apps prod (remove once AWS cutover's rollback window elapses)
+      - "https://lazyspender.zirchel.com"                        # AWS CloudFront prod (see docs/aws-static-hosting-migration-plan.md)
   expense-categories:
     - Allowance
     - Car Loan
