@@ -11,3 +11,13 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+
+# Env
+.env.local
+
+# Terraform (infra/) — local working state, never committed
+# (.terraform.lock.hcl IS committed — it pins provider versions)
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
+infra/*.tfplan

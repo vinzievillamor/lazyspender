@@ -21,26 +21,6 @@ There is no root-level build; each project is built and run independently from i
 
 See the per-project sections below for what each command actually does.
 
-## Development workflow
-
-**Before starting any new task, complete these steps in order — don't skip ahead to implementation:**
-
-1. **Startup** — run the `startup` skill (or otherwise orient on recent commits, working tree state, and relevant memory) if not already done this session.
-2. **Create a GitHub issue** for the task (`gh issue create ...`).
-3. **Create the branch** from that issue, named per the convention below, and link the two.
-4. **Create a dedicated git worktree** for the branch at `.claude/worktrees/<branch-slug>` (see below) so this session's work can't overlap or conflict with any other in-progress session.
-5. **Open a dedicated VS Code window on the whole worktree root** (the monorepo root of that checkout, not just `frontend/` or `backend/` inside it): `code -n <path>` (`-n` forces a new window rather than reusing/reopening an existing one). Pass a native Windows path (e.g. `C:\Users\...\lazyspender\.claude\worktrees\<branch-slug>`), not a Git-Bash POSIX-style path (`/c/Users/...`) — the Windows `code` launcher can mis-parse a leading `/c/...` as flags and silently open an empty window with a stray unsaved file instead of the folder. If running from the Bash tool, invoke `code` via the PowerShell tool instead so the native path resolves correctly. With multiple worktrees active across parallel sessions, a shared editor window makes it hard to tell which folder/files belong to which session — one VS Code window per worktree keeps them visually and spatially separate.
-6. Only then start the actual task.
-
-- **Every feature, hotfix, or bugfix starts with a GitHub issue.** Create the issue first, then create the branch from it and link the two (e.g. `gh issue create ...` followed by a branch named after the issue).
-- **Branch naming**: `<type>/<issue-number>-<short-slug>`, e.g. `feature/32-account-delegation-frontend-implementation`. Common `<type>` values: `feature`, `fix`, `hotfix`, `docs`, `chore`.
-- **All development happens in a branch** — never commit directly to `main`.
-- **Merges to `main` must be squash merges** (`gh pr merge --squash` or the GitHub UI's "Squash and merge"), so `main` keeps one commit per issue/PR.
-- **Never add a `Co-Authored-By: Claude` (or similar) trailer to commits pushed to this repository.** Omit the co-author line entirely, regardless of Claude Code's default commit message template.
-- **Use a separate `git worktree` per feature/task**, especially when spawning subagents to work on it. Each worktree gets its own checkout of the feature branch so parallel agents don't clobber each other's working-tree state (uncommitted changes, build artifacts, etc.). Clean up the worktree once the branch is merged/abandoned.
-- **Worktrees live under `.claude/worktrees/<branch-slug>`** (e.g. `.claude/worktrees/74-pwa-installable`), inside the repo itself rather than as sibling directories next to it. `.claude/worktrees/` is gitignored so these checkouts never get tracked from the parent repo. Create with `git worktree add .claude/worktrees/<branch-slug> <branch-name>`. If a worktree already exists at a stale location (e.g. a sibling `../<repo>-worktrees/` directory from before this convention), use `git worktree move <old-path> .claude/worktrees/<branch-slug>` rather than remove+recreate — `move` preserves untracked state like `node_modules` so it doesn't need reinstalling.
-- **Open each worktree in its own VS Code window on the worktree's root**, using a native Windows path (`code -n C:\...\lazyspender\.claude\worktrees\<branch-slug>`, run via the PowerShell tool, not a Bash-tool POSIX path — see above), so parallel sessions stay visually distinguishable by window instead of all sharing one editor pointed at whichever worktree was opened last. Close that window when the worktree is removed.
-
 ## Backend (`backend/`)
 
 ### Commands
