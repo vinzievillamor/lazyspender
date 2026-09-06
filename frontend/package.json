@@ -10,7 +10,7 @@
     "web": "expo start --web --port 3000",
     "lint": "expo lint",
     "web:build": "expo export -p web",
-    "web:deploy": "npm run web:build && swa deploy ./dist --deployment-token $AZURE_SWA_DEPLOYMENT_TOKEN --env production"
+    "web:deploy": "npm run web:build && aws s3 sync ./dist s3://$AWS_FRONTEND_BUCKET --delete && aws cloudfront create-invalidation --distribution-id $AWS_FRONTEND_DISTRIBUTION_ID --paths '/*'"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
