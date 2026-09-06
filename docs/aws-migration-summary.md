@@ -12,9 +12,9 @@ Only compute and database are actually moving off GCP — the frontend's static 
 
 | Concern | Today | AWS target |
 |---|---|---|
-| Compute | Cloud Run (GCP), scales to zero (cold starts) | API Gateway + Lambda, SnapStart-mitigated cold starts (still scales to zero) |
+| Compute | Cloud Run (GCP), scales to zero (cold starts) | API Gateway + Lambda, SnapStart-mitigated cold starts (still scales to zero), custom domain `api.zirchel.com` |
 | Database | Firestore in Datastore mode (GCP, no `GROUP BY`/`JOIN`) | Aurora Serverless v2, PostgreSQL-compatible, scale-to-zero |
-| Frontend hosting | Azure Static Web Apps (free tier) | S3 (private, OAC) + CloudFront, no custom domain |
+| Frontend hosting | Azure Static Web Apps (free tier) | S3 (private, OAC) + CloudFront, custom domain `lazyspender.zirchel.com` |
 | ORM/repos | Spring Data `DatastoreRepository` + hand-declared composite indexes | Spring Data JPA (Hibernate) + Flyway migrations |
 | DB access pattern | Native (same cloud as compute) | Native (same cloud as compute), once both migrations land |
 | Secrets | Plaintext YAML file via `--env-vars-file` | AWS Systems Manager Parameter Store (SecureString) |
@@ -33,9 +33,9 @@ The **frontend hosting move is fully independent** of both — it only needs to 
 
 | Item | Estimate |
 |---|---|
-| Lambda + API Gateway compute (SnapStart, no ALB, no EC2, + logs + Parameter Store secrets) | ~$1-2/mo |
+| Lambda + API Gateway compute (SnapStart, no ALB, no EC2, custom domain, + logs + Parameter Store secrets) | ~$1-2/mo |
 | Aurora Serverless v2, scale-to-zero (2 low-traffic users) | <$5/mo |
-| Frontend hosting (S3 + CloudFront, no custom domain) | ~$0-0.25/mo |
+| Frontend hosting (S3 + CloudFront, custom domain) | ~$0-0.25/mo |
 | **Combined total** | **~$1-7/mo** |
 
 Baseline today: ~$0/mo (Cloud Run scales to zero, Firestore free tier, Azure SWA free tier).
@@ -50,11 +50,12 @@ No RDS/always-on database fallback, no ALB, and no always-on compute are kept in
 - Whichever side migrates first runs a temporary cross-cloud bridge (GCP key in AWS, or AWS DB reached from GCP over the public internet) — neither is meant to be hardened further, since it's short-lived.
 - Both plans keep a rollback window (leave the old GCP resource running/untouched) before decommissioning anything on GCP.
 - The frontend hosting move carries its own, smaller risk: `staticwebapp.config.json`'s route-to-HTML rewrites have no automatic AWS equivalent and must be reimplemented as a CloudFront Function, or every route but `/` 404s — see the static hosting plan's "Target AWS setup."
+- Both new custom domains (`lazyspender.zirchel.com`, `api.zirchel.com`) sit on subdomains of a Google Workspace domain purchased for this project. DNS stays at the existing registrar rather than migrating the zone to Route 53, so each domain's validation/CNAME records are a one-time manual step outside Terraform, not IaC-managed — see either plan's "Custom domain" section.
 
 ## High-level phases
 
 1. **Stand up AWS database** (Aurora Serverless v2, Flyway schema, ETL cutover from Firestore) — see SQL plan's "Phased rollout."
-2. **Stand up AWS compute** (Lambda function + API Gateway, `aws-serverless-java-container` adapter, IAM roles, CI/CD switch) — see the Lambda plan's "Target AWS setup" and "CI/CD" sections.
-3. **Cut over frontend's backend target** — point `frontend/.env` `API_BASE_URL` at the new backend once it's verified independently.
-4. **Migrate frontend hosting** (S3 + CloudFront, CloudFront Function for route rewrites, CI/CD switch) — independent of 1-3, can happen any time — see the static hosting plan's "Target AWS setup" and "Cutover."
+2. **Stand up AWS compute** (Lambda function + API Gateway, `aws-serverless-java-container` adapter, custom domain `api.zirchel.com`, IAM roles, CI/CD switch) — see the Lambda plan's "Target AWS setup" and "CI/CD" sections.
+3. **Cut over frontend's backend target** — point `frontend/.env` `API_BASE_URL` at the new backend's custom domain (`api.zirchel.com`) once it's verified independently.
+4. **Migrate frontend hosting** (S3 + CloudFront, CloudFront Function for route rewrites, custom domain `lazyspender.zirchel.com`, CI/CD switch) — independent of 1-3, can happen any time — see the static hosting plan's "Target AWS setup," "Custom domain," and "Cutover."
 5. **Decommission GCP and Azure** — after each side's rollback grace period elapses: Cloud Run service, Artifact Registry repo (no longer used once compute is a Lambda zip rather than a container image), Firestore-in-Datastore-mode database, the `spring-cloud-gcp-*` dependencies/index.yaml, and the Azure Static Web App + `swa` CLI reference.

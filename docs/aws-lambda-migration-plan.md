@@ -26,7 +26,7 @@ The backend (`backend/`, Spring Boot 3 / Java 21) currently deploys to Cloud Run
 - **Application**: a thin `LambdaHandler` adapter wraps the existing Spring app via `aws-serverless-java-container-springboot3` — no changes to controllers/services/`SecurityConfig`. A SnapStart hook drives one throwaway request during snapshot build so lazy Spring init happens then, not on the first real request. Packaged as a shaded/fat jar (Lambda's managed runtime needs a plain jar, not the Spring Boot executable-jar launcher).
 - **IAM**: one Lambda execution role (`AWSLambdaBasicExecutionRole` + inline policy scoped to the two secret/parameter ARNs) — no execution/task-role split like ECS.
 - **Lambda function**: Java 21 managed runtime, arm64/Graviton2, 1024 MB starting memory (more memory ⇒ more CPU ⇒ often net-cheaper/faster cold starts for JVM — tune after measuring), 29s timeout (API Gateway's HTTP API integration cap), SnapStart enabled on published versions (never `$LATEST`, which shapes the deploy flow).
-- **API Gateway**: HTTP API (cheaper than REST API; no need for request validators/API keys/usage plans), single catch-all proxy route to the function's `live` alias. CORS stays in Spring's `WebConfig` only, not duplicated at the gateway. **No custom domain** — API Gateway's default `execute-api` HTTPS URL is used directly, same as Cloud Run today (no custom domain either) and consistent with the frontend hosting plan's own no-custom-domain choice. This also drops the superseded ECS plan's Elastic IP + Caddy sidecar entirely, with no ACM/Route 53 replacement needed.
+- **API Gateway**: HTTP API (cheaper than REST API; no need for request validators/API keys/usage plans), single catch-all proxy route to the function's `live` alias. CORS stays in Spring's `WebConfig` only, not duplicated at the gateway. **Custom domain**: `api.zirchel.com`, a regional API Gateway custom domain mapping backed by a regional ACM certificate in `us-east-1` (matching the API's own deployment region — a coincidental match with the frontend plan's CloudFront cert, which is pinned to `us-east-1` for an unrelated reason). DNS-validated the same way as the frontend's cert: the validation CNAME and the domain-mapping CNAME are added by hand at the existing registrar rather than migrating the zone to Route 53 — see `aws-static-hosting-migration-plan.md`'s "Custom domain"/"Rejected alternatives," which applies identically here. This still drops the superseded ECS plan's Elastic IP + Caddy sidecar entirely — the regional ACM cert here is lightweight, not a replacement for that.
 
 ### Interim Firestore credential
 
@@ -44,7 +44,7 @@ This is the one regression relative to the superseded always-on ECS plan. **The 
 
 ## Cutover
 
-Stand up and verify the AWS service independently (health check, Firestore read/write cross-cloud) before touching the frontend or GCP. Then point `frontend/.env`'s `API_BASE_URL` at the new API Gateway domain, leaving Cloud Run running for a rollback window before decommissioning it and the Artifact Registry repo.
+Stand up and verify the AWS service independently (health check, Firestore read/write cross-cloud) first using API Gateway's default `execute-api` URL, then add the custom domain mapping and confirm `https://api.zirchel.com` serves identically. Point `frontend/.env`'s `API_BASE_URL` at `https://api.zirchel.com`, leaving Cloud Run running for a rollback window before decommissioning it and the Artifact Registry repo.
 
 ## Rough monthly cost estimate (us-east-1, personal-scale traffic)
 
@@ -54,7 +54,7 @@ Stand up and verify the AWS service independently (health check, Firestore read/
 | API Gateway (HTTP API) | $0 for 12 months, then negligible at this traffic |
 | CloudWatch Logs | ~$1/mo |
 | Secrets (SSM Parameter Store) | $0 |
-| ACM certificate | $0 (not used — no custom domain) |
+| ACM certificate | $0 (DNS-validated regional cert for `api.zirchel.com`) |
 | Data transfer out | ~$0-1/mo |
 | **Total** | **~$1-2/mo** |
 
