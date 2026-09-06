@@ -1,28 +1,5 @@
 {
   "worktree": {
     "bgIsolation": "worktree"
-  },
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"SessionStart\\\",\\\"additionalContext\\\":\\\"Before doing anything else, run the startup skill (invoke Skill with skill=startup) to orient on recent commits, working tree state, and relevant memory. Skip it only if this conversation already has that context (e.g. mid-task continuation).\\\"}}\""
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "common=$(git rev-parse --git-common-dir 2>/dev/null); gitdir=$(git rev-parse --git-dir 2>/dev/null); if [ -n \"$common\" ] && [ \"$common\" = \"$gitdir\" ]; then branch=$(git branch --show-current 2>/dev/null); printf '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"Editing directly in the main checkout (branch: %s), not a dedicated worktree. CLAUDE.md workflow: create a GitHub issue, branch, and git worktree before implementation. Proceed anyway, or stop and create a worktree first?\"}}' \"$branch\"; fi"
-          }
-        ]
-      }
-    ]
   }
 }
