@@ -37,20 +37,8 @@ jobs:
           role-to-assume: ${{ vars.AWS_FRONTEND_DEPLOY_ROLE_ARN }}
           aws-region: us-east-1
 
-      - name: Sync to S3
-        run: aws s3 sync dist s3://${{ vars.AWS_FRONTEND_BUCKET }} --delete
-
-      - name: Fix manifest.json content-type
-        # aws s3 sync's built-in MIME guessing doesn't recognize .json and
-        # uploads it as application/octet-stream (Azure SWA, the previous
-        # host, set this correctly on its own). iOS Safari silently refuses
-        # to treat the page as an installable standalone PWA when the
-        # manifest isn't served as a JSON-ish content type, so "Add to Home
-        # Screen" falls back to a normal bookmark tab with the address bar.
-        run: |
-          aws s3 cp dist/manifest.json s3://${{ vars.AWS_FRONTEND_BUCKET }}/manifest.json \
-            --content-type "application/manifest+json" \
-            --metadata-directive REPLACE
-
-      - name: Invalidate CloudFront cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ vars.AWS_FRONTEND_DISTRIBUTION_ID }} --paths "/*"
+      - name: Deploy to S3 + CloudFront
+        env:
+          AWS_FRONTEND_BUCKET: ${{ vars.AWS_FRONTEND_BUCKET }}
+          AWS_FRONTEND_DISTRIBUTION_ID: ${{ vars.AWS_FRONTEND_DISTRIBUTION_ID }}
+        run: ./deploy-web.sh
