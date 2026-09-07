@@ -10,7 +10,7 @@
     "web": "expo start --web --port 3000",
     "lint": "expo lint",
     "web:build": "expo export -p web",
-    "web:deploy": "npm run web:build && aws s3 sync ./dist s3://$AWS_FRONTEND_BUCKET --delete && aws cloudfront create-invalidation --distribution-id $AWS_FRONTEND_DISTRIBUTION_ID --paths '/*'"
+    "web:deploy": "npm run web:build && aws s3 sync ./dist s3://$AWS_FRONTEND_BUCKET --delete && aws s3 cp ./dist/manifest.json s3://$AWS_FRONTEND_BUCKET/manifest.json --content-type application/manifest+json --metadata-directive REPLACE && aws cloudfront create-invalidation --distribution-id $AWS_FRONTEND_DISTRIBUTION_ID --paths '/*'"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
