@@ -4,7 +4,7 @@ Full migration has three independent-but-complementary pieces, each documented i
 
 - **Compute**: Cloud Run (GCP) → AWS API Gateway + Lambda (SnapStart, no ALB, no EC2) — [details](./aws-lambda-migration-plan.md)
 - **Database**: Firestore in Datastore mode (GCP) → AWS Aurora Serverless v2 (Postgres) — [details](./aws-sql-migration-plan.md)
-- **Frontend static hosting**: Azure Static Web Apps → AWS S3 + CloudFront — [details](./aws-static-hosting-migration-plan.md)
+- **Frontend static hosting**: Azure Static Web Apps → AWS S3 + CloudFront — [details](./aws-static-hosting-adr.md)
 
 Only compute and database are actually moving off GCP — the frontend's static hosting is already on a third cloud (Azure), not GCP, so its move is about consolidating everything onto one cloud rather than leaving GCP specifically. This page is the top-level reference; go to the linked docs for implementation detail.
 
