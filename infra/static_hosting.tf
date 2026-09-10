@@ -1,5 +1,5 @@
 # Frontend static hosting: S3 (private) + CloudFront (OAC) + ACM, replacing
-# Azure Static Web Apps. See docs/aws-static-hosting-migration-plan.md.
+# Azure Static Web Apps. See docs/aws-static-hosting-adr.md.
 
 resource "aws_s3_bucket" "frontend" {
   bucket = "lazyspender-frontend"
@@ -111,7 +111,7 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   # index.html, other *.html, manifest.json, sw.js: short/no-cache — sw.js in
-  # particular must never be served stale (see aws-static-hosting-migration-plan.md).
+  # particular must never be served stale (see aws-static-hosting-adr.md).
   default_cache_behavior {
     target_origin_id       = "lazyspender-frontend-s3"
     viewer_protocol_policy = "redirect-to-https"
