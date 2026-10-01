@@ -223,6 +223,7 @@ export const BalanceTrendWidget: React.FC = () => {
               xAxisColor={theme.colors.outline}
               stepValue={data?.yaxisConfig?.interval}
               maxValue={data?.yaxisConfig?.maxValue}
+              overflowTop={30}
               curved
               showScrollIndicator
               scrollToIndex={chartData.length - 1}

@@ -38,7 +38,7 @@ export const customTheme: MD3Theme = {
     onErrorContainer: '#C62828',
 
     // Background colors - Light and clean
-    background: '#F5F7FA',
+    background: '#E8ECF2',
     onBackground: '#1A1C1E',
 
     // Surface colors - White cards with subtle elevation
